@@ -12,11 +12,12 @@ CREATE TABLE Books (
 );
 
 CREATE TABLE Genres (
-    book_ID INT,
-    genre VARCHAR(31) NOT NULL,
+    ID SERIAL,
+    bookID INT,
+    genre VARCHAR(31),
 
-    PRIMARY KEY(book_ID, genre),
-    FOREIGN KEY (book_ID) REFERENCES Books(ID)
+    PRIMARY KEY(ID),
+    FOREIGN KEY (bookID) REFERENCES Books(ID) ON DELETE CASCADE
 );
 
 
@@ -25,60 +26,63 @@ CREATE TABLE Users (
     ID SERIAL,
     email VARCHAR(64) NOT NULL,
     username VARCHAR(31) NOT NULL,
-    hash_password VARCHAR(63) NOT NULL,
+    hashPassword VARCHAR(63) NOT NULL,
     role VARCHAR(15) NOT NULL,
     firstName VARCHAR(31) NOT NULL,
     lastName VARCHAR(31) NOT NULL,
-    signup_date DATE NOT NULL,
+    signupDate DATE NOT NULL,
 
     PRIMARY KEY(ID)
 );
 
 CREATE TABLE Favourites (
-    user_ID INT,
-    book_ID INT,
+    ID SERIAL,
+    userID INT,
+    bookID INT,
 
-    PRIMARY KEY(user_ID, book_ID),
-    FOREIGN KEY (user_ID) REFERENCES Users(ID),
-    FOREIGN KEY (book_ID) REFERENCES Books(ID)
+    PRIMARY KEY(ID),
+    FOREIGN KEY (userID) REFERENCES Users(ID) ON DELETE CASCADE,
+    FOREIGN KEY (bookID) REFERENCES Books(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Orders (
     ID SERIAL,
-    user_ID INT NOT NULL,
-    total_amount DECIMAL NOT NULL,
+    userID INT NOT NULL,
+    totalAmount DECIMAL NOT NULL,
     status VARCHAR(15) NOT NULL,
-    order_date DATE NOT NULL,
+    orderDate DATE NOT NULL,
 
     PRIMARY KEY(ID),
-    FOREIGN KEY (user_ID) REFERENCES Users(ID)
+    FOREIGN KEY (userID) REFERENCES Users(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE OrderItems (
-    order_ID INT,
-    book_ID INT,
+    ID SERIAL,
+    orderID INT,
+    bookID INT,
     quantity INT DEFAULT 1,
 
-    PRIMARY KEY(order_ID, book_ID),
-    FOREIGN KEY (order_ID) REFERENCES Orders(ID),
-    FOREIGN KEY (book_ID) REFERENCES Books(ID)
+    PRIMARY KEY(ID),
+    FOREIGN KEY (orderID) REFERENCES Orders(ID) ON DELETE CASCADE,
+    FOREIGN KEY (bookID) REFERENCES Books(ID) ON DELETE CASCADE
 );
 
 
 CREATE TABLE Carts (
     ID SERIAL,
-    user_ID INT NOT NULL,
+    userID INT NOT NULL,
 
     PRIMARY KEY(ID),
-    FOREIGN KEY (user_ID) REFERENCES Users(ID)
+    FOREIGN KEY (userID) REFERENCES Users(ID) ON DELETE CASCADE
 );
 
 CREATE TABLE CartItems (
-    cart_ID INT,
-    user_ID INT,
+    ID SERIAL,
+    cartID INT,
+    userID INT,
     quantity INT DEFAULT 1,
 
-    PRIMARY KEY(cart_ID, user_ID),
-    FOREIGN KEY (cart_ID) REFERENCES Carts(ID),
-    FOREIGN KEY (user_ID) REFERENCES Users(ID)
+    PRIMARY KEY(ID),
+    FOREIGN KEY (cartID) REFERENCES Carts(ID) ON DELETE CASCADE,
+    FOREIGN KEY (userID) REFERENCES Users(ID) ON DELETE CASCADE
 );

@@ -8,7 +8,7 @@ VALUES
     ('The Great Gatsby', 'F. Scott Fitzgerald', 'The Great Gatsby is a novel written by American author F. Scott Fitzgerald.', 180, 1, '978-0-7432-7356-5');
 
 
-INSERT INTO Users (email, username, hash_password, role, firstName, lastName, signup_date)
+INSERT INTO Users (email, username, hashPassword, role, firstName, lastName, signupDate)
 VALUES
     ('jane.smith@example.com', 'janesmith', 'hashed_password_value', 'User', 'Jane', 'Smith', '2022-01-05'),
     ('bob.johnson@example.com', 'bobjohnson', 'hashed_password_value', 'Admin', 'Bob', 'Johnson', '2022-01-10'),
@@ -16,7 +16,7 @@ VALUES
     ('mike.davis@example.com', 'mikedavis', 'hashed_password_value', 'Admin', 'Mike', 'Davis', '2022-01-20');
 
 
-INSERT INTO Favourites
+INSERT INTO Favourites (userID, bookID)
 VALUES
     (1, 1),
     (1, 2),
@@ -27,7 +27,7 @@ VALUES
     (4, 6);
 
 
-INSERT INTO Genres
+INSERT INTO Genres (bookID, genre)
 VALUES
     (1, 'Fantasy'),
     (1, 'Adventure'),
@@ -41,22 +41,22 @@ VALUES
     (6, 'Literary Fiction');
 
 
-INSERT INTO Carts (user_ID)
+INSERT INTO Carts (userID)
 VALUES
     (1), (2), (3), (4);
 
-INSERT INTO CartItems
+INSERT INTO CartItems (cartID, userID, quantity)
 VALUES
     (1, 1, 1),
     (1, 2, 1),
     (3, 4, 1),
     (4, 2, 3);
 
-INSERT INTO Orders (user_ID, total_amount, status, order_date)
+INSERT INTO Orders (userID, totalAmount, status, orderDate)
 VALUES
     (1, 20.0, 'Delivered', '2022-01-15');
 
-INSERT INTO OrderItems
+INSERT INTO OrderItems (orderID, bookID, quantity)
 VALUES
     (1, 4, 1),
     (1, 5, 1);
