@@ -1,11 +1,11 @@
-INSERT INTO Books (title, author, description, pages, availability, ISBN)
+INSERT INTO Books (title, author, description, pages, price, availability, ISBN)
 VALUES
-    ('The Lord of the Rings', 'J. R. R. Tolkien', 'The Lord of the Rings is a series of three fantasy novels written by English author and scholar J. R. R. Tolkien.', 1178, 5, '978-0-395-36381-0'),
-    ('Harry Potter and the Philosopher''s Stone', 'J. K. Rowling', 'Harry Potter and the Philosopher''s Stone is a fantasy novel written by British author J. K. Rowling.', 223, 10, '978-0-7-152-20664-5'),
-    ('Harry Potter and the Chamber of Secrets', 'J. K. Rowling', 'Harry Potter and the Chamber of Secrets is a fantasy novel written by British author J. K. Rowling.', 251, 2, '978-0-7-152-20665-2'),
-    ('Pride and Prejudice', 'Jane Austen', 'Pride and Prejudice is a romantic novel written by English author Jane Austen.', 272, 4, '978-0-14-143951-8'),
-    ('To Kill a Mockingbird', 'Harper Lee', 'To Kill a Mockingbird is a novel written by American author Harper Lee.', 281, 2, '978-0-446-31106-2'),
-    ('The Great Gatsby', 'F. Scott Fitzgerald', 'The Great Gatsby is a novel written by American author F. Scott Fitzgerald.', 180, 1, '978-0-7432-7356-5');
+    ('The Lord of the Rings', 'J. R. R. Tolkien', 'The Lord of the Rings is a series of three fantasy novels written by English author and scholar J. R. R. Tolkien.', 1178, 15, 5, '978-0-395-36381-0'),
+    ('Harry Potter and the Philosopher''s Stone', 'J. K. Rowling', 'Harry Potter and the Philosopher''s Stone is a fantasy novel written by British author J. K. Rowling.', 223, 20, 10, '978-0-7-152-20664-5'),
+    ('Harry Potter and the Chamber of Secrets', 'J. K. Rowling', 'Harry Potter and the Chamber of Secrets is a fantasy novel written by British author J. K. Rowling.', 251, 20, 2, '978-0-7-152-20665-2'),
+    ('Pride and Prejudice', 'Jane Austen', 'Pride and Prejudice is a romantic novel written by English author Jane Austen.', 272, 15, 4, '978-0-14-143951-8'),
+    ('To Kill a Mockingbird', 'Harper Lee', 'To Kill a Mockingbird is a novel written by American author Harper Lee.', 281, 10, 2, '978-0-446-31106-2'),
+    ('The Great Gatsby', 'F. Scott Fitzgerald', 'The Great Gatsby is a novel written by American author F. Scott Fitzgerald.', 180, 13, 1, '978-0-7432-7356-5');
 
 
 INSERT INTO Users (email, username, hashPassword, role, firstName, lastName, signupDate)

@@ -10,18 +10,18 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
-    private int bookID;
+    private Integer bookID;
 
     @Column
-    private int quantity;
+    private Integer quantity;
 
     public CartItem() {
     }
 
-    public CartItem(int bookID, int quantity) {
+    public CartItem(Integer bookID, Integer quantity) {
         this.bookID = bookID;
         this.quantity = quantity;
     }

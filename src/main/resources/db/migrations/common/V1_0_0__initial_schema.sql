@@ -1,10 +1,10 @@
 CREATE TABLE Books (
     ID SERIAL,
-    title VARCHAR(64) NOT NULL,
+    title VARCHAR(63) NOT NULL,
     author VARCHAR(31) NOT NULL,
     description VARCHAR,
     pages INT NOT NULL,
-    price DECIMAL DEFAULT 0,
+    price FLOAT DEFAULT 0,
     availability INT DEFAULT 0,
     ISBN VARCHAR(31),
 
@@ -17,6 +17,7 @@ CREATE TABLE Genres (
     genre VARCHAR(31),
 
     PRIMARY KEY(ID),
+--    UNIQUE (bookID, genre),
     FOREIGN KEY (bookID) REFERENCES Books(ID) ON DELETE CASCADE
 );
 
@@ -24,7 +25,7 @@ CREATE TABLE Genres (
 
 CREATE TABLE Users (
     ID SERIAL,
-    email VARCHAR(64) NOT NULL,
+    email VARCHAR(63) NOT NULL,
     username VARCHAR(31) NOT NULL,
     hashPassword VARCHAR(63) NOT NULL,
     role VARCHAR(15) NOT NULL,
@@ -41,6 +42,7 @@ CREATE TABLE Favourites (
     bookID INT,
 
     PRIMARY KEY(ID),
+    UNIQUE (userID, bookID),
     FOREIGN KEY (userID) REFERENCES Users(ID) ON DELETE CASCADE,
     FOREIGN KEY (bookID) REFERENCES Books(ID) ON DELETE CASCADE
 );
@@ -48,7 +50,7 @@ CREATE TABLE Favourites (
 CREATE TABLE Orders (
     ID SERIAL,
     userID INT NOT NULL,
-    totalAmount DECIMAL NOT NULL,
+    totalAmount FLOAT NOT NULL,
     status VARCHAR(15) NOT NULL,
     orderDate DATE NOT NULL,
 
@@ -73,6 +75,7 @@ CREATE TABLE Carts (
     userID INT NOT NULL,
 
     PRIMARY KEY(ID),
+    UNIQUE (userID),
     FOREIGN KEY (userID) REFERENCES Users(ID) ON DELETE CASCADE
 );
 

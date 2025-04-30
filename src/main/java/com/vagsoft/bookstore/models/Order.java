@@ -15,10 +15,10 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
-    private double totalAmount;
+    private Double totalAmount;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -35,14 +35,14 @@ public class Order {
         orderItems = new ArrayList<>();
     }
 
-    public Order(double totalAmount, Status status, Date orderDate) {
+    public Order(Double totalAmount, Status status, Date orderDate) {
         this.totalAmount = totalAmount;
         this.status = status;
         this.orderDate = orderDate;
         orderItems = new ArrayList<>();
     }
 
-    public Order(List<OrderItem> orderItems, Date orderDate, Status status, double totalAmount) {
+    public Order(List<OrderItem> orderItems, Date orderDate, Status status, Double totalAmount) {
         this.orderItems = orderItems;
         this.orderDate = orderDate;
         this.status = status;

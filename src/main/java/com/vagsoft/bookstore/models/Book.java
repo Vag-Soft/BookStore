@@ -1,19 +1,26 @@
 package com.vagsoft.bookstore.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Books")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
     private String title;
@@ -25,53 +32,19 @@ public class Book {
     private String description;
 
     @Column(nullable = false)
-    private int pages;
+    private Integer pages;
 
     @Column
-    private double price;
+    private Double price;
 
     @Column
-    private int availability;
+    private Integer availability;
 
     @Column(name = "ISBN", unique = true)
     private String isbn;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "bookID")
-    private List<Genre> genres;
-
-    public Book() {
-        genres = new ArrayList<>();
-    }
-
-    public Book(String title, String author, int pages) {
-        this.title = title;
-        this.author = author;
-        this.pages = pages;
-        genres = new ArrayList<>();
-    }
-
-    public Book(String title, String author, String description, int pages, double price, int availability, String isbn) {
-        this.title = title;
-        this.author = author;
-        this.description = description;
-        this.pages = pages;
-        this.price = price;
-        this.availability = availability;
-        this.isbn = isbn;
-        genres = new ArrayList<>();
-    }
-
-    public Book(String title, String author, String description, int pages, double price, int availability, String isbn, List<Genre> genres) {
-        this.title = title;
-        this.author = author;
-        this.description = description;
-        this.pages = pages;
-        this.price = price;
-        this.availability = availability;
-        this.isbn = isbn;
-        this.genres = genres;
-    }
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Genre> genres = new ArrayList<>();
 
     public void addGenre(Genre genre) {
         genres.add(genre);

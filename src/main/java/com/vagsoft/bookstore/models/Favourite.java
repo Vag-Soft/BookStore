@@ -10,15 +10,15 @@ public class Favourite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private int id;
+    private Integer id;
 
     @Column(nullable = false)
-    private int bookID;
+    private Integer bookID;
 
     public Favourite() {
     }
 
-    public Favourite(int bookID) {
+    public Favourite(Integer bookID) {
         this.bookID = bookID;
     }
 }
