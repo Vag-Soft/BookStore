@@ -1,20 +1,12 @@
 package com.vagsoft.bookstore.repositories;
 
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.models.Book;
-import com.vagsoft.bookstore.models.Genre;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository class for accessing book data

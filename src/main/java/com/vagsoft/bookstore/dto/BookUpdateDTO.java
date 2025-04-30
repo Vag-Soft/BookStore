@@ -1,7 +1,5 @@
 package com.vagsoft.bookstore.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.vagsoft.bookstore.models.Genre;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

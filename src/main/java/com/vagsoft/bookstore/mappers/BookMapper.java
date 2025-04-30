@@ -3,7 +3,6 @@ package com.vagsoft.bookstore.mappers;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.BookWriteDTO;
-import com.vagsoft.bookstore.dto.GenreDTO;
 import com.vagsoft.bookstore.models.Book;
 import com.vagsoft.bookstore.models.Genre;
 import org.mapstruct.*;

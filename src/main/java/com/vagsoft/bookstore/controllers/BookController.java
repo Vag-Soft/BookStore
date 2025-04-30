@@ -6,21 +6,18 @@ import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.BookWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
-import com.vagsoft.bookstore.models.Book;
 import com.vagsoft.bookstore.services.BookService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import jakarta.websocket.server.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -114,6 +111,7 @@ public class BookController {
      * @param bookID the ID of the book to be deleted
      * @return a ResponseEntity with no content
      */
+    @ApiResponse(responseCode = "204")
     @DeleteMapping(path = "/{bookID}")
     public ResponseEntity<Void> deleteBookByID(@PathVariable @Positive Long bookID) {
         log.info("DELETE /books/{bookID}: bookID={}", bookID);

@@ -3,13 +3,10 @@ package com.vagsoft.bookstore.services;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.BookWriteDTO;
-import com.vagsoft.bookstore.dto.GenreDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.mappers.BookMapper;
 import com.vagsoft.bookstore.models.Book;
-import com.vagsoft.bookstore.models.Genre;
 import com.vagsoft.bookstore.repositories.BookRepository;
-import jakarta.websocket.server.PathParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Optional;
 
 /**

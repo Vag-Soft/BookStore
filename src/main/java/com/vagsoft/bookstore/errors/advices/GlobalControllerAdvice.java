@@ -1,6 +1,5 @@
 package com.vagsoft.bookstore.errors.advices;
 
-import com.vagsoft.bookstore.controllers.BookController;
 import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import jakarta.validation.ConstraintViolationException;
