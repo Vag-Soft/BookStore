@@ -16,10 +16,19 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.util.stream.Collectors;
 
+/**
+ * Global controller advice that handles exceptions
+ */
 @RestControllerAdvice
 public class GlobalControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(GlobalControllerAdvice.class);
 
+    /**
+     * Handles argument exceptions
+     *
+     * @param ex exception to handle of type {@link ConstraintViolationException}, {@link MethodArgumentTypeMismatchException}, {@link IllegalArgumentException}
+     * @return a {@link ProblemDetail} with the error details
+     */
     @ExceptionHandler({ConstraintViolationException.class, MethodArgumentTypeMismatchException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleArgumentExceptions(Exception ex) {
@@ -30,6 +39,12 @@ public class GlobalControllerAdvice {
         return problemDetail;
     }
 
+    /**
+     * Handles validation exceptions
+     *
+     * @param ex the {@link MethodArgumentNotValidException} to handle
+     * @return a {@link ProblemDetail} with the error details
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
@@ -45,6 +60,12 @@ public class GlobalControllerAdvice {
         return problemDetail;
     }
 
+    /**
+     * Handles book creation exceptions
+     *
+     * @param ex the {@link BookCreationException} to handle
+     * @return a {@link ProblemDetail} with the error details
+     */
     @ExceptionHandler(BookCreationException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ProblemDetail handleBookCreationException(BookCreationException ex) {
@@ -55,6 +76,12 @@ public class GlobalControllerAdvice {
         return problemDetail;
     }
 
+    /**
+     * Handles book not found exceptions
+     *
+     * @param ex the {@link BookNotFoundException} to handle
+     * @return a {@link ProblemDetail} with the error details
+     */
     @ExceptionHandler(BookNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleBookNotFoundException(BookNotFoundException ex) {
@@ -65,6 +92,12 @@ public class GlobalControllerAdvice {
         return problemDetail;
     }
 
+    /**
+     * Handles other exceptions
+     *
+     * @param ex the {@link Exception} to handle
+     * @return a {@link ProblemDetail} with the error details
+     */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ProblemDetail handleException(Exception ex) {

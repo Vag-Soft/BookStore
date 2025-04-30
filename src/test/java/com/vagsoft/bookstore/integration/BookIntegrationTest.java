@@ -20,6 +20,7 @@ import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.lang.annotation.Documented;
 import java.net.URI;
 import java.util.*;
 
@@ -300,7 +301,6 @@ public class BookIntegrationTest {
         Optional<BookReadDTO> foundBook = bookService.getBookByID(-1);
         assertFalse(foundBook.isPresent());
     }
-
 
     @Test
     @DisplayName("DELETE /books/{bookID} - Success")
