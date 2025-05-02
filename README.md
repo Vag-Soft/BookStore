@@ -27,9 +27,10 @@ An Online Bookstore Application designed for browsing, ordering and managing boo
 4. Send HTTP requests at ```http://localhost:8080```.
 5. Check the API docs with Swagger UI at ```http://localhost:8080/swagger-ui/index.html```.
 
-## Database schema design
-![BookStore](https://github.com/user-attachments/assets/7b89aeef-96d8-4ff0-bd61-542f3fd31a2c)
-
 ## Useful Information
+- Checkout to the testing branch before running the application for testing purposes.
 - The database will be populated with some initial data the first time the application is executed (look at [this file](src/main/resources/db/migrations/dev/V1_0_1__initial_data.sql)).
 - The unit and integration tests use another DB instance that is set up automatically and temporarily when the tests are run.
+  
+## Database schema design
+![BookStore](https://github.com/user-attachments/assets/7b89aeef-96d8-4ff0-bd61-542f3fd31a2c)
