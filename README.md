@@ -21,7 +21,7 @@ An Online Bookstore Application designed for browsing, ordering and managing boo
 4. Run the BookStoreApplication class in src/main/java/com/vagsoft/bookstore/BookStoreApplication.java.
 
 ## Usage
-1. Launch DockerDesktop
+1. Launch Docker Desktop
 2. Run ```docker compose up -d``` in the IntelliJ terminal, to start up the PostgreSQL docker container.
 3. Run the BookStoreApplication class in src/main/java/com/vagsoft/bookstore/BookStoreApplication.java.
 4. Send HTTP requests at ```http://localhost:8080```.
@@ -32,4 +32,4 @@ An Online Bookstore Application designed for browsing, ordering and managing boo
 
 ## Useful Information
 - The database will be populated with some initial data the first time the application is executed (look at [this file](src/main/resources/db/migrations/dev/V1_0_1__initial_data.sql)).
-- The unit and integration tests use another db instance that is set up automatically and temporarily when the tests are run.
+- The unit and integration tests use another DB instance that is set up automatically and temporarily when the tests are run.
