@@ -25,7 +25,7 @@ CREATE TABLE Genres (
 
 CREATE TABLE Users (
     ID SERIAL,
-    email VARCHAR(63) NOT NULL,
+    email VARCHAR(320) NOT NULL,
     username VARCHAR(31) NOT NULL,
     hashPassword VARCHAR(63) NOT NULL,
     role VARCHAR(15) NOT NULL,
