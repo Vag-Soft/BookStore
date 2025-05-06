@@ -16,7 +16,7 @@ public class GenreDTO {
     Integer id;
 
     @NotBlank(message = "genre must not be blank")
-    @Size(max = 32, message = "genre must be less than 32 characters")
+    @Size(max = 31, message = "genre must be less than 32 characters")
     private String genre;
 
     public GenreDTO(String genre) {

@@ -15,10 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookUpdateDTO {
-    @Size(max = 64, message = "title must be less than 64 characters")
+    @Size(max = 63, message = "title must be less than 64 characters")
     private String title;
 
-    @Size(max = 32, message = "author must be less than 32 characters")
+    @Size(max = 31, message = "author must be less than 32 characters")
     private String author;
 
     private String description;
@@ -32,7 +32,7 @@ public class BookUpdateDTO {
     @PositiveOrZero(message = "availability must be greater than or equal to 0")
     private Integer availability;
 
-    @Size(max = 32, message = "isbn must be less than 32 characters")
+    @Size(max = 31, message = "isbn must be less than 32 characters")
     private String isbn;
 
     @Valid

@@ -16,11 +16,11 @@ import java.util.List;
 @AllArgsConstructor
 public class BookWriteDTO {
     @NotBlank(message = "title must not be blank")
-    @Size(max = 64, message = "title must be less than 64 characters")
+    @Size(max = 61, message = "title must be less than 64 characters")
     private String title;
 
     @NotBlank(message = "author must not be blank")
-    @Size(max = 32, message = "author must be less than 32 characters")
+    @Size(max = 31, message = "author must be less than 32 characters")
     private String author;
 
     private String description;
@@ -35,7 +35,7 @@ public class BookWriteDTO {
     @PositiveOrZero(message = "availability must be greater than or equal to 0")
     private Integer availability;
 
-    @Size(max = 32, message = "isbn must be less than 32 characters")
+    @Size(max = 31, message = "isbn must be less than 32 characters")
     private String isbn;
 
     @Valid
