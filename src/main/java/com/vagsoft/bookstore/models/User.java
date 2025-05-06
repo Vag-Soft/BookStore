@@ -45,7 +45,18 @@ public class User {
 
     @Column(name = "signupdate", nullable = false)
     private LocalDate signupDate;
-//
+
+    public User(String email, String username, String hashPassword, Role role, String firstName, String lastName, LocalDate signupDate) {
+        this.email = email;
+        this.username = username;
+        this.hashPassword = hashPassword;
+        this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.signupDate = signupDate;
+    }
+
+    //
 //    @OneToOne
 //    @JoinColumn(name = "userID")
 //    private Cart cart;
