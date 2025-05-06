@@ -2,13 +2,20 @@ package com.vagsoft.bookstore.models;
 
 import com.vagsoft.bookstore.models.enums.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "Users")
 public class User {
@@ -23,40 +30,23 @@ public class User {
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "hashpassword", nullable = false)
     private String hashPassword;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
+    @Column(name = "firstname", nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(name = "lastname", nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
-    private Date signupDate;
+    @Column(name = "signupdate", nullable = false)
+    private LocalDate signupDate;
 
-    @OneToOne
-    @JoinColumn(name = "userID")
-    private Cart cart;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "userID")
-    private List<Order> orders;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "userID")
-    private List<Favourite> favourites;
-
-    public User() {
-        orders = new ArrayList<>();
-        favourites = new ArrayList<>();
-    }
-
-    public User(String email, String username, String hashPassword, Role role, String firstName, String lastName, Date signupDate) {
+    public User(String email, String username, String hashPassword, Role role, String firstName, String lastName, LocalDate signupDate) {
         this.email = email;
         this.username = username;
         this.hashPassword = hashPassword;
@@ -64,30 +54,28 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.signupDate = signupDate;
-        orders = new ArrayList<>();
-        favourites = new ArrayList<>();
     }
 
-    public User(List<Favourite> favourites, List<Order> orders, Cart cart, Date signupDate, String lastName, String firstName, Role role, String hashPassword, String username, String email) {
-        this.cart = cart;
-        this.signupDate = signupDate;
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.role = role;
-        this.hashPassword = hashPassword;
-        this.username = username;
-        this.email = email;
-        this.favourites = favourites;
-        this.orders = orders;
-    }
-
-    public void addOrder(Order order) {
-        orders.add(order);
-    }
-
-    public void addFavourite(Favourite favourite) {
-        favourites.add(favourite);
-    }
+    //
+//    @OneToOne
+//    @JoinColumn(name = "userID")
+//    private Cart cart;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name = "userID")
+//    private List<Order> orders = new ArrayList<>();
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name = "userID")
+//    private List<Favourite> favourites = new ArrayList<>();
+//
+//    public void addOrder(Order order) {
+//        orders.add(order);
+//    }
+//
+//    public void addFavourite(Favourite favourite) {
+//        favourites.add(favourite);
+//    }
 
 
 }

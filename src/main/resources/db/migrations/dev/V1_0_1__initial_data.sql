@@ -10,10 +10,10 @@ VALUES
 
 INSERT INTO Users (email, username, hashPassword, role, firstName, lastName, signupDate)
 VALUES
-    ('jane.smith@example.com', 'janesmith', 'hashed_password_value', 'User', 'Jane', 'Smith', '2022-01-05'),
-    ('bob.johnson@example.com', 'bobjohnson', 'hashed_password_value', 'Admin', 'Bob', 'Johnson', '2022-01-10'),
-    ('alice.williams@example.com', 'alicewilliams', 'hashed_password_value', 'User', 'Alice', 'Williams', '2022-01-15'),
-    ('mike.davis@example.com', 'mikedavis', 'hashed_password_value', 'Admin', 'Mike', 'Davis', '2022-01-20');
+    ('jane.smith@example.com', 'janesmith', 'hashed_password_value', 'USER', 'Jane', 'Smith', '2022-01-05'),
+    ('bob.johnson@example.com', 'bobjohnson', 'hashed_password_value', 'ADMIN', 'Bob', 'Johnson', '2022-01-10'),
+    ('alice.williams@example.com', 'alicewilliams', 'hashed_password_value', 'USER', 'Alice', 'Williams', '2022-01-15'),
+    ('mike.davis@example.com', 'mikedavis', 'hashed_password_value', 'ADMIN', 'Mike', 'Davis', '2022-01-20');
 
 
 INSERT INTO Favourites (userID, bookID)

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
     /**
-     * Retrieves a list of books filtered by title, genre, author, description, minPrice and maxPrice
+     * Retrieves a list of books filtered by the specified parameters
      *
      * @param title the title of the books to search for (optional)
      * @param genre the genre of the books to search for (optional)

@@ -37,14 +37,12 @@ class BookControllerTest {
     private BookService bookService;
     @Autowired
     private MockMvc mockMvc;
-
+    @Autowired
     private ObjectMapper objectMapper;
 
     private List<BookReadDTO> storedBooks;
     @BeforeEach
     void setUp() {
-        objectMapper = new ObjectMapper();
-
         storedBooks = new ArrayList<>();
         storedBooks.add(new BookReadDTO(1, "title", "author", "description", 1, 1.0, 1, "isbn", new ArrayList<>()));
         storedBooks.add(new BookReadDTO(2, "title2", "author2", "description2", 2, 2.0, 2, "isbn2", List.of(new GenreDTO(1, "genre1"), new GenreDTO(2, "genre2"))));

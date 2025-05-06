@@ -1,0 +1,39 @@
+package com.vagsoft.bookstore.repositories;
+
+import com.vagsoft.bookstore.models.Book;
+import com.vagsoft.bookstore.models.User;
+import com.vagsoft.bookstore.models.enums.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+/**
+ * Repository class for accessing user data
+ */
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
+    /**
+     * Retrieves a list of users filtered by the specified parameters
+     *
+     * @param username the username of the users to search for (optional)
+     * @param email the email of the users to search for (optional)
+     * @param role the role of the users to search for (optional)
+     * @param firstName the first name of the users to search for (optional)
+     * @param lastName the last name of the users to search for (optional)
+     * @param pageable the pagination information (optional)
+     * @return a page of users
+     */
+    @Query("""
+            SELECT u
+            FROM User u
+            WHERE (:username IS NULL OR u.username ILIKE %:username%)
+            AND (:email IS NULL OR u.email ILIKE %:email%)
+            AND (:role IS NULL OR u.role = :role)
+            AND (:firstName IS NULL OR u.firstName ILIKE %:firstName%)
+            AND (:lastName IS NULL OR u.lastName ILIKE %:lastName%)
+            """)
+    public Page<User> findUsers(String username, String email, Role role, String firstName, String lastName, Pageable pageable);
+
+}

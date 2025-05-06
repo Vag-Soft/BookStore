@@ -49,7 +49,7 @@ class BookServiceTest {
     }
 
     @Test
-    @DisplayName("getBooks - Success No Filters")
+    @DisplayName("getBooks() - Success No Filters")
     void getBooksNoFilters() {
         Pageable pageable = PageRequest.of(0, 20);
         Page<Book> page = new PageImpl<>(storedBooks, pageable, 2);
@@ -65,7 +65,7 @@ class BookServiceTest {
     }
 
     @Test
-    @DisplayName("getBooks - Success With Filters")
+    @DisplayName("getBooks() - Success With Filters")
     void getBooksWithFilters() {
         Pageable pageable = PageRequest.of(0, 20);
         Page<Book> page = new PageImpl<>(List.of(storedBooks.getLast()), pageable, 2);
@@ -80,7 +80,7 @@ class BookServiceTest {
     }
 
     @Test
-    @DisplayName("addBook - Success")
+    @DisplayName("addBook() - Success")
     void addBook() {
         // Create a BookCreateDTO object with some sample data
         BookWriteDTO bookToAdd = new BookWriteDTO();
