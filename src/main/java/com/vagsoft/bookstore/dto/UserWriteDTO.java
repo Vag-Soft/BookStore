@@ -11,11 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Builder

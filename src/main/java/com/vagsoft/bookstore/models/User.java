@@ -7,8 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -43,7 +44,7 @@ public class User {
     private String lastName;
 
     @Column(name = "signupdate", nullable = false)
-    private Date signupDate;
+    private LocalDate signupDate;
 //
 //    @OneToOne
 //    @JoinColumn(name = "userID")

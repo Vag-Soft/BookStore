@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +30,7 @@ public class GlobalControllerAdvice {
      * @param ex exception to handle of type {@link ConstraintViolationException}, {@link MethodArgumentTypeMismatchException}, {@link IllegalArgumentException}
      * @return a {@link ProblemDetail} with the error details
      */
-    @ExceptionHandler({ConstraintViolationException.class, MethodArgumentTypeMismatchException.class, IllegalArgumentException.class})
+    @ExceptionHandler({ConstraintViolationException.class, IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleArgumentExceptions(Exception ex) {
         log.error("ArgumentException", ex);
@@ -56,6 +58,24 @@ public class GlobalControllerAdvice {
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errorMessage);
         problemDetail.setTitle("Invalid request body");
+        return problemDetail;
+    }
+
+    /**
+     * Handles type mismatch exceptions
+     *
+     * @param ex the {@link MethodArgumentTypeMismatchException} to handle
+     * @return a {@link ProblemDetail} with the error details
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        log.error("ArgumentException", ex);
+
+        String errorMessage = "'" + ex.getPropertyName() + "' should be of type " + Arrays.toString(Objects.requireNonNull(ex.getRequiredType()).getEnumConstants());
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errorMessage);
+        problemDetail.setTitle("Invalid request parameters");
         return problemDetail;
     }
 

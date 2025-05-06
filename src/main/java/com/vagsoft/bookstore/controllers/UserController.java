@@ -6,7 +6,11 @@ import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.services.BookService;
 import com.vagsoft.bookstore.services.UserService;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -51,7 +55,6 @@ public class UserController {
             @RequestParam(name="firstName", required=false) @NullOrNotBlank String firstName,
             @RequestParam(name="lastName", required=false) @NullOrNotBlank String lastName,
             Pageable pageable) {
-
         log.info("GET /users: username={}, email={}, role={}, firstName={}, lastName={}, pageable={}", username, email, role, firstName, lastName, pageable);
 
         return ResponseEntity.ok(userService.getUsers(username, email, role, firstName, lastName, pageable));

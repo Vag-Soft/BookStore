@@ -10,7 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @Builder
@@ -25,5 +26,5 @@ public class UserReadDTO {
     private Role role;
     private String firstName;
     private String lastName;
-    private Date signupDate;
+    private LocalDate signupDate;
 }

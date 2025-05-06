@@ -31,7 +31,7 @@ public interface UserMapper {
      * @param user the User entity to be converted
      * @return the converted UserReadDTO
      */
-    UserReadDTO UserToDto(User user);
+    UserReadDTO UserToReadDto(User user);
 
 
 
