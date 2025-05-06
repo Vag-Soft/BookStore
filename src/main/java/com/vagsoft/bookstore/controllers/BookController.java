@@ -35,7 +35,7 @@ public class BookController {
     }
 
     /**
-     * Retrieves a list of books filtered by title, genre, author, description, minPrice and maxPrice
+     * Retrieves a list of books filtered by the specified parameters
      *
      * @param title the title of the books search for (optional)
      * @param genre the genre of the books search for (optional)

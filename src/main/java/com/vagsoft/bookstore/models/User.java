@@ -29,41 +29,41 @@ public class User {
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "hashpassword", nullable = false)
     private String hashPassword;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
+    @Column(name = "firstname", nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(name = "lastname", nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(name = "signupdate", nullable = false)
     private Date signupDate;
-
-    @OneToOne
-    @JoinColumn(name = "userID")
-    private Cart cart;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "userID")
-    private List<Order> orders = new ArrayList<>();
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "userID")
-    private List<Favourite> favourites = new ArrayList<>();
-
-    public void addOrder(Order order) {
-        orders.add(order);
-    }
-
-    public void addFavourite(Favourite favourite) {
-        favourites.add(favourite);
-    }
+//
+//    @OneToOne
+//    @JoinColumn(name = "userID")
+//    private Cart cart;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name = "userID")
+//    private List<Order> orders = new ArrayList<>();
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+//    @JoinColumn(name = "userID")
+//    private List<Favourite> favourites = new ArrayList<>();
+//
+//    public void addOrder(Order order) {
+//        orders.add(order);
+//    }
+//
+//    public void addFavourite(Favourite favourite) {
+//        favourites.add(favourite);
+//    }
 
 
 }
