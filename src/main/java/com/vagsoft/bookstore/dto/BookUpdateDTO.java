@@ -26,7 +26,6 @@ public class BookUpdateDTO {
     @Size(max = 31, message = "author must be less than 32 characters")
     private String author;
 
-    @NullOrNotBlank
     private String description;
 
     @Positive(message = "pages must be greater than 0")
@@ -38,7 +37,6 @@ public class BookUpdateDTO {
     @PositiveOrZero(message = "availability must be greater than or equal to 0")
     private Integer availability;
 
-    @NullOrNotBlank
     @UniqueISBN
     @Size(max = 31, message = "isbn must be less than 32 characters")
     private String isbn;
