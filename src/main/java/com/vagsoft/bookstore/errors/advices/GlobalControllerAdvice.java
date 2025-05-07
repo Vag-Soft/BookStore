@@ -94,7 +94,7 @@ public class GlobalControllerAdvice {
     public ProblemDetail handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         log.error("TypeMismatchException", ex);
 
-        String errorMessage = "'" + ex.getPropertyName() + "' should be of type " + Arrays.toString(Objects.requireNonNull(ex.getRequiredType()).getEnumConstants());
+        String errorMessage = "'" + ex.getPropertyName() + "' has invalid type";
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errorMessage);
         problemDetail.setTitle("Invalid request parameters");
