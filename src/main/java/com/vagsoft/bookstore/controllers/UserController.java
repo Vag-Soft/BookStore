@@ -11,10 +11,7 @@ import com.vagsoft.bookstore.services.UserService;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -52,11 +49,11 @@ public class UserController {
      */
     @GetMapping
     public ResponseEntity<Page<UserReadDTO>> getUsers(
-            @RequestParam(name="username", required=false) @NullOrNotBlank String username,
-            @RequestParam(name="email", required=false) @NullOrNotBlank String email,
+            @RequestParam(name="username", required=false) @Size(max = 31, message = "username must be less than 32 characters") @NullOrNotBlank String username,
+            @RequestParam(name="email", required=false) @Size(max = 320, message = "email must be less than 321 characters") @NullOrNotBlank String email,
             @RequestParam(name="role", required=false) Role role,
-            @RequestParam(name="firstName", required=false) @NullOrNotBlank String firstName,
-            @RequestParam(name="lastName", required=false) @NullOrNotBlank String lastName,
+            @RequestParam(name="firstName", required=false) @Size(max = 31, message = "firstName must be less than 32 characters") @NullOrNotBlank String firstName,
+            @RequestParam(name="lastName", required=false) @Size(max = 31, message = "lastName must be less than 32 characters") @NullOrNotBlank String lastName,
             Pageable pageable) {
         log.info("GET /users: username={}, email={}, role={}, firstName={}, lastName={}, pageable={}", username, email, role, firstName, lastName, pageable);
 
