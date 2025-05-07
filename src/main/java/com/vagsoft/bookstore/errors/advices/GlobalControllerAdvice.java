@@ -2,6 +2,7 @@ package com.vagsoft.bookstore.errors.advices;
 
 import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
+import com.vagsoft.bookstore.errors.exceptions.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,18 +97,18 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles book not found exceptions
+     * Handles resource not found exceptions
      *
-     * @param ex the {@link BookNotFoundException} to handle
+     * @param ex the {@link ResourceNotFoundException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
-    @ExceptionHandler(BookNotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ProblemDetail handleBookNotFoundException(BookNotFoundException ex) {
-        log.error("BookNotFoundException", ex);
+    public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException ex) {
+        log.error("ResourceNotFoundException", ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problemDetail.setTitle("Book not found");
+        problemDetail.setTitle("Resource not found");
         return problemDetail;
     }
 

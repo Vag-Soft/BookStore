@@ -1,5 +1,6 @@
 package com.vagsoft.bookstore.dto;
 
+import com.vagsoft.bookstore.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.models.enums.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,21 +16,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserUpdateDTO {
+    @NullOrNotBlank
     @Size(max = 320, message = "email must be less than 321 characters")
     private String email;
 
+    @NullOrNotBlank
     @Size(max = 31, message = "username must be less than 32 characters")
     private String username;
 
+    @NullOrNotBlank
     @Size(max = 63, message = "password must be less than 64 characters")
     private String password;
 
     @Enumerated(EnumType.STRING) //TODO: check validation
     private Role role;
 
+    @NullOrNotBlank
     @Size(max = 31, message = "firstName must be less than 32 characters")
     private String firstName;
 
+    @NullOrNotBlank
     @Size(max = 31, message = "lastName must be less than 32 characters")
     private String lastName;
 }
