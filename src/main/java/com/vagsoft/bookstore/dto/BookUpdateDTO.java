@@ -1,6 +1,8 @@
 package com.vagsoft.bookstore.dto;
 
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
+import com.vagsoft.bookstore.annotations.UniqueGenresPerBook;
+import com.vagsoft.bookstore.annotations.UniqueISBN;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -37,9 +39,11 @@ public class BookUpdateDTO {
     private Integer availability;
 
     @NullOrNotBlank
+    @UniqueISBN
     @Size(max = 31, message = "isbn must be less than 32 characters")
     private String isbn;
 
     @Valid
+    @UniqueGenresPerBook
     private List<GenreDTO> genres = new ArrayList<>();
 }

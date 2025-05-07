@@ -3,6 +3,7 @@ package com.vagsoft.bookstore.mappers;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.BookWriteDTO;
+import com.vagsoft.bookstore.dto.GenreDTO;
 import com.vagsoft.bookstore.models.Book;
 import com.vagsoft.bookstore.models.Genre;
 import org.mapstruct.*;
@@ -90,13 +91,30 @@ public interface BookMapper {
     }
 
     /**
+     * Links the genre ids of the Book to the non null genre ids of the BookUpdateDTO,
+     * to be able to update the genres and avoide deletion
+     *
+     * @param genreDto the BookUpdateDTO that was used in the mapping
+     * @param book the Book entity that contains the genres
+     */
+    @BeforeMapping
+    default void linkGenreIDs(BookUpdateDTO genreDto, @MappingTarget Book book) {
+        for (GenreDTO dto : genreDto.getGenres()) {
+            if(dto.getId() == null)
+            {
+                dto.setId(book.getGenres().stream().filter(g -> g.getGenre().equals(dto.getGenre())).findFirst().get().getId());
+            }
+        }
+    }
+
+    /**
      * Links the books inside the genres of a Book entity with itself, after mapping
      *
      * @param dto the BookUpdateDTO that was used in the mapping
      * @param book the Book entity that contains the genres
      */
     @AfterMapping
-    default void linkGenres(BookUpdateDTO dto, @MappingTarget Book book) {
+    default void linkGenreBooks(BookUpdateDTO dto, @MappingTarget Book book) {
         for (Genre genre : book.getGenres()) {
             genre.setBook(book);
         }
@@ -119,4 +137,5 @@ public interface BookMapper {
     default Page<BookReadDTO> PageBookToPageDto(Page<Book> page) {
         return new PageImpl<>(ListBookToListDto(page.getContent()), page.getPageable(), page.getTotalElements());
     }
+
 }

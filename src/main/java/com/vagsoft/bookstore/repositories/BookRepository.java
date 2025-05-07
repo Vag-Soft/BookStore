@@ -44,4 +44,16 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
      * @return the number of books deleted (should be 1)
      */
     public Long deleteById(Long bookID);
+
+    /**
+     * Checks if a book with the given ISBN exists in the database
+     *
+     * @param isbn the ISBN of the book to be checked
+     * @return true if the book exists, false otherwise
+     */
+    public boolean existsByIsbn(String isbn);
+
+
+    @Query("SELECT b.id FROM Book b WHERE b.isbn = :isbn")
+    public Integer findIdByIsbn(String isbn);
 }

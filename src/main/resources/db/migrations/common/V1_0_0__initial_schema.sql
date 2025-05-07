@@ -8,7 +8,8 @@ CREATE TABLE Books (
     availability INT DEFAULT 0,
     ISBN VARCHAR(31),
 
-    PRIMARY KEY(ID)
+    PRIMARY KEY(ID),
+    UNIQUE (ISBN)
 );
 
 CREATE TABLE Genres (
@@ -17,7 +18,7 @@ CREATE TABLE Genres (
     genre VARCHAR(31),
 
     PRIMARY KEY(ID),
---    UNIQUE (bookID, genre),
+    UNIQUE (bookID, genre),
     FOREIGN KEY (bookID) REFERENCES Books(ID) ON DELETE CASCADE
 );
 
