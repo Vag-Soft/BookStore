@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -151,6 +152,7 @@ class BookControllerTest {
         BookReadDTO savedBook = new BookReadDTO(3,"title3", "author3", "description3", 3, 3.0, 3, "isbn3", List.of(new GenreDTO(3, "genre1")));
 
         when(bookService.addBook(newBook)).thenReturn(Optional.of(savedBook));
+        when(bookRepository.existsByIsbn("isbn3")).thenReturn(false);
 
         String newBookString = objectMapper.writeValueAsString(newBook);
 
@@ -178,6 +180,7 @@ class BookControllerTest {
         BookReadDTO bookOutput = storedBooks.getFirst();
         when(bookService.getBookByID(1)).thenReturn(Optional.ofNullable(bookOutput));
 
+        assertNotNull(bookOutput);
         mockMvc.perform(get("/books/{bookID}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json"))
@@ -221,6 +224,7 @@ class BookControllerTest {
         BookReadDTO bookOutput = storedBooks.getFirst();
         bookOutput.setTitle(bookUpdateDTO.getTitle());
         bookOutput.setGenres(bookUpdateDTO.getGenres());
+
         when(bookService.updateBookByID(1, bookUpdateDTO)).thenReturn(Optional.of(bookOutput));
 
         mockMvc.perform(put("/books/{bookID}", 1)

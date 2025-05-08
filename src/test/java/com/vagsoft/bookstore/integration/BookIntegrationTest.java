@@ -211,7 +211,7 @@ public class BookIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /books/999} - Not Found")
+    @DisplayName("GET /books/999 - Not Found")
     void getBookByIDNotFound() throws Exception {
         ResponseEntity<BookReadDTO> response = client.getForEntity("/books/999", BookReadDTO.class);
 
@@ -219,7 +219,7 @@ public class BookIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /books/-1} - Invalid ID")
+    @DisplayName("GET /books/-1 - Invalid ID")
     void getBookByIDInvalid() throws Exception {
         ResponseEntity<BookReadDTO> response = client.getForEntity("/books/-1", BookReadDTO.class);
 

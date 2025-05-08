@@ -21,7 +21,6 @@ public class UserReadDTO {
     private Integer id;
     private String email;
     private String username;
-    private String hashPassword;
     @Enumerated(EnumType.STRING) //TODO: check validation
     private Role role;
     private String firstName;
