@@ -64,7 +64,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("GET /users - Success No Filters")
-    public void getUsersNoFilters() throws Exception {
+    void getUsersNoFilters() throws Exception {
         URI uri = UriComponentsBuilder.fromUriString("/users")
                 .build().encode().toUri();
 
@@ -85,7 +85,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("GET /users - Success With Filters")
-    public void getUsersWithFilters() throws Exception {
+    void getUsersWithFilters() throws Exception {
         URI uri = UriComponentsBuilder.fromUriString("/users")
                 .queryParam("email", "johnson@")
                 .queryParam("role", "ADMIN")
@@ -102,5 +102,31 @@ public class UserIntegrationTest {
 
         UserReadDTO secondUser = response.getBody().getContent().getFirst();
         assertEquals(userMapper.UserToReadDto(user2), secondUser);
+    }
+
+    @Test
+    @DisplayName("GET /users/{userID} - Success")
+    void getUserByIDFound() throws Exception {
+        ResponseEntity<UserReadDTO> response = client.getForEntity("/users/" + user1.getId(), UserReadDTO.class);
+
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(userMapper.UserToReadDto(user1), response.getBody());
+    }
+
+    @Test
+    @DisplayName("GET /users/999 - Not Found")
+    void getUserByIDNotFound() throws Exception {
+        ResponseEntity<UserReadDTO> response = client.getForEntity("/users/999", UserReadDTO.class);
+
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("GET /users/-1 - Invalid ID")
+    void getUserByIDInvalid() throws Exception {
+        ResponseEntity<UserReadDTO> response = client.getForEntity("/users/-1", UserReadDTO.class);
+
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
     }
 }

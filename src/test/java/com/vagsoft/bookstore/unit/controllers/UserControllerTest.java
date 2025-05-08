@@ -24,8 +24,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -113,5 +115,43 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.content[0].firstName").value("Jane"))
                 .andExpect(jsonPath("$.content[0].lastName").value("Smith"))
                 .andExpect(jsonPath("$.content[0].signupDate").value("2022-01-05"));
+    }
+
+
+    @Test
+    @DisplayName("GET /users/1 - Success")
+    void getUserByIDFound() throws Exception {
+        UserReadDTO userOutput = storedUsers.getFirst();
+        when(userService.getUserByID(1)).thenReturn(Optional.ofNullable(userOutput));
+
+        assertNotNull(userOutput);
+        mockMvc.perform(get("/users/{userID}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+
+                .andExpect(jsonPath("$.id").value(userOutput.getId()))
+                .andExpect(jsonPath("$.username").value(userOutput.getUsername()))
+                .andExpect(jsonPath("$.hashPassword").value(userOutput.getHashPassword()))
+                .andExpect(jsonPath("$.email").value(userOutput.getEmail()))
+                .andExpect(jsonPath("$.role").value(userOutput.getRole().toString()))
+                .andExpect(jsonPath("$.firstName").value(userOutput.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(userOutput.getLastName()))
+                .andExpect(jsonPath("$.signupDate").value(userOutput.getSignupDate().toString()));
+    }
+
+    @Test
+    @DisplayName("GET /users/999} - Not Found")
+    void getUserByIDNotFound() throws Exception {
+        when(userService.getUserByID(999)).thenReturn(Optional.empty());
+
+        mockMvc.perform(get("/users/{userID}", 999))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("GET /users/-1} - Invalid ID")
+    void getUserByIDInvalid() throws Exception {
+        mockMvc.perform(get("/users/{userID}", -1))
+                .andExpect(status().isBadRequest());
     }
 }

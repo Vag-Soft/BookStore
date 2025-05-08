@@ -27,8 +27,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -78,5 +79,34 @@ class UserServiceTest {
 
         assertEquals(1, result.getContent().size());
         assertEquals(userMapper.UserToReadDto(storedUsers.getFirst()), result.getContent().getFirst());
+    }
+
+    @Test
+    @DisplayName("getUserByID(1) - Success")
+    void getUserByIDFound() {
+        when(userRepository.findById(1)).thenReturn(Optional.of(storedUsers.getFirst()));
+
+        Optional<UserReadDTO> result = userService.getUserByID(1);
+
+        assertFalse(result.isEmpty());
+        assertEquals(userMapper.UserToReadDto(storedUsers.getFirst()), result.get());
+    }
+
+    @Test
+    @DisplayName("getUserByID(999) - Not Found")
+    void getUserByIDNotFound() {
+        when(userRepository.findById(999)).thenReturn(Optional.empty());
+
+        Optional<UserReadDTO> result = userService.getUserByID(999);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("getUserByID(-1) - Invalid ID")
+    void getUserByIDInvalid() {
+        Optional<UserReadDTO> result = userService.getUserByID(-1);
+
+        assertTrue(result.isEmpty());
     }
 }
