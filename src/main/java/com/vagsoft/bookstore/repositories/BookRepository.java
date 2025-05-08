@@ -53,7 +53,4 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
      */
     public boolean existsByIsbn(String isbn);
 
-
-    @Query("SELECT b.id FROM Book b WHERE b.isbn = :isbn")
-    public Integer findIdByIsbn(String isbn);
 }
