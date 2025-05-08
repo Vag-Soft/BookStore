@@ -1,6 +1,8 @@
 package com.vagsoft.bookstore.unit.services;
 
 import com.vagsoft.bookstore.dto.UserReadDTO;
+import com.vagsoft.bookstore.dto.UserUpdateDTO;
+import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.mappers.BookMapper;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.models.Book;
@@ -108,5 +110,45 @@ class UserServiceTest {
         Optional<UserReadDTO> result = userService.getUserByID(-1);
 
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("updateUserByID(1) - Success")
+    void updateUserByIDFound() {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        userUpdateDTO.setRole(Role.ADMIN);
+
+        when(userRepository.findById(1)).thenReturn(Optional.of(storedUsers.getFirst()));
+
+        User updatedUser = storedUsers.getFirst();
+        updatedUser.setUsername(userUpdateDTO.getUsername());
+        updatedUser.setRole(userUpdateDTO.getRole());
+
+        when(userRepository.save(updatedUser)).thenReturn(updatedUser);
+
+        Optional<UserReadDTO> result = userService.updateUserByID(1, userUpdateDTO);
+        assertFalse(result.isEmpty());
+        assertEquals(userMapper.UserToReadDto(updatedUser), result.get());
+    }
+
+    @Test
+    @DisplayName("updateUserByID(999) - Not Found")
+    void updateUserByIDNotFound() {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        userUpdateDTO.setRole(Role.ADMIN);
+
+        assertThrows(UserNotFoundException.class, () -> userService.updateUserByID(999, userUpdateDTO));
+    }
+
+    @Test
+    @DisplayName("updateUserByID(-1) - Invalid ID")
+    void updateUserByIDInvalid() {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        userUpdateDTO.setRole(Role.ADMIN);
+
+        assertThrows(UserNotFoundException.class, () -> userService.updateUserByID(-1, userUpdateDTO));
     }
 }

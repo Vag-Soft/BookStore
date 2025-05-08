@@ -3,6 +3,8 @@ package com.vagsoft.bookstore.services;
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
+import com.vagsoft.bookstore.dto.UserUpdateDTO;
+import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.models.Book;
 import com.vagsoft.bookstore.models.User;
@@ -59,5 +61,24 @@ public class UserService {
     public Optional<UserReadDTO> getUserByID(Integer userID) {
         Optional<User> foundUser = userRespository.findById(userID);
         return foundUser.map(userMapper::UserToReadDto);
+    }
+
+    /**
+     * Updates a user by its ID with the given user information
+     *
+     * @param userID the ID of the user to be updated
+     * @param userUpdateDTO the new user information
+     * @return the updated user
+     */
+    public Optional<UserReadDTO> updateUserByID(Integer userID, UserUpdateDTO userUpdateDTO) {
+
+        Optional<User> foundUser = userRespository.findById(userID);
+        if (foundUser.isEmpty()) throw new UserNotFoundException("No user found with the given ID");
+
+        userMapper.updateUserFromDto(userUpdateDTO, foundUser.get());//TODO: calculate hashPassword
+
+        User updatedUser = userRespository.save(foundUser.get());
+
+        return Optional.of(userMapper.UserToReadDto(updatedUser));
     }
 }

@@ -3,6 +3,7 @@ package com.vagsoft.bookstore.controllers;
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
+import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.models.enums.Role;
@@ -60,8 +61,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsers(username, email, role, firstName, lastName, pageable));
     }
 
-
-
     /**
      * Retrieves a user by its ID
      *
@@ -75,4 +74,20 @@ public class UserController {
         Optional<UserReadDTO> foundUser = userService.getUserByID(userID);
         return ResponseEntity.ok(foundUser.orElseThrow(() -> new UserNotFoundException("No user found with the given ID")));
     }
+
+    /**
+     * Updates a user by its ID with the given user information
+     *
+     * @param userID the ID of the user to be updated
+     * @param userUpdateDTO the new user information
+     * @return the updated user
+     */
+    @PutMapping(path = "/{userID}")
+    public ResponseEntity<UserReadDTO> updateUserByID(@PathVariable @Positive Integer userID, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
+        log.info("PUT /users/{userID}: userID={}, userUpdateDTO={}", userID, userUpdateDTO);
+
+        Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
+        return ResponseEntity.ok(updatedUser.orElseThrow(() -> new UserNotFoundException("No user found with the given ID")));
+    }
+
 }

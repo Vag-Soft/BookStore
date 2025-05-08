@@ -227,7 +227,7 @@ public class BookIntegrationTest {
     }
 
     @Test
-    @DisplayName("PUT /books/1 - Success")
+    @DisplayName("PUT /books/{bookID} - Success")
     void updateBookByIDFound() throws Exception{
         BookUpdateDTO bookUpdateDTO = new BookUpdateDTO();
         bookUpdateDTO.setTitle("title10");

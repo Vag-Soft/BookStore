@@ -6,6 +6,7 @@ import com.vagsoft.bookstore.controllers.UserController;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.GenreDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
+import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.services.BookService;
 import com.vagsoft.bookstore.services.UserService;
@@ -151,6 +152,64 @@ class UserControllerTest {
     @DisplayName("GET /users/-1} - Invalid ID")
     void getUserByIDInvalid() throws Exception {
         mockMvc.perform(get("/users/{userID}", -1))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @DisplayName("PUT /users/1 - Success")
+    void updateUserByIDFound() throws Exception {
+
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        userUpdateDTO.setRole(Role.ADMIN);
+
+        UserReadDTO userOutput = storedUsers.getFirst();
+        userOutput.setUsername(userUpdateDTO.getUsername());
+        userOutput.setRole(userUpdateDTO.getRole());
+
+        when(userService.updateUserByID(1, userUpdateDTO)).thenReturn(Optional.of(userOutput));
+
+        mockMvc.perform(put("/users/{userID}", 1)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(userUpdateDTO)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+
+                .andExpect(jsonPath("$.id").value(userOutput.getId()))
+                .andExpect(jsonPath("$.username").value(userUpdateDTO.getUsername()))
+                .andExpect(jsonPath("$.email").value(userOutput.getEmail()))
+                .andExpect(jsonPath("$.role").value(userUpdateDTO.getRole().toString()))
+                .andExpect(jsonPath("$.firstName").value(userOutput.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(userOutput.getLastName()))
+                .andExpect(jsonPath("$.signupDate").value(userOutput.getSignupDate().toString()));
+    }
+
+    @Test
+    @DisplayName("PUT /users/999 - Not Found")
+    void updateUserByIDNotFound() throws Exception {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        userUpdateDTO.setRole(Role.ADMIN);
+
+        when(userService.updateUserByID(999, userUpdateDTO)).thenReturn(Optional.empty());
+
+        mockMvc.perform(put("/users/{userID}", 999)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(userUpdateDTO)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("PUT /users/-1 - Invalid ID")
+    void updateUserByIDInvalid() throws Exception {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        userUpdateDTO.setRole(Role.ADMIN);
+
+        mockMvc.perform(put("/users/{userID}", -1)
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(userUpdateDTO)))
                 .andExpect(status().isBadRequest());
     }
 }
