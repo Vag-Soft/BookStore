@@ -49,8 +49,8 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         storedUsers = new ArrayList<>();
-        storedUsers.add(new UserReadDTO(1, "jane.smith@example.com", "janesmith", "hashed_password_value", Role.USER, "Jane", "Smith", LocalDate.parse("2022-01-05")));
-        storedUsers.add(new UserReadDTO(2, "bob.johnson@example.com", "bobjohnson", "hashed_password_value", Role.ADMIN, "Bob", "Johnson", LocalDate.parse("2022-01-10")));
+        storedUsers.add(new UserReadDTO(1, "jane.smith@example.com", "janesmith", Role.USER, "Jane", "Smith", LocalDate.parse("2022-01-05")));
+        storedUsers.add(new UserReadDTO(2, "bob.johnson@example.com", "bobjohnson", Role.ADMIN, "Bob", "Johnson", LocalDate.parse("2022-01-10")));
     }
 
     @Test
@@ -131,7 +131,6 @@ class UserControllerTest {
 
                 .andExpect(jsonPath("$.id").value(userOutput.getId()))
                 .andExpect(jsonPath("$.username").value(userOutput.getUsername()))
-                .andExpect(jsonPath("$.hashPassword").value(userOutput.getHashPassword()))
                 .andExpect(jsonPath("$.email").value(userOutput.getEmail()))
                 .andExpect(jsonPath("$.role").value(userOutput.getRole().toString()))
                 .andExpect(jsonPath("$.firstName").value(userOutput.getFirstName()))
