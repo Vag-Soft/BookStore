@@ -6,6 +6,7 @@ import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.BookWriteDTO;
 import com.vagsoft.bookstore.dto.GenreDTO;
+import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.services.BookService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class BookControllerTest {
     @MockitoBean
     private BookService bookService;
+    @MockitoBean
+    private BookRepository bookRepository;
     @Autowired
     private MockMvc mockMvc;
     @Autowired

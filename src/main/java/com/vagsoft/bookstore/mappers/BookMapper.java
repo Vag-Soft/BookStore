@@ -102,7 +102,10 @@ public interface BookMapper {
         for (GenreDTO dto : genreDto.getGenres()) {
             if(dto.getId() == null)
             {
-                dto.setId(book.getGenres().stream().filter(g -> g.getGenre().equals(dto.getGenre())).findFirst().get().getId());
+                book.getGenres().stream()
+                        .filter(g -> g.getGenre().equals(dto.getGenre()))
+                        .findFirst()
+                        .ifPresent(genre -> dto.setId(genre.getId()));
             }
         }
     }
