@@ -25,7 +25,7 @@ public class NullOrNotBlankValidator implements ConstraintValidator<NullOrNotBla
     @Override
     public boolean isValid(String contactField,
             ConstraintValidatorContext cxt) {
-        return contactField == null || !contactField.isEmpty();
+        return contactField == null || !contactField.isBlank();
     }
 
 }

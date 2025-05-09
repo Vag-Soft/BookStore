@@ -234,7 +234,7 @@ class BookControllerTest {
                 .andExpect(content().contentType("application/json"))
 
                 .andExpect(jsonPath("$.id").value(bookOutput.getId()))
-                .andExpect(jsonPath("$.title").value(bookOutput.getTitle()))
+                .andExpect(jsonPath("$.title").value(bookUpdateDTO.getTitle()))
                 .andExpect(jsonPath("$.author").value(bookOutput.getAuthor()))
                 .andExpect(jsonPath("$.description").value(bookOutput.getDescription()))
                 .andExpect(jsonPath("$.pages").value(bookOutput.getPages()))

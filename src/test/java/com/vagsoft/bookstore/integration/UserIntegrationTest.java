@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.GenreDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
+import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.models.User;
 import com.vagsoft.bookstore.models.enums.Role;
@@ -17,9 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
@@ -28,9 +27,9 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
@@ -129,4 +128,116 @@ public class UserIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
     }
+
+    @Test
+    @DisplayName("PUT /users/{userID} - Success")
+    void updateUserByIDFound() throws Exception {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        userUpdateDTO.setRole(Role.ADMIN);
+        String updateUserString = objectMapper.writeValueAsString(userUpdateDTO);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(updateUserString, headers);
+
+        ResponseEntity<UserReadDTO> response = client.exchange("/users/" + user1.getId(), HttpMethod.PUT, request, UserReadDTO.class);
+
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        UserReadDTO userReadDTO = response.getBody();
+        assertNotNull(userReadDTO);
+        assertEquals(user1.getId(), userReadDTO.getId());
+        assertEquals(userUpdateDTO.getUsername(), userReadDTO.getUsername());
+        assertEquals(userUpdateDTO.getRole(), userReadDTO.getRole());
+        assertEquals(user1.getEmail(), userReadDTO.getEmail());
+        assertEquals(user1.getFirstName(), userReadDTO.getFirstName());
+        assertEquals(user1.getLastName(), userReadDTO.getLastName());
+        assertEquals(user1.getSignupDate(), userReadDTO.getSignupDate());
+
+
+        Optional<UserReadDTO> updatedUser = userService.getUserByID(user1.getId());
+        assertTrue(updatedUser.isPresent());
+        assertEquals(user1.getId(), updatedUser.get().getId());
+        assertEquals(userUpdateDTO.getUsername(), updatedUser.get().getUsername());
+        assertEquals(userUpdateDTO.getRole(), updatedUser.get().getRole());
+        assertEquals(user1.getEmail(), updatedUser.get().getEmail());
+        assertEquals(user1.getFirstName(), updatedUser.get().getFirstName());
+        assertEquals(user1.getLastName(), updatedUser.get().getLastName());
+        assertEquals(user1.getSignupDate(), updatedUser.get().getSignupDate());
+    }
+
+    @Test
+    @DisplayName("PUT /users/999 - Not Found")
+    void updateUserByIDNotFound() throws Exception {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        userUpdateDTO.setRole(Role.ADMIN);
+        String updateUserString = objectMapper.writeValueAsString(userUpdateDTO);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(updateUserString, headers);
+
+        ResponseEntity<UserReadDTO> response = client.exchange("/users/999", HttpMethod.PUT, request, UserReadDTO.class);
+
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+
+        Optional<UserReadDTO> foundUser = userService.getUserByID(999);
+        assertTrue(foundUser.isEmpty());
+    }
+
+    @Test
+    @DisplayName("PUT /users/-1 - Invalid ID")
+    void updateUserByIDInvalid() throws Exception {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        userUpdateDTO.setRole(Role.ADMIN);
+        String updateUserString = objectMapper.writeValueAsString(userUpdateDTO);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(updateUserString, headers);
+
+        ResponseEntity<UserReadDTO> response = client.exchange("/users/-1", HttpMethod.PUT, request, UserReadDTO.class);
+
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+
+        Optional<UserReadDTO> foundUser = userService.getUserByID(-1);
+        assertTrue(foundUser.isEmpty());
+    }
+
+    @Test
+    @DisplayName("DELETE /users/{userID} - Success")
+    void deleteUserByIDFound() throws Exception {
+        ResponseEntity<Void> response = client.exchange("/users/" + user1.getId(), HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+
+        Optional<UserReadDTO> foundUser = userService.getUserByID(user1.getId());
+        assertTrue(foundUser.isEmpty());
+    }
+
+    @Test
+    @DisplayName("DELETE /users/999 - Not Found")
+    void deleteUserByIDNotFound() throws Exception {
+        ResponseEntity<Void> response = client.exchange("/users/999", HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+
+        Optional<UserReadDTO> foundUser = userService.getUserByID(999);
+        assertTrue(foundUser.isEmpty());
+    }
+
+    @Test
+    @DisplayName("DELETE /users/-1 - Invalid ID")
+    void deleteUserByIDInvalid() throws Exception {
+        ResponseEntity<Void> response = client.exchange("/users/-1", HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+
+        Optional<UserReadDTO> foundUser = userService.getUserByID(-1);
+        assertTrue(foundUser.isEmpty());
+    }
+
 }

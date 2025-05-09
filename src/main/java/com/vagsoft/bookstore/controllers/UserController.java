@@ -3,11 +3,13 @@ package com.vagsoft.bookstore.controllers;
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
+import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.services.BookService;
 import com.vagsoft.bookstore.services.UserService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
@@ -60,8 +62,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsers(username, email, role, firstName, lastName, pageable));
     }
 
-
-
     /**
      * Retrieves a user by its ID
      *
@@ -74,5 +74,40 @@ public class UserController {
 
         Optional<UserReadDTO> foundUser = userService.getUserByID(userID);
         return ResponseEntity.ok(foundUser.orElseThrow(() -> new UserNotFoundException("No user found with the given ID")));
+    }
+
+    /**
+     * Updates a user by its ID with the given user information
+     *
+     * @param userID the ID of the user to be updated
+     * @param userUpdateDTO the new user information
+     * @return the updated user
+     */
+    @PutMapping(path = "/{userID}")
+    public ResponseEntity<UserReadDTO> updateUserByID(@PathVariable @Positive Integer userID, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
+        log.info("PUT /users/{userID}: userID={}, userUpdateDTO={}", userID, userUpdateDTO);
+
+        Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
+        return ResponseEntity.ok(updatedUser.orElseThrow(() -> new UserNotFoundException("No user found with the given ID")));
+    }
+
+    /**
+     * Deletes a user by its ID
+     *
+     * @param userID the ID of the user to be deleted
+     * @return  a ResponseEntity with no content
+     */
+    @ApiResponse(responseCode = "204")
+    @DeleteMapping(path = "/{userID}")
+    public ResponseEntity<Void> deleteUserByID(@PathVariable @Positive Long userID) {
+        log.info("DELETE /users/{userID}: userID={}", userID);
+
+        Long deletedUsers = userService.deleteUserByID(userID);
+
+        if (deletedUsers == 0) {
+            throw new UserNotFoundException("No user found with the given ID");
+        }
+
+        return ResponseEntity.noContent().build();
     }
 }
