@@ -212,4 +212,29 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(userUpdateDTO)))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DisplayName("DELETE /users/1 - Success")
+    void deleteUserByIDFound() throws Exception {
+        when(userService.deleteUserByID(1L)).thenReturn(1L);
+
+        mockMvc.perform(delete("/users/{userID}", 1))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("DELETE /users/999 - Not Found")
+    void deleteUserByIDNotFound() throws Exception {
+        when(userService.deleteUserByID(999L)).thenReturn(0L);
+
+        mockMvc.perform(delete("/users/{userID}", 999))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("DELETE /users/-1 - Invalid ID")
+    void deleteUserByIDInvalid() throws Exception {
+        mockMvc.perform(delete("/users/{userID}", -1))
+                .andExpect(status().isBadRequest());
+    }
 }

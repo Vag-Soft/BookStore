@@ -206,4 +206,38 @@ public class UserIntegrationTest {
         Optional<UserReadDTO> foundUser = userService.getUserByID(-1);
         assertTrue(foundUser.isEmpty());
     }
+
+    @Test
+    @DisplayName("DELETE /users/{userID} - Success")
+    void deleteUserByIDFound() throws Exception {
+        ResponseEntity<Void> response = client.exchange("/users/" + user1.getId(), HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+
+        Optional<UserReadDTO> foundUser = userService.getUserByID(user1.getId());
+        assertTrue(foundUser.isEmpty());
+    }
+
+    @Test
+    @DisplayName("DELETE /users/999 - Not Found")
+    void deleteUserByIDNotFound() throws Exception {
+        ResponseEntity<Void> response = client.exchange("/users/999", HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+
+        Optional<UserReadDTO> foundUser = userService.getUserByID(999);
+        assertTrue(foundUser.isEmpty());
+    }
+
+    @Test
+    @DisplayName("DELETE /users/-1 - Invalid ID")
+    void deleteUserByIDInvalid() throws Exception {
+        ResponseEntity<Void> response = client.exchange("/users/-1", HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+
+        Optional<UserReadDTO> foundUser = userService.getUserByID(-1);
+        assertTrue(foundUser.isEmpty());
+    }
+
 }

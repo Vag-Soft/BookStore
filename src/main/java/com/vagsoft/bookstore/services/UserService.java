@@ -81,4 +81,15 @@ public class UserService {
 
         return Optional.of(userMapper.UserToReadDto(updatedUser));
     }
+
+    /**
+     * Deletes a user by its ID
+     *
+     * @param userID the ID of the user to be deleted
+     * @return the number of users deleted (should be 1)
+     */
+    @Transactional
+    public Long deleteUserByID(Long userID) {
+        return userRespository.deleteById(userID);
+    }
 }

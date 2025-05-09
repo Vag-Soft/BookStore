@@ -118,7 +118,9 @@ public class BookController {
 
         Long deletedBooks = bookService.deleteBookByID(bookID);
 
-        if(deletedBooks == 0) throw new BookNotFoundException("No book found with the given ID");
+        if(deletedBooks == 0) {
+            throw new BookNotFoundException("No book found with the given ID");
+        }
 
         return ResponseEntity.noContent().build();
     }

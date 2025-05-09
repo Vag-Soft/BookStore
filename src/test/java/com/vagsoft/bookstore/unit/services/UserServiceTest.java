@@ -151,4 +151,35 @@ class UserServiceTest {
 
         assertThrows(UserNotFoundException.class, () -> userService.updateUserByID(-1, userUpdateDTO));
     }
+
+    @Test
+    @DisplayName("deleteUserByID(1) - Success")
+    void deletedUserByIDFound() {
+        when(userRepository.deleteById(1L)).thenReturn(1L);
+
+        Long deletedUsers = userService.deleteUserByID(1L);
+
+        assertEquals(1, deletedUsers);
+    }
+
+    @Test
+    @DisplayName("deleteUserByID(999) - Not Found")
+    void deletedUserByIDNotFound() {
+        when(userRepository.deleteById(999L)).thenReturn(0L);
+
+        Long deletedUsers = userService.deleteUserByID(999L);
+
+        assertEquals(0, deletedUsers);
+    }
+
+    @Test
+    @DisplayName("deleteUserByID(-1) - Invalid ID")
+    void deletedUserByIDInvalid() {
+        when(userRepository.deleteById(-1L)).thenReturn(0L);
+
+        Long deletedUsers = userService.deleteUserByID(-1L);
+
+        assertEquals(0, deletedUsers);
+    }
+
 }

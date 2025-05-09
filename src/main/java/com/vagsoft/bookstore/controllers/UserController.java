@@ -9,6 +9,7 @@ import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.services.BookService;
 import com.vagsoft.bookstore.services.UserService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
@@ -90,4 +91,23 @@ public class UserController {
         return ResponseEntity.ok(updatedUser.orElseThrow(() -> new UserNotFoundException("No user found with the given ID")));
     }
 
+    /**
+     * Deletes a user by its ID
+     *
+     * @param userID the ID of the user to be deleted
+     * @return  a ResponseEntity with no content
+     */
+    @ApiResponse(responseCode = "204")
+    @DeleteMapping(path = "/{userID}")
+    public ResponseEntity<Void> deleteUserByID(@PathVariable @Positive Long userID) {
+        log.info("DELETE /users/{userID}: userID={}", userID);
+
+        Long deletedUsers = userService.deleteUserByID(userID);
+
+        if (deletedUsers == 0) {
+            throw new UserNotFoundException("No user found with the given ID");
+        }
+
+        return ResponseEntity.noContent().build();
+    }
 }

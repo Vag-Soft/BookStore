@@ -36,4 +36,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             """)
     public Page<User> findUsers(String username, String email, Role role, String firstName, String lastName, Pageable pageable);
 
+    /**
+     * Deletes a user by its ID
+     *
+     * @param userID the ID of the user to be deleted
+     * @return the number of users deleted (should be 1)
+     */
+    Long deleteById(Long userID);
 }
