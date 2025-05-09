@@ -1,8 +1,9 @@
 package com.vagsoft.bookstore.dto;
 
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
+import com.vagsoft.bookstore.annotations.UniqueField;
 import com.vagsoft.bookstore.annotations.UniqueGenresPerBook;
-import com.vagsoft.bookstore.annotations.UniqueISBN;
+import com.vagsoft.bookstore.repositories.BookRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -37,7 +38,8 @@ public class BookUpdateDTO {
     @PositiveOrZero(message = "availability must be greater than or equal to 0")
     private Integer availability;
 
-    @UniqueISBN
+    @UniqueField(repository = BookRepository.class, methodName = "existsByIsbnAndIdNot", pathVariable = "bookID", message = "isbn must be unique")
+    @NullOrNotBlank
     @Size(max = 31, message = "isbn must be less than 32 characters")
     private String isbn;
 

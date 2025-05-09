@@ -1,6 +1,5 @@
 package com.vagsoft.bookstore.models;
 
-import com.vagsoft.bookstore.annotations.UniqueISBN;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
