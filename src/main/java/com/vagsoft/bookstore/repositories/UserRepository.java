@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository class for accessing user data
+ * Repository interface for accessing user data
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {

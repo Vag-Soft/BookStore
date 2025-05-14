@@ -177,7 +177,7 @@ public class BookIntegrationTest {
 
         ResponseEntity<BookReadDTO> response = client.postForEntity("/books", request, BookReadDTO.class);
 
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(HttpStatusCode.valueOf(201), response.getStatusCode());
 
         BookReadDTO savedBook = response.getBody();
         assertNotNull(savedBook);

@@ -6,6 +6,7 @@ import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.BookWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
+import com.vagsoft.bookstore.errors.exceptions.UserCreationException;
 import com.vagsoft.bookstore.services.BookService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -14,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -68,12 +71,15 @@ public class BookController {
      * @param bookWriteDTO the book to be added
      * @return the added book
      */
+    @ApiResponse(responseCode = "201")
     @PostMapping
     public ResponseEntity<BookReadDTO> addBook(@Valid @RequestBody BookWriteDTO bookWriteDTO) {
         log.info("POST /books: book={}", bookWriteDTO);
 
         Optional<BookReadDTO> savedBook = bookService.addBook(bookWriteDTO);
-        return ResponseEntity.ok(savedBook.orElseThrow(() -> new BookCreationException("Book creation failed")));
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(savedBook.orElseThrow(() -> new BookCreationException("Book creation failed")));
     }
 
     /**

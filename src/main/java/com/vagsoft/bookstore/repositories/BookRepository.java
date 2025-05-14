@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 
 /**
- * Repository class for accessing book data
+ * Repository interface for accessing book data
  */
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
