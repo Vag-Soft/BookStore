@@ -1,5 +1,6 @@
 package com.vagsoft.bookstore.controllers;
 
+import com.vagsoft.bookstore.annotations.ValidAdminRegistration;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.UserLoginDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
@@ -46,7 +47,7 @@ public class AuthController {
      * @return ResponseEntity containing the registered UserReadDTO and JWT token
      */
     @PostMapping("/register")
-    public ResponseEntity<UserReadDTO> registerUser(@RequestBody @Valid UserWriteDTO userWriteDTO) {
+    public ResponseEntity<UserReadDTO> registerUser(@RequestBody @ValidAdminRegistration @Valid UserWriteDTO userWriteDTO) {
         log.info("POST /auth/register: userWriteDTO={}", userWriteDTO);
 
         String jwtToken = jwtService.generateToken(userWriteDTO.getUsername());

@@ -1,5 +1,7 @@
 package com.vagsoft.bookstore.controllers;
 
+import com.vagsoft.bookstore.annotations.IsAdmin;
+import com.vagsoft.bookstore.annotations.IsUser;
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.BookUpdateDTO;
@@ -9,6 +11,7 @@ import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.errors.exceptions.UserCreationException;
 import com.vagsoft.bookstore.services.BookService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.slf4j.Logger;
@@ -18,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,6 +76,7 @@ public class BookController {
      * @return the added book
      */
     @ApiResponse(responseCode = "201")
+    @IsAdmin()
     @PostMapping
     public ResponseEntity<BookReadDTO> addBook(@Valid @RequestBody BookWriteDTO bookWriteDTO) {
         log.info("POST /books: book={}", bookWriteDTO);
@@ -103,6 +108,7 @@ public class BookController {
      * @param bookUpdateDTO the new book information
      * @return the updated book
      */
+    @IsAdmin()
     @PutMapping(path = "/{bookID}")
     public ResponseEntity<BookReadDTO> updateBookByID(@PathVariable @Positive Integer bookID, @Valid @RequestBody BookUpdateDTO bookUpdateDTO) {
         log.info("PUT /books/{bookID}: bookID={}, book={}", bookID, bookUpdateDTO);
@@ -118,6 +124,7 @@ public class BookController {
      * @return a ResponseEntity with no content
      */
     @ApiResponse(responseCode = "204")
+    @IsAdmin()
     @DeleteMapping(path = "/{bookID}")
     public ResponseEntity<Void> deleteBookByID(@PathVariable @Positive Long bookID) {
         log.info("DELETE /books/{bookID}: bookID={}", bookID);

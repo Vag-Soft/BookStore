@@ -8,11 +8,13 @@ import com.vagsoft.bookstore.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -35,6 +37,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
  */
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @Profile("!test")
 public class SecurityConfig {
     /**
@@ -49,7 +52,9 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/login").anonymous()
+                        .requestMatchers("/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/books", "/books/{bookID}").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/**").permitAll()
                         .anyRequest().authenticated())

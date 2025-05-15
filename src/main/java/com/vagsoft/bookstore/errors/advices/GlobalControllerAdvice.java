@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -186,6 +188,24 @@ public class GlobalControllerAdvice {
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, errorMessage);
         problemDetail.setTitle("Unauthorized");
+        return problemDetail;
+    }
+
+    /**
+     * Handles authorization denied exceptions
+     *
+     * @param ex the {@link AuthorizationDeniedException} to handle
+     * @return a {@link ProblemDetail} with the error details
+     */
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ProblemDetail handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+        log.error("AuthorizationDeniedException", ex);
+
+        String errorMessage = "You do not have permission to access this resource";
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, errorMessage);
+        problemDetail.setTitle("Access Denied");
         return problemDetail;
     }
 

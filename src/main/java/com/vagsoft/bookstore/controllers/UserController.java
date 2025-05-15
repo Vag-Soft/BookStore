@@ -1,5 +1,6 @@
 package com.vagsoft.bookstore.controllers;
 
+import com.vagsoft.bookstore.annotations.IsAdmin;
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
@@ -49,6 +50,7 @@ public class UserController {
      * @param pageable the pagination information (optional)
      * @return a page of users
      */
+    @IsAdmin()
     @GetMapping
     public ResponseEntity<Page<UserReadDTO>> getUsers(
             @RequestParam(name="username", required=false) @Size(max = 31, message = "username must be less than 32 characters") @NullOrNotBlank String username,
@@ -68,8 +70,9 @@ public class UserController {
      * @param userID the ID of the user to be retrieved
      * @return the retrieved user
      */
-   @GetMapping(path = "/{userID}")
-   public ResponseEntity<UserReadDTO> getUserByID(@PathVariable @Positive Integer userID) {
+    @IsAdmin()
+    @GetMapping(path = "/{userID}")
+    public ResponseEntity<UserReadDTO> getUserByID(@PathVariable @Positive Integer userID) {
         log.info("GET /users/{userID}: userID={}", userID);
 
         Optional<UserReadDTO> foundUser = userService.getUserByID(userID);
@@ -83,6 +86,7 @@ public class UserController {
      * @param userUpdateDTO the new user information
      * @return the updated user
      */
+    @IsAdmin()
     @PutMapping(path = "/{userID}")
     public ResponseEntity<UserReadDTO> updateUserByID(@PathVariable @Positive Integer userID, @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
         log.info("PUT /users/{userID}: userID={}, userUpdateDTO={}", userID, userUpdateDTO);
@@ -98,6 +102,7 @@ public class UserController {
      * @return  a ResponseEntity with no content
      */
     @ApiResponse(responseCode = "204")
+    @IsAdmin()
     @DeleteMapping(path = "/{userID}")
     public ResponseEntity<Void> deleteUserByID(@PathVariable @Positive Long userID) {
         log.info("DELETE /users/{userID}: userID={}", userID);
