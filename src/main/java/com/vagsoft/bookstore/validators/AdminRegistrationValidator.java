@@ -23,7 +23,7 @@ public class AdminRegistrationValidator implements ConstraintValidator<ValidAdmi
     public boolean isValid(UserWriteDTO userWriteDTO, ConstraintValidatorContext constraintValidatorContext) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+        System.out.println("AdminRegistrationValidator: " + authentication);
         // Check if the user is trying to register an 'ADMIN' account
         if(userWriteDTO.getRole().equals(Role.ADMIN)) {
             // Check if the user that made the request has the 'ADMIN' role
@@ -31,6 +31,13 @@ public class AdminRegistrationValidator implements ConstraintValidator<ValidAdmi
                     .stream()
                     .map(GrantedAuthority::getAuthority)
                     .anyMatch(authority -> authority.equals("SCOPE_ROLE_ADMIN"));
+        }
+        else if (userWriteDTO.getRole().equals(Role.USER)) {
+            // Check if the user that made the request has the 'ADMIN' role or is anonymous
+            return authentication.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .anyMatch(authority -> authority.equals("SCOPE_ROLE_ADMIN") || authority.equals("ROLE_ANONYMOUS"));
         }
         return true;
     }

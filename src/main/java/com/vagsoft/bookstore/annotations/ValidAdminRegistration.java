@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = AdminRegistrationValidator.class)
 public @interface ValidAdminRegistration {
-    String message() default "Only accounts with 'ADMIN' role can register other 'ADMIN' accounts";
+    String message() default "Only accounts with 'ADMIN' role can register accounts for other users";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

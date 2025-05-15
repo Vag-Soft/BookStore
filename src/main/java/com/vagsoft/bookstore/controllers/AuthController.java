@@ -47,7 +47,7 @@ public class AuthController {
      * @return ResponseEntity containing the registered UserReadDTO and JWT token
      */
     @PostMapping("/register")
-    public ResponseEntity<UserReadDTO> registerUser(@RequestBody  @Valid UserWriteDTO userWriteDTO) {
+    public ResponseEntity<UserReadDTO> registerUser(@RequestBody @ValidAdminRegistration @Valid UserWriteDTO userWriteDTO) {
         log.info("POST /auth/register: userWriteDTO={}", userWriteDTO);
 
         String jwtToken = jwtService.generateToken(userWriteDTO.getUsername());
