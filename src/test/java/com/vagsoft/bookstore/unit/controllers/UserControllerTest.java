@@ -12,6 +12,7 @@ import com.vagsoft.bookstore.services.BookService;
 import com.vagsoft.bookstore.services.UserService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(UserController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 @ActiveProfiles("test")
 class UserControllerTest {

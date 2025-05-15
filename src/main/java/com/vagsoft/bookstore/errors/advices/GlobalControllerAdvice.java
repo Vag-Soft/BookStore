@@ -2,6 +2,7 @@ package com.vagsoft.bookstore.errors.advices;
 
 import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
+import com.vagsoft.bookstore.errors.exceptions.ResourceCreationException;
 import com.vagsoft.bookstore.errors.exceptions.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -11,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -102,18 +106,18 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles book creation exceptions
+     * Handles resource creation exceptions
      *
-     * @param ex the {@link BookCreationException} to handle
+     * @param ex the {@link ResourceCreationException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
-    @ExceptionHandler(BookCreationException.class)
+    @ExceptionHandler(ResourceCreationException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ProblemDetail handleBookCreationException(BookCreationException ex) {
-        log.error("BookCreationException", ex);
+    public ProblemDetail handleResourceCreationException(ResourceCreationException ex) {
+        log.error("ResourceCreationException", ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        problemDetail.setTitle("Book creation failed");
+        problemDetail.setTitle("Resource creation failed");
         return problemDetail;
     }
 
@@ -166,6 +170,42 @@ public class GlobalControllerAdvice {
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errorMessage);
         problemDetail.setTitle("Internal server error");
+        return problemDetail;
+    }
+
+    /**
+     * Handles bad credentials exceptions
+     *
+     * @param ex the {@link BadCredentialsException} to handle
+     * @return a {@link ProblemDetail} with the error details
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ProblemDetail handleBadCredentialsException(BadCredentialsException ex) {
+        log.error("BadCredentialsException", ex);
+
+        String errorMessage = "Invalid username or password";
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, errorMessage);
+        problemDetail.setTitle("Unauthorized");
+        return problemDetail;
+    }
+
+    /**
+     * Handles authorization denied exceptions
+     *
+     * @param ex the {@link AuthorizationDeniedException} to handle
+     * @return a {@link ProblemDetail} with the error details
+     */
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ProblemDetail handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+        log.error("AuthorizationDeniedException", ex);
+
+        String errorMessage = "You do not have permission to access this resource";
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, errorMessage);
+        problemDetail.setTitle("Access Denied");
         return problemDetail;
     }
 

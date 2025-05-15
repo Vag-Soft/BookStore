@@ -3,12 +3,16 @@ package com.vagsoft.bookstore.mappers;
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserUpdateDTO;
+import com.vagsoft.bookstore.dto.UserWriteDTO;
 import com.vagsoft.bookstore.models.Book;
 import com.vagsoft.bookstore.models.User;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -25,7 +29,15 @@ public interface UserMapper {
     @Mapping(ignore = true, target = "userReadDTO.id")
     User DtoToUser (UserReadDTO userReadDTO);
 
-
+    /**
+     * Converts a UserWriteDTO to a User entity
+     *
+     * @param userWriteDTO the UserWriteDTO to be converted
+     * @return the converted User entity
+     */
+    @Mapping(source = "userWriteDTO.password", target = "hashPassword")
+    @Mapping(target = "signupDate", expression = "java(java.time.LocalDate.now())")
+    User DtoToUser(UserWriteDTO userWriteDTO);
 
     /**
      * Converts a User entity to a UserReadDTO

@@ -10,6 +10,7 @@ import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.services.BookService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -32,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookController.class)
+@AutoConfigureMockMvc(addFilters = false)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 @ActiveProfiles("test")
 class BookControllerTest {
@@ -157,7 +159,7 @@ class BookControllerTest {
         String newBookString = objectMapper.writeValueAsString(newBook);
 
         mockMvc.perform(post("/books").content(newBookString).contentType("application/json"))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json"))
 
                 .andExpect(jsonPath("$.id").value(savedBook.getId()))

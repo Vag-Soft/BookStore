@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 
 /**
- * Repository class for accessing book data
+ * Repository interface for accessing book data
  */
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
@@ -53,6 +53,13 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
      */
     public boolean existsByIsbn(String isbn);
 
+    /**
+     * Checks if a book with the given ISBN exists in the database, excluding the book with the specified ID
+     *
+     * @param isbn the ISBN of the book to be checked
+     * @param bookID the ID of the book to be excluded from the check
+     * @return true if the book exists, false otherwise
+     */
     public boolean existsByIsbnAndIdNot(String isbn, Integer bookID);
 
 }

@@ -34,7 +34,9 @@ CREATE TABLE Users (
     lastName VARCHAR(31) NOT NULL,
     signupDate DATE NOT NULL,
 
-    PRIMARY KEY(ID)
+    PRIMARY KEY(ID),
+    UNIQUE (email),
+    UNIQUE (username)
 );
 
 CREATE TABLE Favourites (

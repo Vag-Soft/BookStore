@@ -189,7 +189,7 @@ class BookServiceTest {
     }
 
     @Test
-    @DisplayName("deletedBookByID(1) - Success")
+    @DisplayName("deleteBookByID(1) - Success")
     void deleteBookByIDFound() {
         when(bookRepository.deleteById(1L)).thenReturn(1L);
 
@@ -199,7 +199,7 @@ class BookServiceTest {
     }
 
     @Test
-    @DisplayName("deletedBookByID(999) - Not Found")
+    @DisplayName("deleteBookByID(999) - Not Found")
     void deleteBookByIDNotFound() {
         when(bookRepository.deleteById(999L)).thenReturn(0L);
 
@@ -209,7 +209,7 @@ class BookServiceTest {
     }
 
     @Test
-    @DisplayName("deletedBookByID(-1) - Invalid ID")
+    @DisplayName("deleteBookByID(-1) - Invalid ID")
     void deleteBookByIDInvalid() {
         when(bookRepository.deleteById(-1L)).thenReturn(0L);
 
