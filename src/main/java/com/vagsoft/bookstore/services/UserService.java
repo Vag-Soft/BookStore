@@ -1,12 +1,9 @@
 package com.vagsoft.bookstore.services;
 
-import com.vagsoft.bookstore.annotations.NullOrNotBlank;
-import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.mappers.UserMapper;
-import com.vagsoft.bookstore.models.Book;
 import com.vagsoft.bookstore.models.User;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.repositories.UserRepository;
@@ -14,9 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 
@@ -26,12 +23,14 @@ import java.util.Optional;
 @Service
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    private final UserRepository userRespository;
+    private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRespository, UserMapper userMapper) {
-        this.userRespository = userRespository;
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -47,7 +46,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public Page<UserReadDTO> getUsers(String username, String email, Role role, String firstName, String lastName, Pageable pageable) {
-        return userMapper.PageUserToPageDto(userRespository.findUsers(username, email, role, firstName, lastName, pageable));
+        return userMapper.PageUserToPageDto(userRepository.findUsers(username, email, role, firstName, lastName, pageable));
     }
 
 
@@ -59,7 +58,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public Optional<UserReadDTO> getUserByID(Integer userID) {
-        Optional<User> foundUser = userRespository.findById(userID);
+        Optional<User> foundUser = userRepository.findById(userID);
         return foundUser.map(userMapper::UserToReadDto);
     }
 
@@ -72,12 +71,15 @@ public class UserService {
      */
     public Optional<UserReadDTO> updateUserByID(Integer userID, UserUpdateDTO userUpdateDTO) {
 
-        Optional<User> foundUser = userRespository.findById(userID);
+        Optional<User> foundUser = userRepository.findById(userID);
         if (foundUser.isEmpty()) throw new UserNotFoundException("No user found with the given ID");
 
-        userMapper.updateUserFromDto(userUpdateDTO, foundUser.get());//TODO: calculate hashPassword
+        String hashedPassword = passwordEncoder.encode(userUpdateDTO.getPassword());
+        userUpdateDTO.setPassword(hashedPassword);
 
-        User updatedUser = userRespository.save(foundUser.get());
+        userMapper.updateUserFromDto(userUpdateDTO, foundUser.get());
+
+        User updatedUser = userRepository.save(foundUser.get());
 
         return Optional.of(userMapper.UserToReadDto(updatedUser));
     }
@@ -90,6 +92,6 @@ public class UserService {
      */
     @Transactional
     public Long deleteUserByID(Long userID) {
-        return userRespository.deleteById(userID);
+        return userRepository.deleteById(userID);
     }
 }

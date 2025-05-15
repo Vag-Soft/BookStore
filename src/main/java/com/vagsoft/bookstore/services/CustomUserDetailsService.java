@@ -1,17 +1,11 @@
 package com.vagsoft.bookstore.services;
 
 import com.vagsoft.bookstore.models.User;
-import com.vagsoft.bookstore.repositories.AuthRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.core.GrantedAuthority;
+import com.vagsoft.bookstore.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Custom UserDetailsService implementation for loading user details from the database
@@ -19,10 +13,10 @@ import java.util.List;
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final AuthRepository authRepository;
+    private final UserRepository userRepository;
 
-    public CustomUserDetailsService(AuthRepository authRepository) {
-        this.authRepository = authRepository;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     /**
@@ -34,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = authRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }

@@ -1,8 +1,6 @@
 package com.vagsoft.bookstore.services;
 
-import com.vagsoft.bookstore.repositories.AuthRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;

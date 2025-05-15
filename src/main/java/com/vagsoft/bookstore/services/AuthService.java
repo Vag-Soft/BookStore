@@ -5,7 +5,7 @@ import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserWriteDTO;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.models.User;
-import com.vagsoft.bookstore.repositories.AuthRepository;
+import com.vagsoft.bookstore.repositories.UserRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,14 +19,14 @@ import java.util.Optional;
  */
 @Service
 public class AuthService {
-    private final AuthRepository authRepository;
+    private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public AuthService(AuthRepository authRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, AuthenticationManager authenticationManager1, JwtService jwtService) {
-        this.authRepository = authRepository;
+    public AuthService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, AuthenticationManager authenticationManager1, JwtService jwtService) {
+        this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager1;
@@ -42,12 +42,11 @@ public class AuthService {
      */
     public Optional<UserReadDTO> registerUser(UserWriteDTO userWriteDTO) {
         String hashedPassword = passwordEncoder.encode(userWriteDTO.getPassword());
-
         userWriteDTO.setPassword(hashedPassword);
 
         User user = userMapper.DtoToUser(userWriteDTO);
 
-        User savedUser = authRepository.save(user);
+        User savedUser = userRepository.save(user);
         return Optional.of(userMapper.UserToReadDto(savedUser));
     }
 

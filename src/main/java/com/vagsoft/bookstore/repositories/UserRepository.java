@@ -42,5 +42,46 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      * @param userID the ID of the user to be deleted
      * @return the number of users deleted (should be 1)
      */
-    Long deleteById(Long userID);
+    public Long deleteById(Long userID);
+
+    /**
+     * Finds a user by its username
+     *
+     * @param username the username of the user to be found
+     * @return the user with the specified username
+     */
+    public User findByUsername(String username);
+
+    /**
+     * Checks if a user with the given email exists in the database
+     *
+     * @param email the email of the user to be checked
+     * @return true if the user exists, false otherwise
+     */
+    public boolean existsByEmail(String email);
+
+    /**
+     * Checks if a user with the given email exists in the database, excluding the user with the specified ID
+     *
+     * @param email the email of the user to be checked
+     * @return true if the user exists, false otherwise
+     */
+    public boolean existsByEmailAndIdNot(String email, Integer userID);
+
+
+    /**
+     * Checks if a user with the given username exists in the database
+     *
+     * @param username the username of the user to be checked
+     * @return true if the user exists, false otherwise
+     */
+    public boolean existsByUsername(String username);
+
+    /**
+     * Checks if a user with the given username exists in the database, excluding the user with the specified ID
+     *
+     * @param username the username of the user to be checked
+     * @return true if the user exists, false otherwise
+     */
+    public boolean existsByUsernameAndIdNot(String username, Integer userID);
 }
