@@ -1,4 +1,4 @@
-package com.vagsoft.bookstore.models;
+package com.vagsoft.bookstore.models.entities;
 
 import com.vagsoft.bookstore.models.enums.Status;
 import jakarta.persistence.*;

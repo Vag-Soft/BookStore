@@ -1,6 +1,6 @@
-package com.vagsoft.bookstore.services;
+package com.vagsoft.bookstore.models;
 
-import com.vagsoft.bookstore.models.User;
+import com.vagsoft.bookstore.models.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

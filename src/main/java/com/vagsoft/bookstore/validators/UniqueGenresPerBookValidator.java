@@ -1,15 +1,9 @@
 package com.vagsoft.bookstore.validators;
 
-import com.vagsoft.bookstore.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.annotations.UniqueGenresPerBook;
-import com.vagsoft.bookstore.dto.BookWriteDTO;
 import com.vagsoft.bookstore.dto.GenreDTO;
-import com.vagsoft.bookstore.models.Book;
-import com.vagsoft.bookstore.models.Genre;
-import com.vagsoft.bookstore.repositories.BookRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 

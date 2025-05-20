@@ -1,15 +1,11 @@
 package com.vagsoft.bookstore.mappers;
 
 import com.vagsoft.bookstore.dto.*;
-import com.vagsoft.bookstore.models.Book;
-import com.vagsoft.bookstore.models.User;
+import com.vagsoft.bookstore.models.entities.User;
 import org.mapstruct.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**

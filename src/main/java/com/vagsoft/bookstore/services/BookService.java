@@ -5,7 +5,7 @@ import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.BookWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.mappers.BookMapper;
-import com.vagsoft.bookstore.models.Book;
+import com.vagsoft.bookstore.models.entities.Book;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

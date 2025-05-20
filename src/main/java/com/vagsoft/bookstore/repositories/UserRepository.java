@@ -1,7 +1,6 @@
 package com.vagsoft.bookstore.repositories;
 
-import com.vagsoft.bookstore.models.Book;
-import com.vagsoft.bookstore.models.User;
+import com.vagsoft.bookstore.models.entities.User;
 import com.vagsoft.bookstore.models.enums.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

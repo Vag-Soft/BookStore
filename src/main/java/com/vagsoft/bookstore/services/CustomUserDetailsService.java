@@ -1,6 +1,7 @@
 package com.vagsoft.bookstore.services;
 
-import com.vagsoft.bookstore.models.User;
+import com.vagsoft.bookstore.models.CustomUserDetails;
+import com.vagsoft.bookstore.models.entities.User;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,15 +1,12 @@
 package com.vagsoft.bookstore.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.GenreDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.mappers.UserMapper;
-import com.vagsoft.bookstore.models.User;
+import com.vagsoft.bookstore.models.entities.User;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.pagination.CustomPageImpl;
-import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.UserService;
 import org.junit.jupiter.api.*;
@@ -17,16 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

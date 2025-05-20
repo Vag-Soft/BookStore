@@ -1,8 +1,5 @@
 package com.vagsoft.bookstore.dto;
 
-import com.vagsoft.bookstore.models.Cart;
-import com.vagsoft.bookstore.models.Favourite;
-import com.vagsoft.bookstore.models.Order;
 import com.vagsoft.bookstore.models.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 @Builder

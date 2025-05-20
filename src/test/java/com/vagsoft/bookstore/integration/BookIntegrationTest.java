@@ -6,8 +6,8 @@ import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.BookWriteDTO;
 import com.vagsoft.bookstore.dto.GenreDTO;
 import com.vagsoft.bookstore.mappers.BookMapper;
-import com.vagsoft.bookstore.models.Book;
-import com.vagsoft.bookstore.models.Genre;
+import com.vagsoft.bookstore.models.entities.Book;
+import com.vagsoft.bookstore.models.entities.Genre;
 import com.vagsoft.bookstore.pagination.CustomPageImpl;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.services.BookService;
@@ -20,7 +20,6 @@ import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.lang.annotation.Documented;
 import java.net.URI;
 import java.util.*;
 

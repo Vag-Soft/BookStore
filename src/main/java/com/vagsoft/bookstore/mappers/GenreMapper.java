@@ -1,7 +1,7 @@
 package com.vagsoft.bookstore.mappers;
 
 import com.vagsoft.bookstore.dto.GenreDTO;
-import com.vagsoft.bookstore.models.Genre;
+import com.vagsoft.bookstore.models.entities.Genre;
 import org.mapstruct.Mapper;
 /**
  * Mapper class for converting Genre entities and DTOs

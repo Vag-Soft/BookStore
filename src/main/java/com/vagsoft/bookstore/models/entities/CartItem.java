@@ -1,12 +1,12 @@
-package com.vagsoft.bookstore.models;
+package com.vagsoft.bookstore.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "OrderItems")
-public class OrderItem {
+@Table(name = "CartItems")
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -18,10 +18,10 @@ public class OrderItem {
     @Column
     private Integer quantity;
 
-    public OrderItem() {
+    public CartItem() {
     }
 
-    public OrderItem(Integer bookID, Integer quantity) {
+    public CartItem(Integer bookID, Integer quantity) {
         this.bookID = bookID;
         this.quantity = quantity;
     }

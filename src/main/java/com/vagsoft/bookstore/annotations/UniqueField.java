@@ -31,16 +31,12 @@ public @interface UniqueField {
     String pathVariable() default "id";
 
     /**
-     * The error message to be used when the constraint is violated
-     *
-     * @return the error message
+     * Whether the field can be null or not. If true, the field can be null and
      */
     boolean nullable() default true;
 
     /**
      * The error message to be used when the constraint is violated
-     *
-     * @return the error message
      */
     String message() default "Unique constraint violated";
 

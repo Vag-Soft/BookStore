@@ -2,19 +2,12 @@ package com.vagsoft.bookstore.controllers;
 
 import com.vagsoft.bookstore.annotations.IsAdmin;
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
-import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserUpdateDTO;
-import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.models.enums.Role;
-import com.vagsoft.bookstore.services.BookService;
-import com.vagsoft.bookstore.services.CustomUserDetails;
-import com.vagsoft.bookstore.services.JwtService;
 import com.vagsoft.bookstore.services.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.slf4j.Logger;
@@ -22,13 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**

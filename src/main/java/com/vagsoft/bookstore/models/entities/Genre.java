@@ -1,4 +1,4 @@
-package com.vagsoft.bookstore.models;
+package com.vagsoft.bookstore.models.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

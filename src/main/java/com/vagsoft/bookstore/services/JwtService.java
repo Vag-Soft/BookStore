@@ -1,5 +1,6 @@
 package com.vagsoft.bookstore.services;
 
+import com.vagsoft.bookstore.models.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

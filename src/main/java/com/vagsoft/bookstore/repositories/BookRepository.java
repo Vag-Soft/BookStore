@@ -1,6 +1,6 @@
 package com.vagsoft.bookstore.repositories;
 
-import com.vagsoft.bookstore.models.Book;
+import com.vagsoft.bookstore.models.entities.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

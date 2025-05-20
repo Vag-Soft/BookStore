@@ -16,6 +16,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+/**
+ * Validates that a resource field is unique
+ */
 public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Object> {
 
     @Autowired
@@ -57,7 +60,7 @@ public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Ob
             case "PUT":
                 try {
                     Integer userID;
-                    if (request.getRequestURI().endsWith("/me")) {
+                    if (request.getRequestURI().contains("/me")) {
                         try {
                             Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

@@ -1,12 +1,12 @@
-package com.vagsoft.bookstore.models;
+package com.vagsoft.bookstore.models.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "Favourites")
-public class Favourite {
+@Table(name = "OrderItems")
+public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -15,10 +15,14 @@ public class Favourite {
     @Column(nullable = false)
     private Integer bookID;
 
-    public Favourite() {
+    @Column
+    private Integer quantity;
+
+    public OrderItem() {
     }
 
-    public Favourite(Integer bookID) {
+    public OrderItem(Integer bookID, Integer quantity) {
         this.bookID = bookID;
+        this.quantity = quantity;
     }
 }
