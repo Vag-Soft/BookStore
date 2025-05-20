@@ -117,13 +117,11 @@ class UserServiceTest {
     void updateUserByIDFound() {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
-        userUpdateDTO.setRole(Role.ADMIN);
 
         when(userRepository.findById(1)).thenReturn(Optional.of(storedUsers.getFirst()));
 
         User updatedUser = storedUsers.getFirst();
         updatedUser.setUsername(userUpdateDTO.getUsername());
-        updatedUser.setRole(userUpdateDTO.getRole());
 
         when(userRepository.save(updatedUser)).thenReturn(updatedUser);
 
@@ -137,7 +135,6 @@ class UserServiceTest {
     void updateUserByIDNotFound() {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
-        userUpdateDTO.setRole(Role.ADMIN);
 
         assertThrows(UserNotFoundException.class, () -> userService.updateUserByID(999, userUpdateDTO));
     }
@@ -147,7 +144,6 @@ class UserServiceTest {
     void updateUserByIDInvalid() {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
-        userUpdateDTO.setRole(Role.ADMIN);
 
         assertThrows(UserNotFoundException.class, () -> userService.updateUserByID(-1, userUpdateDTO));
     }

@@ -85,7 +85,7 @@ public class BookService {
     public Optional<BookReadDTO> updateBookByID(Integer bookID, BookUpdateDTO bookUpdateDTO) {
 
         Optional<Book> foundBook = bookRepository.findById(bookID);
-        if (foundBook.isEmpty()) throw new BookNotFoundException("No book found with the given ID");
+        if (foundBook.isEmpty()) throw new BookNotFoundException("No book found with the given ID: " + bookID);
 
         bookMapper.updateBookFromDto(bookUpdateDTO, foundBook.get());
 

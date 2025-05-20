@@ -7,8 +7,10 @@ import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
 import com.vagsoft.bookstore.errors.exceptions.UserCreationException;
+import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.services.AuthService;
 import com.vagsoft.bookstore.services.JwtService;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,10 +38,14 @@ public class AuthController {
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
     private final AuthService authService;
     private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
 
-    public AuthController(AuthService authService, JwtService jwtService) {
+    public AuthController(AuthService authService, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper) {
         this.authService = authService;
         this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -46,13 +54,17 @@ public class AuthController {
      * @param userWriteDTO the UserWriteDTO containing user details
      * @return ResponseEntity containing the registered UserReadDTO and JWT token
      */
+    @ApiResponse(responseCode = "201")
     @PostMapping("/register")
     public ResponseEntity<UserReadDTO> registerUser(@RequestBody @ValidAdminRegistration @Valid UserWriteDTO userWriteDTO) {
         log.info("POST /auth/register: userWriteDTO={}", userWriteDTO);
 
-        String jwtToken = jwtService.generateToken(userWriteDTO.getUsername());
+        UserLoginDTO userLoginDTO = userMapper.UserWriteToLoginDto(userWriteDTO);
 
         Optional<UserReadDTO> registeredUser = authService.registerUser(userWriteDTO);
+
+        String jwtToken = authService.authenticate(userLoginDTO);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)

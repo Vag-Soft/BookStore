@@ -72,10 +72,12 @@ public class UserService {
     public Optional<UserReadDTO> updateUserByID(Integer userID, UserUpdateDTO userUpdateDTO) {
 
         Optional<User> foundUser = userRepository.findById(userID);
-        if (foundUser.isEmpty()) throw new UserNotFoundException("No user found with the given ID");
+        if (foundUser.isEmpty()) throw new UserNotFoundException("No user found with the given ID: " + userID);
 
-        String hashedPassword = passwordEncoder.encode(userUpdateDTO.getPassword());
-        userUpdateDTO.setPassword(hashedPassword);
+        if(userUpdateDTO.getPassword() != null) {
+            String hashedPassword = passwordEncoder.encode(userUpdateDTO.getPassword());
+            userUpdateDTO.setPassword(hashedPassword);
+        }
 
         userMapper.updateUserFromDto(userUpdateDTO, foundUser.get());
 
@@ -93,5 +95,19 @@ public class UserService {
     @Transactional
     public Long deleteUserByID(Long userID) {
         return userRepository.deleteById(userID);
+    }
+
+    /**
+     * Retrieves a user by its username
+     *
+     * @param username the username of the user to be retrieved
+     * @return the retrieved user
+     */
+    @Transactional(readOnly = true)
+    public Optional<UserReadDTO> getUserByUsername(String username) {
+        Optional<User> foundUser = userRepository.findByUsername(username);
+
+        return foundUser.map(userMapper::UserToReadDto);
+
     }
 }
