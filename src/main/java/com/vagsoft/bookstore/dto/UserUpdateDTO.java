@@ -32,9 +32,6 @@ public class UserUpdateDTO {
     @Size(max = 63, message = "password must be less than 64 characters")
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
     @NullOrNotBlank
     @Size(max = 31, message = "firstName must be less than 32 characters")
     private String firstName;

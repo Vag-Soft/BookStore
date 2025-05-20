@@ -1,9 +1,6 @@
 package com.vagsoft.bookstore.mappers;
 
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.UserReadDTO;
-import com.vagsoft.bookstore.dto.UserUpdateDTO;
-import com.vagsoft.bookstore.dto.UserWriteDTO;
+import com.vagsoft.bookstore.dto.*;
 import com.vagsoft.bookstore.models.Book;
 import com.vagsoft.bookstore.models.User;
 import org.mapstruct.*;
@@ -46,6 +43,14 @@ public interface UserMapper {
      * @return the converted UserReadDTO
      */
     UserReadDTO UserToReadDto(User user);
+
+    /**
+     * Converts a UserWriteDTO entity to a UserLoginDTO
+     *
+     * @param userWriteDTO the UserWriteDTO to be converted
+     * @return the converted UserLoginDTO
+     */
+    UserLoginDTO UserWriteToLoginDto(UserWriteDTO userWriteDTO);
 
 
     /**

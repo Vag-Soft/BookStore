@@ -8,6 +8,8 @@ import com.vagsoft.bookstore.dto.GenreDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.models.enums.Role;
+import com.vagsoft.bookstore.repositories.BookRepository;
+import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.BookService;
 import com.vagsoft.bookstore.services.UserService;
 import org.junit.jupiter.api.*;
@@ -43,6 +45,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest {
     @MockitoBean
     private UserService userService;
+    @MockitoBean
+    private UserRepository userRepository;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -164,13 +168,12 @@ class UserControllerTest {
 
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
-        userUpdateDTO.setRole(Role.ADMIN);
 
         UserReadDTO userOutput = storedUsers.getFirst();
         userOutput.setUsername(userUpdateDTO.getUsername());
-        userOutput.setRole(userUpdateDTO.getRole());
 
         when(userService.updateUserByID(1, userUpdateDTO)).thenReturn(Optional.of(userOutput));
+        when(userRepository.existsByUsernameAndIdNot("jane", 1)).thenReturn(false);
 
         mockMvc.perform(put("/users/{userID}", 1)
                         .contentType("application/json")
@@ -181,7 +184,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id").value(userOutput.getId()))
                 .andExpect(jsonPath("$.username").value(userUpdateDTO.getUsername()))
                 .andExpect(jsonPath("$.email").value(userOutput.getEmail()))
-                .andExpect(jsonPath("$.role").value(userUpdateDTO.getRole().toString()))
                 .andExpect(jsonPath("$.firstName").value(userOutput.getFirstName()))
                 .andExpect(jsonPath("$.lastName").value(userOutput.getLastName()))
                 .andExpect(jsonPath("$.signupDate").value(userOutput.getSignupDate().toString()));
@@ -192,9 +194,9 @@ class UserControllerTest {
     void updateUserByIDNotFound() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
-        userUpdateDTO.setRole(Role.ADMIN);
 
         when(userService.updateUserByID(999, userUpdateDTO)).thenReturn(Optional.empty());
+        when(userRepository.existsByUsernameAndIdNot("jane", 999)).thenReturn(false);
 
         mockMvc.perform(put("/users/{userID}", 999)
                         .contentType("application/json")
@@ -207,7 +209,6 @@ class UserControllerTest {
     void updateUserByIDInvalid() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
-        userUpdateDTO.setRole(Role.ADMIN);
 
         mockMvc.perform(put("/users/{userID}", -1)
                         .contentType("application/json")
@@ -239,4 +240,24 @@ class UserControllerTest {
         mockMvc.perform(delete("/users/{userID}", -1))
                 .andExpect(status().isBadRequest());
     }
+//
+//    @Test
+//    @DisplayName("GET /users/me - Success")
+//    void getMe() throws Exception {
+//        UserReadDTO userOutput = storedUsers.getFirst();
+//        when(userService.getUserByID(1)).thenReturn(Optional.ofNullable(userOutput));
+//
+//        assertNotNull(userOutput);
+//        mockMvc.perform(get("/users/me"))
+//                .andExpect(status().isOk())
+//                .andExpect(content().contentType("application/json"))
+//
+//                .andExpect(jsonPath("$.id").value(userOutput.getId()))
+//                .andExpect(jsonPath("$.username").value(userOutput.getUsername()))
+//                .andExpect(jsonPath("$.email").value(userOutput.getEmail()))
+//                .andExpect(jsonPath("$.role").value(userOutput.getRole().toString()))
+//                .andExpect(jsonPath("$.firstName").value(userOutput.getFirstName()))
+//                .andExpect(jsonPath("$.lastName").value(userOutput.getLastName()))
+//                .andExpect(jsonPath("$.signupDate").value(userOutput.getSignupDate().toString()));
+//    }
 }

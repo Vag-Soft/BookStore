@@ -8,6 +8,8 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.servlet.HandlerMapping;
 
 import java.lang.reflect.InvocationTargetException;
@@ -54,10 +56,22 @@ public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Ob
                 }
             case "PUT":
                 try {
-                    Integer pathID = RequestUtils.getPathVariable(request, pathVariable, Integer.class);
+                    Integer userID;
+                    if (request.getRequestURI().endsWith("/me")) {
+                        try {
+                            Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+                            userID = Integer.valueOf(jwt.getClaimAsString("id"));
+                        } catch (Exception e) {
+                            throw new IllegalStateException("No JWT token found in authenticated request");
+                        }
+                    } else {
+                        userID = RequestUtils.getPathVariable(request, pathVariable, Integer.class);
+                    }
 
                     Method repositoryMethod = repository.getClass().getMethod(methodName, value.getClass(), Integer.class);
-                    return ! (boolean) repositoryMethod.invoke(repository, value, pathID);
+                    return ! (boolean) repositoryMethod.invoke(repository, value, userID);
+
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }

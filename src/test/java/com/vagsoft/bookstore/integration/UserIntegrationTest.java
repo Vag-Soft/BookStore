@@ -134,7 +134,6 @@ public class UserIntegrationTest {
     void updateUserByIDFound() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
-        userUpdateDTO.setRole(Role.ADMIN);
         String updateUserString = objectMapper.writeValueAsString(userUpdateDTO);
 
         HttpHeaders headers = new HttpHeaders();
@@ -149,7 +148,6 @@ public class UserIntegrationTest {
         assertNotNull(userReadDTO);
         assertEquals(user1.getId(), userReadDTO.getId());
         assertEquals(userUpdateDTO.getUsername(), userReadDTO.getUsername());
-        assertEquals(userUpdateDTO.getRole(), userReadDTO.getRole());
         assertEquals(user1.getEmail(), userReadDTO.getEmail());
         assertEquals(user1.getFirstName(), userReadDTO.getFirstName());
         assertEquals(user1.getLastName(), userReadDTO.getLastName());
@@ -160,7 +158,6 @@ public class UserIntegrationTest {
         assertTrue(updatedUser.isPresent());
         assertEquals(user1.getId(), updatedUser.get().getId());
         assertEquals(userUpdateDTO.getUsername(), updatedUser.get().getUsername());
-        assertEquals(userUpdateDTO.getRole(), updatedUser.get().getRole());
         assertEquals(user1.getEmail(), updatedUser.get().getEmail());
         assertEquals(user1.getFirstName(), updatedUser.get().getFirstName());
         assertEquals(user1.getLastName(), updatedUser.get().getLastName());
@@ -172,7 +169,6 @@ public class UserIntegrationTest {
     void updateUserByIDNotFound() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
-        userUpdateDTO.setRole(Role.ADMIN);
         String updateUserString = objectMapper.writeValueAsString(userUpdateDTO);
 
         HttpHeaders headers = new HttpHeaders();
@@ -192,7 +188,6 @@ public class UserIntegrationTest {
     void updateUserByIDInvalid() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
-        userUpdateDTO.setRole(Role.ADMIN);
         String updateUserString = objectMapper.writeValueAsString(userUpdateDTO);
 
         HttpHeaders headers = new HttpHeaders();
