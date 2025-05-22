@@ -1,5 +1,7 @@
 package com.vagsoft.bookstore.services;
 
+import java.util.Optional;
+
 import com.vagsoft.bookstore.dto.CartReadDTO;
 import com.vagsoft.bookstore.mappers.CartMapper;
 import com.vagsoft.bookstore.repositories.CartRepository;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/** Service class for handling cart-related operations */
 @Service
 public class CartService {
     private final CartRepository cartRepository;
@@ -18,8 +21,26 @@ public class CartService {
         this.cartMapper = cartMapper;
     }
 
+    /**
+     * Get all carts
+     *
+     * @param pageable
+     *            pagination information
+     * @return paginated list of carts
+     */
     @Transactional(readOnly = true)
     public Page<CartReadDTO> getAllCarts(Pageable pageable) {
         return cartMapper.pageCartToPageDto(cartRepository.findAll(pageable));
+    }
+
+    /**
+     * Retrieves cart by user ID
+     *
+     * @param userID
+     *            the ID of the user
+     * @return the cart associated with the user ID
+     */
+    public Optional<CartReadDTO> getCartByUserId(Integer userID) {
+        return cartRepository.findById(userID).map(cartMapper::cartToReadDto);
     }
 }

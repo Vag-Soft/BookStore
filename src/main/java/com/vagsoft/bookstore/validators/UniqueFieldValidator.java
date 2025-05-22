@@ -1,5 +1,8 @@
 package com.vagsoft.bookstore.validators;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import com.vagsoft.bookstore.annotations.UniqueField;
 import com.vagsoft.bookstore.utils.AuthUtils;
 import com.vagsoft.bookstore.utils.RequestUtils;
@@ -9,17 +12,8 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.servlet.HandlerMapping;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Map;
-
-/**
- * Validator for the {@link UniqueField} annotation.
- */
+/** Validator for the {@link UniqueField} annotation. */
 public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Object> {
 
     @Autowired
@@ -31,7 +25,7 @@ public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Ob
     @Autowired
     private AuthUtils authUtils;
 
-    private Class<? extends JpaRepository<?, ?>>  repositoryClass;
+    private Class<? extends JpaRepository<?, ?>> repositoryClass;
     private String methodName;
     private String pathVariable;
     private boolean nullable;
@@ -53,35 +47,35 @@ public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Ob
         var repository = applicationContext.getBean(repositoryClass);
         var requestMethod = request.getMethod();
 
-
-        switch(requestMethod) {
-            case "POST":
+        switch (requestMethod) {
+            case "POST" :
                 try {
                     // Running the repository method
                     Method repositoryMethod = repository.getClass().getMethod(methodName, value.getClass());
-                    return ! (boolean) repositoryMethod.invoke(repository, value);
+                    return !(boolean) repositoryMethod.invoke(repository, value);
 
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
-            case "PUT":
+            case "PUT" :
                 try {
                     // Getting the ID from the path variable or the JWT
                     Integer resourceID;
-                    try{
+                    try {
                         resourceID = RequestUtils.getPathVariable(request, pathVariable, Integer.class);
                     } catch (Exception e) {
                         resourceID = authUtils.getUserIdFromAuthentication();
                     }
 
                     // Running the repository method
-                    Method repositoryMethod = repository.getClass().getMethod(methodName, value.getClass(), Integer.class);
-                    return ! (boolean) repositoryMethod.invoke(repository, value, resourceID);
+                    Method repositoryMethod = repository.getClass().getMethod(methodName, value.getClass(),
+                            Integer.class);
+                    return !(boolean) repositoryMethod.invoke(repository, value, resourceID);
 
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
-            default:
+            default :
                 throw new IllegalArgumentException("Unsupported HTTP method: " + requestMethod);
         }
     }

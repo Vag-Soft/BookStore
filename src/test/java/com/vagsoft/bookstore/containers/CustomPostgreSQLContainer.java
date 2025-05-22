@@ -2,9 +2,7 @@ package com.vagsoft.bookstore.containers;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 
-/**
- * Class for Test PostgreSQL Container configuration
- */
+/** Class for Test PostgreSQL Container configuration */
 public class CustomPostgreSQLContainer extends PostgreSQLContainer<CustomPostgreSQLContainer> {
     private static final String IMAGE_VERSION = "postgres";
     private static CustomPostgreSQLContainer container;
@@ -30,6 +28,6 @@ public class CustomPostgreSQLContainer extends PostgreSQLContainer<CustomPostgre
 
     @Override
     public void stop() {
-        //do nothing, JVM handles shut down
+        // do nothing, JVM handles shut down
     }
 }

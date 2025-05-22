@@ -1,5 +1,7 @@
 package com.vagsoft.bookstore.services;
 
+import java.util.Optional;
+
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
@@ -15,11 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-/**
- * Service class for user operations
- */
+/** Service class for user operations */
 @Service
 public class UserService {
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -36,24 +34,32 @@ public class UserService {
     /**
      * Retrieves a list of users filtered by the specified parameters
      *
-     * @param username the username of the users to search for (optional)
-     * @param email the email of the users to search for (optional)
-     * @param role the role of the users to search for (optional)
-     * @param firstName the first name of the users to search for (optional)
-     * @param lastName the last name of the users to search for (optional)
-     * @param pageable the pagination information (optional)
+     * @param username
+     *            the username of the users to search for (optional)
+     * @param email
+     *            the email of the users to search for (optional)
+     * @param role
+     *            the role of the users to search for (optional)
+     * @param firstName
+     *            the first name of the users to search for (optional)
+     * @param lastName
+     *            the last name of the users to search for (optional)
+     * @param pageable
+     *            the pagination information (optional)
      * @return a page of users
      */
     @Transactional(readOnly = true)
-    public Page<UserReadDTO> getUsers(String username, String email, Role role, String firstName, String lastName, Pageable pageable) {
-        return userMapper.pageUserToPageDto(userRepository.findUsers(username, email, role, firstName, lastName, pageable));
+    public Page<UserReadDTO> getUsers(String username, String email, Role role, String firstName, String lastName,
+            Pageable pageable) {
+        return userMapper
+                .pageUserToPageDto(userRepository.findUsers(username, email, role, firstName, lastName, pageable));
     }
-
 
     /**
      * Retrieves a user by its ID
      *
-     * @param userID the ID of the user to be retrieved
+     * @param userID
+     *            the ID of the user to be retrieved
      * @return the retrieved user
      */
     @Transactional(readOnly = true)
@@ -65,16 +71,19 @@ public class UserService {
     /**
      * Updates a user by its ID with the given user information
      *
-     * @param userID the ID of the user to be updated
-     * @param userUpdateDTO the new user information
+     * @param userID
+     *            the ID of the user to be updated
+     * @param userUpdateDTO
+     *            the new user information
      * @return the updated user
      */
     public Optional<UserReadDTO> updateUserByID(Integer userID, UserUpdateDTO userUpdateDTO) {
 
         Optional<User> foundUser = userRepository.findById(userID);
-        if (foundUser.isEmpty()) throw new UserNotFoundException("No user found with the given ID: " + userID);
+        if (foundUser.isEmpty())
+            throw new UserNotFoundException("No user found with the given ID: " + userID);
 
-        if(userUpdateDTO.getPassword() != null) {
+        if (userUpdateDTO.getPassword() != null) {
             String hashedPassword = passwordEncoder.encode(userUpdateDTO.getPassword());
             userUpdateDTO.setPassword(hashedPassword);
         }
@@ -89,7 +98,8 @@ public class UserService {
     /**
      * Deletes a user by its ID
      *
-     * @param userID the ID of the user to be deleted
+     * @param userID
+     *            the ID of the user to be deleted
      * @return the number of users deleted (should be 1)
      */
     @Transactional
@@ -100,7 +110,8 @@ public class UserService {
     /**
      * Retrieves a user by its username
      *
-     * @param username the username of the user to be retrieved
+     * @param username
+     *            the username of the user to be retrieved
      * @return the retrieved user
      */
     @Transactional(readOnly = true)
@@ -108,6 +119,5 @@ public class UserService {
         Optional<User> foundUser = userRepository.findByUsername(username);
 
         return foundUser.map(userMapper::UserToReadDto);
-
     }
 }

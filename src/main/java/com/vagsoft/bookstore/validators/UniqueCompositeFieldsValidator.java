@@ -1,7 +1,9 @@
 package com.vagsoft.bookstore.validators;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import com.vagsoft.bookstore.annotations.UniqueCompositeFields;
-import com.vagsoft.bookstore.annotations.UniqueField;
 import com.vagsoft.bookstore.utils.AuthUtils;
 import com.vagsoft.bookstore.utils.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,12 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-/**
- * Validator for the {@link UniqueCompositeFields} annotation.
- */
+/** Validator for the {@link UniqueCompositeFields} annotation. */
 public class UniqueCompositeFieldsValidator implements ConstraintValidator<UniqueCompositeFields, Object> {
 
     @Autowired
@@ -28,7 +25,7 @@ public class UniqueCompositeFieldsValidator implements ConstraintValidator<Uniqu
     @Autowired
     private AuthUtils authUtils;
 
-    private Class<? extends JpaRepository<?, ?>>  repositoryClass;
+    private Class<? extends JpaRepository<?, ?>> repositoryClass;
     private String methodName;
     private String pathVariable;
     private Class<?> dtoClass;
@@ -54,8 +51,7 @@ public class UniqueCompositeFieldsValidator implements ConstraintValidator<Uniqu
             Integer resourceID;
             if (usePathVariable) {
                 resourceID = RequestUtils.getPathVariable(request, pathVariable, Integer.class);
-            }
-            else {
+            } else {
                 resourceID = authUtils.getUserIdFromAuthentication();
             }
 
@@ -66,7 +62,7 @@ public class UniqueCompositeFieldsValidator implements ConstraintValidator<Uniqu
 
             // Running the repository method
             Method repositoryMethod = repository.getClass().getMethod(methodName, Integer.class, fieldValue.getClass());
-            return ! (boolean) repositoryMethod.invoke(repository, resourceID, fieldValue);
+            return !(boolean) repositoryMethod.invoke(repository, resourceID, fieldValue);
         } catch (NoSuchMethodException | NoSuchFieldException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

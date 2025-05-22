@@ -1,17 +1,15 @@
 package com.vagsoft.bookstore.annotations;
 
+import java.lang.annotation.*;
+
 import com.vagsoft.bookstore.validators.NullOrNotBlankValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-import java.lang.annotation.*;
-
-/**
- * Validates that a field is null or not blank
- */
+/** Validates that a field is null or not blank */
 @Documented
 @Constraint(validatedBy = NullOrNotBlankValidator.class)
-@Target( { ElementType.FIELD, ElementType.PARAMETER })
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NullOrNotBlank {
     /**
@@ -24,5 +22,4 @@ public @interface NullOrNotBlank {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

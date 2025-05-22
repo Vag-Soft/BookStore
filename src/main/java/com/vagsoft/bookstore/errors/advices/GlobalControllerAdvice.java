@@ -1,7 +1,7 @@
 package com.vagsoft.bookstore.errors.advices;
 
-import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
-import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
+import java.util.stream.Collectors;
+
 import com.vagsoft.bookstore.errors.exceptions.ResourceCreationException;
 import com.vagsoft.bookstore.errors.exceptions.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,13 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-/**
- * Global controller advice that handles exceptions
- */
+/** Global controller advice that handles exceptions */
 @RestControllerAdvice(basePackages = "com.vagsoft.bookstore")
 public class GlobalControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(GlobalControllerAdvice.class);
@@ -36,7 +29,9 @@ public class GlobalControllerAdvice {
     /**
      * Handles argument exceptions
      *
-     * @param ex exception to handle of type {@link ConstraintViolationException}, {@link IllegalArgumentException}, {@link ValidationException}
+     * @param ex
+     *            exception to handle of type {@link ConstraintViolationException},
+     *            {@link IllegalArgumentException}, {@link ValidationException}
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler({ConstraintViolationException.class, IllegalArgumentException.class, ValidationException.class})
@@ -52,7 +47,8 @@ public class GlobalControllerAdvice {
     /**
      * Handles validation exceptions
      *
-     * @param ex the {@link MethodArgumentNotValidException} to handle
+     * @param ex
+     *            the {@link MethodArgumentNotValidException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -60,10 +56,9 @@ public class GlobalControllerAdvice {
     public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         log.error("MethodArgumentNotValidException", ex);
 
-        String errorMessage = ex.getFieldErrors()
-                        .stream()
-                        .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
-                        .collect(Collectors.joining("; "));
+        String errorMessage = ex.getFieldErrors().stream()
+                .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+                .collect(Collectors.joining("; "));
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errorMessage);
         problemDetail.setTitle("Invalid request body");
@@ -73,7 +68,8 @@ public class GlobalControllerAdvice {
     /**
      * Handles invalid request body exceptions
      *
-     * @param ex the {@link HttpMessageNotReadableException} to handle
+     * @param ex
+     *            the {@link HttpMessageNotReadableException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -91,7 +87,8 @@ public class GlobalControllerAdvice {
     /**
      * Handles type mismatch exceptions
      *
-     * @param ex the {@link MethodArgumentTypeMismatchException} to handle
+     * @param ex
+     *            the {@link MethodArgumentTypeMismatchException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -109,7 +106,8 @@ public class GlobalControllerAdvice {
     /**
      * Handles resource creation exceptions
      *
-     * @param ex the {@link ResourceCreationException} to handle
+     * @param ex
+     *            the {@link ResourceCreationException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler(ResourceCreationException.class)
@@ -117,7 +115,8 @@ public class GlobalControllerAdvice {
     public ProblemDetail handleResourceCreationException(ResourceCreationException ex) {
         log.error("ResourceCreationException", ex);
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage());
         problemDetail.setTitle("Resource creation failed");
         return problemDetail;
     }
@@ -125,7 +124,8 @@ public class GlobalControllerAdvice {
     /**
      * Handles resource not found exceptions
      *
-     * @param ex the {@link ResourceNotFoundException} to handle
+     * @param ex
+     *            the {@link ResourceNotFoundException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -141,7 +141,8 @@ public class GlobalControllerAdvice {
     /**
      * Handles data integrity exceptions
      *
-     * @param ex the {@link DataIntegrityViolationException} to handle
+     * @param ex
+     *            the {@link DataIntegrityViolationException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -159,7 +160,8 @@ public class GlobalControllerAdvice {
     /**
      * Handles ObjectOptimisticLockingFailureException exceptions
      *
-     * @param ex the {@link ObjectOptimisticLockingFailureException} to handle
+     * @param ex
+     *            the {@link ObjectOptimisticLockingFailureException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
@@ -177,7 +179,8 @@ public class GlobalControllerAdvice {
     /**
      * Handles bad credentials exceptions
      *
-     * @param ex the {@link BadCredentialsException} to handle
+     * @param ex
+     *            the {@link BadCredentialsException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler(BadCredentialsException.class)
@@ -195,7 +198,8 @@ public class GlobalControllerAdvice {
     /**
      * Handles authorization denied exceptions
      *
-     * @param ex the {@link AuthorizationDeniedException} to handle
+     * @param ex
+     *            the {@link AuthorizationDeniedException} to handle
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler(AuthorizationDeniedException.class)
@@ -213,7 +217,8 @@ public class GlobalControllerAdvice {
     /**
      * Handles other exceptions
      *
-     * @param ex the {@link Exception} to handle
+     * @param ex
+     *            the {@link Exception} to handle
      * @return a {@link ProblemDetail} with the error details
      */
     @ExceptionHandler(Exception.class)
@@ -221,9 +226,9 @@ public class GlobalControllerAdvice {
     public ProblemDetail handleException(Exception ex) {
         log.error("Exception", ex);
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage());
         problemDetail.setTitle("Internal server error");
         return problemDetail;
     }
-
 }

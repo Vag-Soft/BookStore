@@ -1,18 +1,15 @@
 package com.vagsoft.bookstore.annotations;
 
-import com.vagsoft.bookstore.validators.NullOrNotBlankValidator;
+import java.lang.annotation.*;
+
 import com.vagsoft.bookstore.validators.UniqueGenresPerBookValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-import java.lang.annotation.*;
-
-/**
- * Validates that a book has unique genres
- */
+/** Validates that a book has unique genres */
 @Documented
 @Constraint(validatedBy = UniqueGenresPerBookValidator.class)
-@Target( { ElementType.FIELD, ElementType.PARAMETER })
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UniqueGenresPerBook {
     /**
@@ -25,5 +22,4 @@ public @interface UniqueGenresPerBook {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

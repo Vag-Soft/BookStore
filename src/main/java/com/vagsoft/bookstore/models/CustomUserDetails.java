@@ -1,16 +1,14 @@
 package com.vagsoft.bookstore.models;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.vagsoft.bookstore.models.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-
-/**
- * Custom UserDetails implementation for Spring Security
- */
+/** Custom UserDetails implementation for Spring Security */
 public class CustomUserDetails implements UserDetails {
     private final User user;
 

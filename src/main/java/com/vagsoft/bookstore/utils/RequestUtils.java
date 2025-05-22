@@ -1,9 +1,9 @@
 package com.vagsoft.bookstore.utils;
 
+import java.util.Map;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
-
-import java.util.Map;
 
 public class RequestUtils {
     public static <T> T getPathVariable(HttpServletRequest request, String pathVariableName, Class<T> type) {

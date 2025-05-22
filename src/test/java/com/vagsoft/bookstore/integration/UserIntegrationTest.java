@@ -1,5 +1,12 @@
 package com.vagsoft.bookstore.integration;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.net.URI;
+import java.time.LocalDate;
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserUpdateDTO;
@@ -11,33 +18,16 @@ import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.UserService;
 import com.vagsoft.bookstore.utils.AuthUtils;
 import org.junit.jupiter.api.*;
-import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 @ActiveProfiles("test")
 public class UserIntegrationTest {
@@ -55,10 +45,13 @@ public class UserIntegrationTest {
     private AuthUtils authUtils;
 
     User user1, user2;
+
     @BeforeEach
     public void setUp() {
-        user1 = new User("jane.smith@example.com", "janesmith", "hashed_password_value", Role.USER, "Jane", "Smith", LocalDate.parse("2022-01-05"));
-        user2 = new User("bob.johnson@example.com", "bobjohnson", "hashed_password_value", Role.ADMIN, "Bob", "Johnson", LocalDate.parse("2022-01-10"));
+        user1 = new User("jane.smith@example.com", "janesmith", "hashed_password_value", Role.USER, "Jane", "Smith",
+                LocalDate.parse("2022-01-05"));
+        user2 = new User("bob.johnson@example.com", "bobjohnson", "hashed_password_value", Role.ADMIN, "Bob", "Johnson",
+                LocalDate.parse("2022-01-10"));
 
         userRepository.save(user1);
         userRepository.save(user2);
@@ -72,10 +65,10 @@ public class UserIntegrationTest {
     @Test
     @DisplayName("GET /users - Success No Filters")
     void getUsersNoFilters() throws Exception {
-        URI uri = UriComponentsBuilder.fromUriString("/users")
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/users").build().encode().toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<UserReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<UserReadDTO>>() {};
+        ParameterizedTypeReference<CustomPageImpl<UserReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<UserReadDTO>>() {
+        };
         ResponseEntity<CustomPageImpl<UserReadDTO>> response = client.exchange(uri, HttpMethod.GET, null, classType);
 
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -89,18 +82,14 @@ public class UserIntegrationTest {
         assertEquals(userMapper.UserToReadDto(user2), secondUser);
     }
 
-
     @Test
     @DisplayName("GET /users - Success With Filters")
     void getUsersWithFilters() throws Exception {
-        URI uri = UriComponentsBuilder.fromUriString("/users")
-                .queryParam("email", "johnson@")
-                .queryParam("role", "ADMIN")
-                .queryParam("page", 0)
-                .queryParam("size", 20)
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/users").queryParam("email", "johnson@")
+                .queryParam("role", "ADMIN").queryParam("page", 0).queryParam("size", 20).build().encode().toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<UserReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<UserReadDTO>>() {};
+        ParameterizedTypeReference<CustomPageImpl<UserReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<UserReadDTO>>() {
+        };
         ResponseEntity<CustomPageImpl<UserReadDTO>> response = client.exchange(uri, HttpMethod.GET, null, classType);
 
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -148,7 +137,8 @@ public class UserIntegrationTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(updateUserString, headers);
 
-        ResponseEntity<UserReadDTO> response = client.exchange("/users/" + user1.getId(), HttpMethod.PUT, request, UserReadDTO.class);
+        ResponseEntity<UserReadDTO> response = client.exchange("/users/" + user1.getId(), HttpMethod.PUT, request,
+                UserReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
@@ -160,7 +150,6 @@ public class UserIntegrationTest {
         assertEquals(user1.getFirstName(), userReadDTO.getFirstName());
         assertEquals(user1.getLastName(), userReadDTO.getLastName());
         assertEquals(user1.getSignupDate(), userReadDTO.getSignupDate());
-
 
         Optional<UserReadDTO> updatedUser = userService.getUserByID(user1.getId());
         assertTrue(updatedUser.isPresent());
@@ -183,7 +172,8 @@ public class UserIntegrationTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(updateUserString, headers);
 
-        ResponseEntity<UserReadDTO> response = client.exchange("/users/999", HttpMethod.PUT, request, UserReadDTO.class);
+        ResponseEntity<UserReadDTO> response = client.exchange("/users/999", HttpMethod.PUT, request,
+                UserReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
 
@@ -257,7 +247,8 @@ public class UserIntegrationTest {
     @Test
     @DisplayName("GET /users/me - Error")
     void getUsersMeError() throws Exception {
-        lenient().when(authUtils.getUserIdFromAuthentication()).thenThrow(new IllegalArgumentException("Invalid Jwt token"));
+        lenient().when(authUtils.getUserIdFromAuthentication())
+                .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
         ResponseEntity<UserReadDTO> response = client.getForEntity("/users/me", UserReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
@@ -289,7 +280,6 @@ public class UserIntegrationTest {
         assertEquals(user1.getLastName(), userReadDTO.getLastName());
         assertEquals(user1.getSignupDate(), userReadDTO.getSignupDate());
 
-
         Optional<UserReadDTO> updatedUser = userService.getUserByID(user1.getId());
         assertTrue(updatedUser.isPresent());
         assertEquals(user1.getId(), updatedUser.get().getId());
@@ -299,7 +289,6 @@ public class UserIntegrationTest {
         assertEquals(user1.getLastName(), updatedUser.get().getLastName());
         assertEquals(user1.getSignupDate(), updatedUser.get().getSignupDate());
     }
-
 
     @Test
     @DisplayName("PUT /users/me - Error")
@@ -312,7 +301,8 @@ public class UserIntegrationTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(updateUserString, headers);
 
-        lenient().when(authUtils.getUserIdFromAuthentication()).thenThrow(new IllegalArgumentException("Invalid Jwt token"));
+        lenient().when(authUtils.getUserIdFromAuthentication())
+                .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
 
         ResponseEntity<UserReadDTO> response = client.exchange("/users/me", HttpMethod.PUT, request, UserReadDTO.class);
 
@@ -335,7 +325,8 @@ public class UserIntegrationTest {
     @Test
     @DisplayName("DELETE /users/me - Error")
     void deleteUserMeError() throws Exception {
-        lenient().when(authUtils.getUserIdFromAuthentication()).thenThrow(new IllegalArgumentException("Invalid Jwt token"));
+        lenient().when(authUtils.getUserIdFromAuthentication())
+                .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
 
         ResponseEntity<Void> response = client.exchange("/users/me", HttpMethod.DELETE, null, Void.class);
 

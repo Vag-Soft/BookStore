@@ -1,5 +1,7 @@
 package com.vagsoft.bookstore.configuration;
 
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 import com.vagsoft.bookstore.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +21,7 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
-/**
- * Security configuration class for the application
- */
+/** Security configuration class for the application */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -32,37 +30,32 @@ public class SecurityConfig {
     /**
      * Bean for configuring the security filter chain
      *
-     * @param http HttpSecurity object for configuring security settings
+     * @param http
+     *            HttpSecurity object for configuring security settings
      * @return SecurityFilterChain object
-     * @throws Exception if an error occurs during configuration
+     * @throws Exception
+     *             if an error occurs during configuration
      */
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login").anonymous()
-                        .requestMatchers("/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/books", "/books/{bookID}").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/v3/**").permitAll()
-                        .anyRequest().authenticated())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(STATELESS))
-                .oauth2ResourceServer(server -> server
-                        .jwt(Customizer.withDefaults())
-                        .authenticationEntryPoint(
-                                new BearerTokenAuthenticationEntryPoint())
-                        .accessDeniedHandler(
-                                new BearerTokenAccessDeniedHandler())
-                )
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(
+                        auth -> auth.requestMatchers("/auth/login").anonymous().requestMatchers("/auth/register")
+                                .permitAll().requestMatchers(HttpMethod.GET, "/books", "/books/{bookID}").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll().requestMatchers("/v3/**").permitAll()
+                                .anyRequest().authenticated())
+                .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
+                .oauth2ResourceServer(server -> server.jwt(Customizer.withDefaults())
+                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
                 .build();
     }
 
     /**
      * Bean for configuring the authentication manager
      *
-     * @param userDetailsService UserDetailsService object for loading user details
+     * @param userDetailsService
+     *            UserDetailsService object for loading user details
      * @return AuthenticationManager object
      */
     @Bean
