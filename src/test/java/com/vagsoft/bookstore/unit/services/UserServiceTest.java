@@ -1,21 +1,23 @@
 package com.vagsoft.bookstore.unit.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
-import com.vagsoft.bookstore.mappers.BookMapper;
 import com.vagsoft.bookstore.mappers.UserMapper;
-import com.vagsoft.bookstore.models.Book;
-import com.vagsoft.bookstore.models.Genre;
-import com.vagsoft.bookstore.models.User;
+import com.vagsoft.bookstore.models.entities.User;
 import com.vagsoft.bookstore.models.enums.Role;
-import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
-import com.vagsoft.bookstore.services.BookService;
 import com.vagsoft.bookstore.services.UserService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,14 +27,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -47,11 +41,14 @@ class UserServiceTest {
     private UserMapper userMapper;
 
     private List<User> storedUsers;
+
     @BeforeEach
     void setUp() {
         storedUsers = new ArrayList<>();
-        storedUsers.add(new User(1, "jane.smith@example.com", "janesmith", "hashed_password_value", Role.USER, "Jane", "Smith", LocalDate.parse("2022-01-05")));
-        storedUsers.add(new User(2, "bob.johnson@example.com", "bobjohnson", "hashed_password_value", Role.ADMIN, "Bob", "Johnson", LocalDate.parse("2022-01-10")));
+        storedUsers.add(new User(1, "jane.smith@example.com", "janesmith", "hashed_password_value", Role.USER, "Jane",
+                "Smith", LocalDate.parse("2022-01-05")));
+        storedUsers.add(new User(2, "bob.johnson@example.com", "bobjohnson", "hashed_password_value", Role.ADMIN, "Bob",
+                "Johnson", LocalDate.parse("2022-01-10")));
     }
 
     @Test
@@ -83,26 +80,26 @@ class UserServiceTest {
         assertEquals(userMapper.UserToReadDto(storedUsers.getFirst()), result.getContent().getFirst());
     }
 
-    @Test
-    @DisplayName("getUserByID(1) - Success")
-    void getUserByIDFound() {
-        when(userRepository.findById(1)).thenReturn(Optional.of(storedUsers.getFirst()));
+  @Test
+  @DisplayName("getUserByID(1) - Success")
+  void getUserByIDFound() {
+    when(userRepository.findById(1)).thenReturn(Optional.of(storedUsers.getFirst()));
 
-        Optional<UserReadDTO> result = userService.getUserByID(1);
+    Optional<UserReadDTO> result = userService.getUserByID(1);
 
-        assertFalse(result.isEmpty());
-        assertEquals(userMapper.UserToReadDto(storedUsers.getFirst()), result.get());
-    }
+    assertFalse(result.isEmpty());
+    assertEquals(userMapper.UserToReadDto(storedUsers.getFirst()), result.get());
+  }
 
-    @Test
-    @DisplayName("getUserByID(999) - Not Found")
-    void getUserByIDNotFound() {
-        when(userRepository.findById(999)).thenReturn(Optional.empty());
+  @Test
+  @DisplayName("getUserByID(999) - Not Found")
+  void getUserByIDNotFound() {
+    when(userRepository.findById(999)).thenReturn(Optional.empty());
 
-        Optional<UserReadDTO> result = userService.getUserByID(999);
+    Optional<UserReadDTO> result = userService.getUserByID(999);
 
-        assertTrue(result.isEmpty());
-    }
+    assertTrue(result.isEmpty());
+  }
 
     @Test
     @DisplayName("getUserByID(-1) - Invalid ID")
@@ -148,34 +145,33 @@ class UserServiceTest {
         assertThrows(UserNotFoundException.class, () -> userService.updateUserByID(-1, userUpdateDTO));
     }
 
-    @Test
-    @DisplayName("deleteUserByID(1) - Success")
-    void deletedUserByIDFound() {
-        when(userRepository.deleteById(1L)).thenReturn(1L);
+  @Test
+  @DisplayName("deleteUserByID(1) - Success")
+  void deletedUserByIDFound() {
+    when(userRepository.deleteById(1L)).thenReturn(1L);
 
-        Long deletedUsers = userService.deleteUserByID(1L);
+    Long deletedUsers = userService.deleteUserByID(1L);
 
-        assertEquals(1, deletedUsers);
-    }
+    assertEquals(1, deletedUsers);
+  }
 
-    @Test
-    @DisplayName("deleteUserByID(999) - Not Found")
-    void deletedUserByIDNotFound() {
-        when(userRepository.deleteById(999L)).thenReturn(0L);
+  @Test
+  @DisplayName("deleteUserByID(999) - Not Found")
+  void deletedUserByIDNotFound() {
+    when(userRepository.deleteById(999L)).thenReturn(0L);
 
-        Long deletedUsers = userService.deleteUserByID(999L);
+    Long deletedUsers = userService.deleteUserByID(999L);
 
-        assertEquals(0, deletedUsers);
-    }
+    assertEquals(0, deletedUsers);
+  }
 
-    @Test
-    @DisplayName("deleteUserByID(-1) - Invalid ID")
-    void deletedUserByIDInvalid() {
-        when(userRepository.deleteById(-1L)).thenReturn(0L);
+  @Test
+  @DisplayName("deleteUserByID(-1) - Invalid ID")
+  void deletedUserByIDInvalid() {
+    when(userRepository.deleteById(-1L)).thenReturn(0L);
 
-        Long deletedUsers = userService.deleteUserByID(-1L);
+    Long deletedUsers = userService.deleteUserByID(-1L);
 
-        assertEquals(0, deletedUsers);
-    }
-
+    assertEquals(0, deletedUsers);
+  }
 }

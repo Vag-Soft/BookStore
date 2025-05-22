@@ -1,12 +1,19 @@
 package com.vagsoft.bookstore.unit.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.BookWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.mappers.BookMapper;
-import com.vagsoft.bookstore.models.Book;
-import com.vagsoft.bookstore.models.Genre;
+import com.vagsoft.bookstore.models.entities.Book;
+import com.vagsoft.bookstore.models.entities.Genre;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.services.BookService;
 import org.junit.jupiter.api.*;
@@ -21,13 +28,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.DisplayName.class)
@@ -41,11 +41,13 @@ class BookServiceTest {
     private BookMapper bookMapper;
 
     private List<Book> storedBooks;
+
     @BeforeEach
     void setUp() {
         storedBooks = new ArrayList<>();
         storedBooks.add(new Book(1, "title", "author", "description", 1, 1.0, 1, "isbn", new ArrayList<>()));
-        storedBooks.add(new Book(2, "title2", "author2", "description2", 2, 2.0, 2, "isbn2", List.of(new Genre(1, "genre1"), new Genre(2, "genre2"))));
+        storedBooks.add(new Book(2, "title2", "author2", "description2", 2, 2.0, 2, "isbn2",
+                List.of(new Genre(1, "genre1"), new Genre(2, "genre2"))));
     }
 
     @Test
@@ -54,8 +56,7 @@ class BookServiceTest {
         Pageable pageable = PageRequest.of(0, 20);
         Page<Book> page = new PageImpl<>(storedBooks, pageable, 2);
 
-        when(bookRepository.findBooks(null, null, null, null, null, null, pageable))
-                .thenReturn(page);
+        when(bookRepository.findBooks(null, null, null, null, null, null, pageable)).thenReturn(page);
 
         Page<BookReadDTO> result = bookService.getBooks(null, null, null, null, null, null, pageable);
 
@@ -73,7 +74,8 @@ class BookServiceTest {
         when(bookRepository.findBooks("title", "genre1", "author", "description2", 1.0, 2.0, pageable))
                 .thenReturn(page);
 
-        Page<BookReadDTO> result = bookService.getBooks("title", "genre1", "author", "description2", 1.0, 2.0, pageable);
+        Page<BookReadDTO> result = bookService.getBooks("title", "genre1", "author", "description2", 1.0, 2.0,
+                pageable);
 
         assertEquals(1, result.getContent().size());
         assertEquals(bookMapper.BookToReadDto(storedBooks.get(1)), result.getContent().getFirst());
@@ -109,33 +111,33 @@ class BookServiceTest {
         assertTrue(result.get().getGenres().isEmpty());
     }
 
-    @Test
-    @DisplayName("getBookByID(1) - Success")
-    void getBookByIDFound() {
-        when(bookRepository.findById(1)).thenReturn(Optional.of(storedBooks.getFirst()));
+  @Test
+  @DisplayName("getBookByID(1) - Success")
+  void getBookByIDFound() {
+    when(bookRepository.findById(1)).thenReturn(Optional.of(storedBooks.getFirst()));
 
-        Optional<BookReadDTO> result = bookService.getBookByID(1);
+    Optional<BookReadDTO> result = bookService.getBookByID(1);
 
-        assertFalse(result.isEmpty());
-        assertEquals(storedBooks.getFirst().getId(), result.get().getId());
-        assertEquals(storedBooks.getFirst().getTitle(), result.get().getTitle());
-        assertEquals(storedBooks.getFirst().getAuthor(), result.get().getAuthor());
-        assertEquals(storedBooks.getFirst().getDescription(), result.get().getDescription());
-        assertEquals(storedBooks.getFirst().getPrice(), result.get().getPrice());
-        assertEquals(storedBooks.getFirst().getAvailability(), result.get().getAvailability());
-        assertEquals(storedBooks.getFirst().getIsbn(), result.get().getIsbn());
-        assertTrue(result.get().getGenres().isEmpty());
-    }
+    assertFalse(result.isEmpty());
+    assertEquals(storedBooks.getFirst().getId(), result.get().getId());
+    assertEquals(storedBooks.getFirst().getTitle(), result.get().getTitle());
+    assertEquals(storedBooks.getFirst().getAuthor(), result.get().getAuthor());
+    assertEquals(storedBooks.getFirst().getDescription(), result.get().getDescription());
+    assertEquals(storedBooks.getFirst().getPrice(), result.get().getPrice());
+    assertEquals(storedBooks.getFirst().getAvailability(), result.get().getAvailability());
+    assertEquals(storedBooks.getFirst().getIsbn(), result.get().getIsbn());
+    assertTrue(result.get().getGenres().isEmpty());
+  }
 
-    @Test
-    @DisplayName("getBookByID(999) - Not Found")
-    void getBookByIDNotFound() {
-        when(bookRepository.findById(999)).thenReturn(Optional.empty());
+  @Test
+  @DisplayName("getBookByID(999) - Not Found")
+  void getBookByIDNotFound() {
+    when(bookRepository.findById(999)).thenReturn(Optional.empty());
 
-        Optional<BookReadDTO> result = bookService.getBookByID(999);
+    Optional<BookReadDTO> result = bookService.getBookByID(999);
 
-        assertTrue(result.isEmpty());
-    }
+    assertTrue(result.isEmpty());
+  }
 
     @Test
     @DisplayName("getBookByID(-1) - Invalid ID")
@@ -188,33 +190,33 @@ class BookServiceTest {
         assertThrows(BookNotFoundException.class, () -> bookService.updateBookByID(-1, updateBookDTO));
     }
 
-    @Test
-    @DisplayName("deleteBookByID(1) - Success")
-    void deleteBookByIDFound() {
-        when(bookRepository.deleteById(1L)).thenReturn(1L);
+  @Test
+  @DisplayName("deleteBookByID(1) - Success")
+  void deleteBookByIDFound() {
+    when(bookRepository.deleteById(1L)).thenReturn(1L);
 
-        Long result = bookService.deleteBookByID(1L);
+    Long result = bookService.deleteBookByID(1L);
 
-        assertEquals(1, result);
-    }
+    assertEquals(1, result);
+  }
 
-    @Test
-    @DisplayName("deleteBookByID(999) - Not Found")
-    void deleteBookByIDNotFound() {
-        when(bookRepository.deleteById(999L)).thenReturn(0L);
+  @Test
+  @DisplayName("deleteBookByID(999) - Not Found")
+  void deleteBookByIDNotFound() {
+    when(bookRepository.deleteById(999L)).thenReturn(0L);
 
-        Long result = bookService.deleteBookByID(999L);
+    Long result = bookService.deleteBookByID(999L);
 
-        assertEquals(0, result);
-    }
+    assertEquals(0, result);
+  }
 
-    @Test
-    @DisplayName("deleteBookByID(-1) - Invalid ID")
-    void deleteBookByIDInvalid() {
-        when(bookRepository.deleteById(-1L)).thenReturn(0L);
+  @Test
+  @DisplayName("deleteBookByID(-1) - Invalid ID")
+  void deleteBookByIDInvalid() {
+    when(bookRepository.deleteById(-1L)).thenReturn(0L);
 
-        Long result = bookService.deleteBookByID(-1L);
+    Long result = bookService.deleteBookByID(-1L);
 
-        assertEquals(0, result);
-    }
+    assertEquals(0, result);
+  }
 }

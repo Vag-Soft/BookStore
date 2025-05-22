@@ -1,9 +1,9 @@
 package com.vagsoft.bookstore.dto;
 
-import lombok.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.*;
 
 @Data
 @Builder

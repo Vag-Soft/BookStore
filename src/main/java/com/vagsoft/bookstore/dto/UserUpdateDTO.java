@@ -2,11 +2,7 @@ package com.vagsoft.bookstore.dto;
 
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.annotations.UniqueField;
-import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.repositories.UserRepository;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

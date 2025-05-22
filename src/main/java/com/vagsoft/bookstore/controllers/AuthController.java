@@ -1,11 +1,11 @@
 package com.vagsoft.bookstore.controllers;
 
+import java.util.Optional;
+
 import com.vagsoft.bookstore.annotations.ValidAdminRegistration;
-import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.UserLoginDTO;
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserWriteDTO;
-import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
 import com.vagsoft.bookstore.errors.exceptions.UserCreationException;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.services.AuthService;
@@ -14,23 +14,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
-/**
- * Controller class for handling authentication-related requests
- */
+/** Controller class for handling authentication-related requests */
 @RestController
 @RequestMapping(path = "/auth")
 @Validated
@@ -41,7 +35,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
 
-    public AuthController(AuthService authService, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper) {
+    public AuthController(AuthService authService, JwtService jwtService, AuthenticationManager authenticationManager,
+            UserMapper userMapper) {
         this.authService = authService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
@@ -51,12 +46,14 @@ public class AuthController {
     /**
      * Registers a new user and returns a JWT token
      *
-     * @param userWriteDTO the UserWriteDTO containing user details
+     * @param userWriteDTO
+     *            the UserWriteDTO containing user details
      * @return ResponseEntity containing the registered UserReadDTO and JWT token
      */
     @ApiResponse(responseCode = "201")
     @PostMapping("/register")
-    public ResponseEntity<UserReadDTO> registerUser(@RequestBody @ValidAdminRegistration @Valid UserWriteDTO userWriteDTO) {
+    public ResponseEntity<UserReadDTO> registerUser(
+            @RequestBody @ValidAdminRegistration @Valid UserWriteDTO userWriteDTO) {
         log.info("POST /auth/register: userWriteDTO={}", userWriteDTO);
 
         UserLoginDTO userLoginDTO = userMapper.UserWriteToLoginDto(userWriteDTO);
@@ -65,25 +62,21 @@ public class AuthController {
 
         String jwtToken = authService.authenticate(userLoginDTO);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+        return ResponseEntity.status(HttpStatus.CREATED).header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .body(registeredUser.orElseThrow(() -> new UserCreationException("User registration failed")));
     }
 
     /**
      * Logins a user and returns a JWT token
      *
-     * @param userLoginDTO the UserLoginDTO containing login credentials
+     * @param userLoginDTO
+     *            the UserLoginDTO containing login credentials
      * @return ResponseEntity containing the JWT token
      */
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody @Valid UserLoginDTO userLoginDTO) {
         log.info("POST /auth/login: userWriteDTO={}", userLoginDTO);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(authService.authenticate(userLoginDTO));
+        return ResponseEntity.status(HttpStatus.OK).body(authService.authenticate(userLoginDTO));
     }
-
 }

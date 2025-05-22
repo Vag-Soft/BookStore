@@ -1,9 +1,6 @@
 package com.vagsoft.bookstore.dto;
 
 import com.vagsoft.bookstore.annotations.UniqueField;
-import com.vagsoft.bookstore.models.Cart;
-import com.vagsoft.bookstore.models.Favourite;
-import com.vagsoft.bookstore.models.Order;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import jakarta.persistence.*;

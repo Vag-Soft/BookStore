@@ -1,17 +1,19 @@
 package com.vagsoft.bookstore.services;
 
-import com.vagsoft.bookstore.models.User;
+import java.util.Optional;
+
+import com.vagsoft.bookstore.models.CustomUserDetails;
+import com.vagsoft.bookstore.models.entities.User;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Custom UserDetailsService implementation for loading user details from the database
- * based on the username.
+ * Custom UserDetailsService implementation for loading user details from the
+ * database based on the username.
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -24,11 +26,14 @@ public class CustomUserDetailsService implements UserDetailsService {
     /**
      * Loads user details by username.
      *
-     * @param username the username of the user
+     * @param username
+     *            the username of the user
      * @return UserDetails object containing user information
-     * @throws UsernameNotFoundException if the user is not found
+     * @throws UsernameNotFoundException
+     *             if the user is not found
      */
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
@@ -37,4 +42,3 @@ public class CustomUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(user.get());
     }
 }
-

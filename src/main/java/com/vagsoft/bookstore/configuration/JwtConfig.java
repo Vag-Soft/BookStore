@@ -1,5 +1,9 @@
 package com.vagsoft.bookstore.configuration;
 
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
+
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -10,20 +14,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.time.Duration;
-
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
-/**
- * Configuration class for JWT settings
- */
+/** Configuration class for JWT settings */
 @Configuration
 @Setter
 @Getter
@@ -36,26 +32,21 @@ public class JwtConfig {
     private Duration ttl;
 
     /**
-     * Bean for configuring the JWT encoder
-     * This bean uses the public and private keys to create a JWT encoder
-     * that can be used to generate JWT tokens.
+     * Bean for configuring the JWT encoder This bean uses the public and private
+     * keys to create a JWT encoder that can be used to generate JWT tokens.
      *
      * @return JwtEncoder instance
      */
     @Bean
     public JwtEncoder jwtEncoder() {
-        final var jwk = new RSAKey
-                        .Builder(publicKey)
-                        .privateKey(privateKey).build();
+        final var jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
 
-        return new NimbusJwtEncoder(
-                new ImmutableJWKSet<>(new JWKSet(jwk)));
+        return new NimbusJwtEncoder(new ImmutableJWKSet<>(new JWKSet(jwk)));
     }
 
     /**
-     * Bean for configuring the JWT decoder
-     * This bean uses the public key to create a JWT decoder
-     * that can be used to validate and decode JWT tokens.
+     * Bean for configuring the JWT decoder This bean uses the public key to create
+     * a JWT decoder that can be used to validate and decode JWT tokens.
      *
      * @return JwtDecoder instance
      */
@@ -65,18 +56,19 @@ public class JwtConfig {
     }
 
     /**
-     * Bean for configuring the JWT service
-     * This bean uses the application name and JWT encoder to create a JWT service
-     * that can be used to generate and validate JWT tokens.
+     * Bean for configuring the JWT service This bean uses the application name and
+     * JWT encoder to create a JWT service that can be used to generate and validate
+     * JWT tokens.
      *
-     * @param appName the name of the application
-     * @param jwtEncoder the JWT encoder
+     * @param appName
+     *            the name of the application
+     * @param jwtEncoder
+     *            the JWT encoder
      * @return JwtService instance
      */
     @Bean
-    public JwtService jwtService(
-            @Value("${spring.application.name}") final String appName,
-            final JwtEncoder jwtEncoder, final JwtDecoder jwtDecoder) {
+    public JwtService jwtService(@Value("${spring.application.name}") final String appName, final JwtEncoder jwtEncoder,
+            final JwtDecoder jwtDecoder) {
 
         return new JwtService(appName, ttl, jwtEncoder, jwtDecoder);
     }

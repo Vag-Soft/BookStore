@@ -1,12 +1,12 @@
-package com.vagsoft.bookstore.models;
-
-import com.vagsoft.bookstore.models.enums.Status;
-import jakarta.persistence.*;
-import lombok.Data;
+package com.vagsoft.bookstore.models.entities;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.vagsoft.bookstore.models.enums.Status;
+import jakarta.persistence.*;
+import lombok.Data;
 
 @Data
 @Entity

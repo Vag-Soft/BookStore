@@ -1,4 +1,6 @@
-package com.vagsoft.bookstore.models;
+package com.vagsoft.bookstore.models.entities;
+
+import java.time.LocalDate;
 
 import com.vagsoft.bookstore.models.enums.Role;
 import jakarta.persistence.*;
@@ -6,11 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 @Data
 @Builder
@@ -46,7 +43,8 @@ public class User {
     @Column(name = "signupdate", nullable = false)
     private LocalDate signupDate;
 
-    public User(String email, String username, String hashPassword, Role role, String firstName, String lastName, LocalDate signupDate) {
+    public User(String email, String username, String hashPassword, Role role, String firstName, String lastName,
+            LocalDate signupDate) {
         this.email = email;
         this.username = username;
         this.hashPassword = hashPassword;
@@ -57,25 +55,26 @@ public class User {
     }
 
     //
-//    @OneToOne
-//    @JoinColumn(name = "userID")
-//    private Cart cart;
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-//    @JoinColumn(name = "userID")
-//    private List<Order> orders = new ArrayList<>();
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-//    @JoinColumn(name = "userID")
-//    private List<Favourite> favourites = new ArrayList<>();
-//
-//    public void addOrder(Order order) {
-//        orders.add(order);
-//    }
-//
-//    public void addFavourite(Favourite favourite) {
-//        favourites.add(favourite);
-//    }
-
+    // @OneToOne
+    // @JoinColumn(name = "userID")
+    // private Cart cart;
+    //
+    // @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval =
+    // true)
+    // @JoinColumn(name = "userID")
+    // private List<Order> orders = new ArrayList<>();
+    //
+    // @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval =
+    // true)
+    // @JoinColumn(name = "userID")
+    // private List<Favourite> favourites = new ArrayList<>();
+    //
+    // public void addOrder(Order order) {
+    // orders.add(order);
+    // }
+    //
+    // public void addFavourite(Favourite favourite) {
+    // favourites.add(favourite);
+    // }
 
 }

@@ -1,12 +1,13 @@
-package com.vagsoft.bookstore.models;
+package com.vagsoft.bookstore.models.entities;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @Builder
@@ -41,11 +42,7 @@ public class Book {
     @Column(name = "ISBN", unique = true)
     private String isbn;
 
-    @OneToMany(
-            mappedBy = "book",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Genre> genres = new ArrayList<>();
 
     public void addGenre(Genre genre) {

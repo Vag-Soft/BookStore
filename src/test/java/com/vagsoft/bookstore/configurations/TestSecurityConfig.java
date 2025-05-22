@@ -3,7 +3,6 @@ package com.vagsoft.bookstore.configurations;
 import com.vagsoft.bookstore.services.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -20,20 +19,15 @@ import org.springframework.security.web.SecurityFilterChain;
 public class TestSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll())
-
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .build();
+        return http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
     }
 
     /**
      * Bean for configuring the authentication manager
      *
-     * @param userDetailsService UserDetailsService object for loading user details
+     * @param userDetailsService
+     *            UserDetailsService object for loading user details
      * @return AuthenticationManager object
      */
     @Bean

@@ -45,10 +45,10 @@ INSERT INTO Carts (userID)
 VALUES
     (1), (2), (3), (4);
 
-INSERT INTO CartItems (cartID, userID, quantity)
+INSERT INTO CartItems (cartID, bookID, quantity)
 VALUES
     (1, 1, 1),
-    (1, 2, 1),
+    (2, 2, 1),
     (3, 4, 1),
     (4, 2, 3);
 
