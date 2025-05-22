@@ -3,13 +3,10 @@ package com.vagsoft.bookstore.services;
 import com.vagsoft.bookstore.dto.FavouriteReadDTO;
 import com.vagsoft.bookstore.dto.FavouriteWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
-import com.vagsoft.bookstore.errors.exceptions.FavouriteCreationException;
 import com.vagsoft.bookstore.mappers.FavouriteMapper;
 import com.vagsoft.bookstore.models.entities.Favourite;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.FavouriteRepository;
-import jakarta.validation.ConstraintViolationException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,7 +38,7 @@ public class FavouriteService {
      */
     @Transactional(readOnly = true)
     public Page<FavouriteReadDTO> getFavouritesByUserID(Integer userID, Pageable pageable) {
-        return favouriteMapper.PageBookToPageDto(favouriteRepository.findFavouritesByUserID(userID, pageable));
+        return favouriteMapper.pageBookToPageDto(favouriteRepository.findFavouritesByUserID(userID, pageable));
     }
 
     /**
@@ -53,12 +50,12 @@ public class FavouriteService {
      */
     @Transactional
     public Optional<FavouriteReadDTO> addFavourite(Integer userID, FavouriteWriteDTO favouriteWriteDTO) {
-        Favourite favouriteToSave = favouriteMapper.DtoToFavourite(favouriteWriteDTO);
+        Favourite favouriteToSave = favouriteMapper.dtoToFavourite(favouriteWriteDTO);
         favouriteToSave.setUserID(userID);
         favouriteToSave.setBook(bookRepository.findById(favouriteWriteDTO.getBookID()).orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + favouriteWriteDTO.getBookID())));
 
         Favourite savedFavourite = favouriteRepository.save(favouriteToSave);
-        return Optional.of(favouriteMapper.FavouriteToReadDto(savedFavourite));
+        return Optional.of(favouriteMapper.favouriteToReadDto(savedFavourite));
     }
 
 

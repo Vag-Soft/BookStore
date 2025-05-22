@@ -17,23 +17,30 @@ import java.util.List;
  */
 public class CustomPageImpl<T> extends PageImpl<T> {
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-    public CustomPageImpl(@JsonProperty("content") List<T> content, @JsonProperty("number") int number,
-                          @JsonProperty("size") int size, @JsonProperty("totalElements") Long totalElements,
-                          @JsonProperty("pageable") JsonNode pageable, @JsonProperty("last") boolean last,
-                          @JsonProperty("totalPages") int totalPages, @JsonProperty("sort") JsonNode sort,
+    public CustomPageImpl(@JsonProperty("content") List<T> content,
+                          @JsonProperty("number") int number,
+                          @JsonProperty("size") int size,
+                          @JsonProperty("totalElements") Long totalElements,
+                          @JsonProperty("pageable") JsonNode pageable,
+                          @JsonProperty("last") boolean last,
+                          @JsonProperty("totalPages") int totalPages,
+                          @JsonProperty("sort") JsonNode sort,
                           @JsonProperty("numberOfElements") int numberOfElements) {
-        super(content, PageRequest.of(number, 1), 10);
+        super(content != null ? content : new ArrayList<>(),
+                PageRequest.of(Math.max(0, number), Math.max(1, size)),
+                totalElements != null ? totalElements : 0);
     }
 
     public CustomPageImpl(List<T> content, Pageable pageable, long total) {
-        super(content, pageable, total);
+        super(content != null ? content : new ArrayList<>(), pageable, total);
     }
 
     public CustomPageImpl(List<T> content) {
-        super(content);
+        super(content != null ? content : new ArrayList<>());
     }
 
     public CustomPageImpl() {
         super(new ArrayList<>());
     }
+
 }

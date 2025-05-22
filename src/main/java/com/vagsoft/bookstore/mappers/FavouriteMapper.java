@@ -1,9 +1,7 @@
 package com.vagsoft.bookstore.mappers;
 
-import com.vagsoft.bookstore.dto.BookReadDTO;
 import com.vagsoft.bookstore.dto.FavouriteReadDTO;
 import com.vagsoft.bookstore.dto.FavouriteWriteDTO;
-import com.vagsoft.bookstore.models.entities.Book;
 import com.vagsoft.bookstore.models.entities.Favourite;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
@@ -16,9 +14,9 @@ import java.util.List;
  */
 @Mapper(componentModel = "spring")
 public interface FavouriteMapper {
-    Favourite DtoToFavourite(FavouriteWriteDTO favouriteWriteDTO);
+    Favourite dtoToFavourite(FavouriteWriteDTO favouriteWriteDTO);
 
-    FavouriteReadDTO FavouriteToReadDto(Favourite favourite);
+    FavouriteReadDTO favouriteToReadDto(Favourite favourite);
 
     /**
      * Converts a list of Favourite entities to a list of FavouriteReadDTOs
@@ -26,7 +24,7 @@ public interface FavouriteMapper {
      * @param favourites the list of Favourite entities to be converted
      * @return the list of converted FavouriteReadDTOs
      */
-    List<FavouriteReadDTO> ListFavouriteToListDto(List<Favourite> favourites);
+    List<FavouriteReadDTO> listFavouriteToListDto(List<Favourite> favourites);
 
     /**
      * Converts a page of Favourite entities to a page of FavouriteReadDTOs
@@ -34,7 +32,7 @@ public interface FavouriteMapper {
      * @param page the page of Favourite entities to be converted
      * @return the page of converted FavouriteReadDTOs
      */
-    default Page<FavouriteReadDTO> PageBookToPageDto(Page<Favourite> page) {
-        return new PageImpl<>(ListFavouriteToListDto(page.getContent()), page.getPageable(), page.getTotalElements());
+    default Page<FavouriteReadDTO> pageBookToPageDto(Page<Favourite> page) {
+        return new PageImpl<>(listFavouriteToListDto(page.getContent()), page.getPageable(), page.getTotalElements());
     }
 }

@@ -9,20 +9,33 @@ import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.pagination.CustomPageImpl;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.UserService;
+import com.vagsoft.bookstore.utils.AuthUtils;
 import org.junit.jupiter.api.*;
+import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
@@ -38,6 +51,8 @@ public class UserIntegrationTest {
     private UserMapper userMapper;
     @Autowired
     private TestRestTemplate client;
+    @MockitoBean
+    private AuthUtils authUtils;
 
     User user1, user2;
     @BeforeEach
@@ -228,4 +243,102 @@ public class UserIntegrationTest {
         assertTrue(foundUser.isEmpty());
     }
 
+    @Test
+    @DisplayName("GET /users/me - Success")
+    void getUsersMe() throws Exception {
+        lenient().when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
+        ResponseEntity<UserReadDTO> response = client.getForEntity("/users/me", UserReadDTO.class);
+
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(userMapper.UserToReadDto(user1), response.getBody());
+    }
+
+    @Test
+    @DisplayName("GET /users/me - Error")
+    void getUsersMeError() throws Exception {
+        lenient().when(authUtils.getUserIdFromAuthentication()).thenThrow(new IllegalArgumentException("Invalid Jwt token"));
+        ResponseEntity<UserReadDTO> response = client.getForEntity("/users/me", UserReadDTO.class);
+
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("PUT /users/me - Success")
+    void updateUserMe() throws Exception {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        String updateUserString = objectMapper.writeValueAsString(userUpdateDTO);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(updateUserString, headers);
+
+        lenient().when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
+
+        ResponseEntity<UserReadDTO> response = client.exchange("/users/me", HttpMethod.PUT, request, UserReadDTO.class);
+
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        UserReadDTO userReadDTO = response.getBody();
+        assertNotNull(userReadDTO);
+        assertEquals(user1.getId(), userReadDTO.getId());
+        assertEquals(userUpdateDTO.getUsername(), userReadDTO.getUsername());
+        assertEquals(user1.getEmail(), userReadDTO.getEmail());
+        assertEquals(user1.getFirstName(), userReadDTO.getFirstName());
+        assertEquals(user1.getLastName(), userReadDTO.getLastName());
+        assertEquals(user1.getSignupDate(), userReadDTO.getSignupDate());
+
+
+        Optional<UserReadDTO> updatedUser = userService.getUserByID(user1.getId());
+        assertTrue(updatedUser.isPresent());
+        assertEquals(user1.getId(), updatedUser.get().getId());
+        assertEquals(userUpdateDTO.getUsername(), updatedUser.get().getUsername());
+        assertEquals(user1.getEmail(), updatedUser.get().getEmail());
+        assertEquals(user1.getFirstName(), updatedUser.get().getFirstName());
+        assertEquals(user1.getLastName(), updatedUser.get().getLastName());
+        assertEquals(user1.getSignupDate(), updatedUser.get().getSignupDate());
+    }
+
+
+    @Test
+    @DisplayName("PUT /users/me - Error")
+    void updateUserMeError() throws Exception {
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
+        userUpdateDTO.setUsername("jane");
+        String updateUserString = objectMapper.writeValueAsString(userUpdateDTO);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(updateUserString, headers);
+
+        lenient().when(authUtils.getUserIdFromAuthentication()).thenThrow(new IllegalArgumentException("Invalid Jwt token"));
+
+        ResponseEntity<UserReadDTO> response = client.exchange("/users/me", HttpMethod.PUT, request, UserReadDTO.class);
+
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("DELETE /users/me - Success")
+    void deleteUserMe() throws Exception {
+        lenient().when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
+
+        ResponseEntity<Void> response = client.exchange("/users/me", HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+
+        Optional<UserReadDTO> foundUser = userService.getUserByID(user1.getId());
+        assertTrue(foundUser.isEmpty());
+    }
+
+    @Test
+    @DisplayName("DELETE /users/me - Error")
+    void deleteUserMeError() throws Exception {
+        lenient().when(authUtils.getUserIdFromAuthentication()).thenThrow(new IllegalArgumentException("Invalid Jwt token"));
+
+        ResponseEntity<Void> response = client.exchange("/users/me", HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+    }
 }

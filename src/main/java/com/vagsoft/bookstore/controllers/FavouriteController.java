@@ -1,5 +1,6 @@
 package com.vagsoft.bookstore.controllers;
 
+import com.vagsoft.bookstore.annotations.ExistsResource;
 import com.vagsoft.bookstore.annotations.IsAdmin;
 import com.vagsoft.bookstore.annotations.UniqueUserFavourite;
 import com.vagsoft.bookstore.dto.FavouriteReadDTO;
@@ -7,14 +8,19 @@ import com.vagsoft.bookstore.dto.FavouriteWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.errors.exceptions.FavouriteCreationException;
 import com.vagsoft.bookstore.errors.exceptions.FavouriteNotFoundException;
+import com.vagsoft.bookstore.repositories.BookRepository;
+import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.FavouriteService;
+import com.vagsoft.bookstore.utils.AuthUtils;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.constraints.Positive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
@@ -31,9 +37,11 @@ import java.util.Optional;
 public class FavouriteController {
     private static final Logger log = LoggerFactory.getLogger(FavouriteController.class);
     private final FavouriteService favouriteService;
+    private final AuthUtils authUtils;
 
-    public FavouriteController(FavouriteService favouriteService) {
+    public FavouriteController(FavouriteService favouriteService, AuthUtils authUtils) {
         this.favouriteService = favouriteService;
+        this.authUtils = authUtils;
     }
 
     /**
@@ -45,7 +53,9 @@ public class FavouriteController {
      */
     @IsAdmin
     @GetMapping("/{userID}/favourites")
-    public ResponseEntity<Page<FavouriteReadDTO>> getFavourites(@PathVariable Integer userID, Pageable pageable) {
+    public ResponseEntity<Page<FavouriteReadDTO>> getFavourites(
+                    @PathVariable @Positive  @ExistsResource(repository = UserRepository.class) Integer userID,
+                    Pageable pageable) {
         log.info("GET /users/{}/favourites", userID);
 
         return ResponseEntity.ok(favouriteService.getFavouritesByUserID(userID, pageable));
@@ -61,7 +71,9 @@ public class FavouriteController {
     @ApiResponse(responseCode = "201")
     @IsAdmin
     @PostMapping("/{userID}/favourites") //TODO: move validation to service layer maybe
-    public ResponseEntity<FavouriteReadDTO> addFavourite(@PathVariable Integer userID, @RequestBody @UniqueUserFavourite FavouriteWriteDTO favouriteWriteDTO) {
+    public ResponseEntity<FavouriteReadDTO> addFavourite(
+                    @PathVariable @Positive @ExistsResource(repository = UserRepository.class)  Integer userID,
+                    @RequestBody @UniqueUserFavourite FavouriteWriteDTO favouriteWriteDTO) {
         log.info("POST /users/{}/favourites: favouriteWriteDTO={}", userID, favouriteWriteDTO);
 
         Optional<FavouriteReadDTO> savedFavourite = favouriteService.addFavourite(userID, favouriteWriteDTO);
@@ -80,7 +92,9 @@ public class FavouriteController {
     @ApiResponse(responseCode = "204")
     @IsAdmin
     @DeleteMapping("/{userID}/favourites/{bookID}")
-    public ResponseEntity<Void> deleteFavourite(@PathVariable Integer userID, @PathVariable Integer bookID) {
+    public ResponseEntity<Void> deleteFavourite(
+                    @PathVariable @Positive @ExistsResource(repository = UserRepository.class) Integer userID,
+                    @PathVariable @Positive @ExistsResource(repository = BookRepository.class) Integer bookID) {
         log.info("DELETE /users/{}/favourites/{}", userID, bookID);
 
         Long deletedBooks = favouriteService.deleteFavourite(userID, bookID);
@@ -95,15 +109,14 @@ public class FavouriteController {
     /**
      * Retrieves the favourites of the currently authenticated user
      *
-     * @param jwt the JWT token of the authenticated user
      * @param pageable the pagination information (optional)
      * @return a page of favourites for the authenticated user
      */
     @GetMapping("/me/favourites")
-    public ResponseEntity<Page<FavouriteReadDTO>> getFavourites(@AuthenticationPrincipal Jwt jwt, Pageable pageable) {
-        log.info("GET /users/me/favourites: id={}, username={}, role={}", jwt.getClaimAsString("id"), jwt.getSubject(), jwt.getClaimAsString("scope"));
+    public ResponseEntity<Page<FavouriteReadDTO>> getFavourites(Pageable pageable) {
+        log.info("GET /users/me/favourites");
 
-        Integer userID = Integer.valueOf(jwt.getClaimAsString("id"));
+        Integer userID = authUtils.getUserIdFromAuthentication();
 
         return ResponseEntity.ok(favouriteService.getFavouritesByUserID(userID, pageable));
     }
@@ -112,15 +125,14 @@ public class FavouriteController {
      * Adds a new favourite book for the currently authenticated user
      *
      * @param favouriteWriteDTO the favourite book to be added
-     * @param jwt the JWT token of the authenticated user
      * @return the created favourite
      */
     @ApiResponse(responseCode = "201")
     @PostMapping("/me/favourites") //TODO: move validation to service layer maybe
-    public ResponseEntity<FavouriteReadDTO> addFavourite(@RequestBody @UniqueUserFavourite FavouriteWriteDTO favouriteWriteDTO, @AuthenticationPrincipal Jwt jwt) {
-        log.info("POST /users/me/favourites: favouriteWriteDTO={}, id={}, username={}, role={}", favouriteWriteDTO, jwt.getClaimAsString("id"), jwt.getSubject(), jwt.getClaimAsString("scope"));
+    public ResponseEntity<FavouriteReadDTO> addFavourite(@RequestBody @UniqueUserFavourite FavouriteWriteDTO favouriteWriteDTO) {
+        log.info("POST /users/me/favourites: favouriteWriteDTO={}", favouriteWriteDTO);
 
-        Integer userID = Integer.valueOf(jwt.getClaimAsString("id"));
+        Integer userID = authUtils.getUserIdFromAuthentication();
 
         Optional<FavouriteReadDTO> savedFavourite = favouriteService.addFavourite(userID, favouriteWriteDTO);
         return ResponseEntity
@@ -132,15 +144,14 @@ public class FavouriteController {
      * Deletes a favourite book for the currently authenticated user
      *
      * @param bookID the ID of the favourite book to be deleted
-     * @param jwt the JWT token of the authenticated user
      * @return a response entity with no content
      */
     @ApiResponse(responseCode = "204")
     @DeleteMapping("/me/favourites/{bookID}")
-    public ResponseEntity<Void> deleteFavourite(@PathVariable Integer bookID, @AuthenticationPrincipal Jwt jwt) {
-        log.info("DELETE /users/me/favourites/{}: id={}, username={}, role={}", bookID, jwt.getClaimAsString("id"), jwt.getSubject(), jwt.getClaimAsString("scope"));
+    public ResponseEntity<Void> deleteFavourite(@PathVariable @Positive Integer bookID) {
+        log.info("DELETE /users/me/favourites/{}", bookID);
 
-        Integer userID = Integer.valueOf(jwt.getClaimAsString("id"));
+        Integer userID = authUtils.getUserIdFromAuthentication();
 
         Long deletedBooks = favouriteService.deleteFavourite(userID, bookID);
 

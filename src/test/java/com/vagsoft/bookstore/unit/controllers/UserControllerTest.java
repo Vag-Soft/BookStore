@@ -12,6 +12,7 @@ import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.BookService;
 import com.vagsoft.bookstore.services.UserService;
+import com.vagsoft.bookstore.utils.AuthUtils;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -51,6 +52,8 @@ class UserControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @MockitoBean
+    private AuthUtils authUtils;
 
     private List<UserReadDTO> storedUsers;
     @BeforeEach
@@ -240,24 +243,6 @@ class UserControllerTest {
         mockMvc.perform(delete("/users/{userID}", -1))
                 .andExpect(status().isBadRequest());
     }
-//
-//    @Test
-//    @DisplayName("GET /users/me - Success")
-//    void getMe() throws Exception {
-//        UserReadDTO userOutput = storedUsers.getFirst();
-//        when(userService.getUserByID(1)).thenReturn(Optional.ofNullable(userOutput));
-//
-//        assertNotNull(userOutput);
-//        mockMvc.perform(get("/users/me"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType("application/json"))
-//
-//                .andExpect(jsonPath("$.id").value(userOutput.getId()))
-//                .andExpect(jsonPath("$.username").value(userOutput.getUsername()))
-//                .andExpect(jsonPath("$.email").value(userOutput.getEmail()))
-//                .andExpect(jsonPath("$.role").value(userOutput.getRole().toString()))
-//                .andExpect(jsonPath("$.firstName").value(userOutput.getFirstName()))
-//                .andExpect(jsonPath("$.lastName").value(userOutput.getLastName()))
-//                .andExpect(jsonPath("$.signupDate").value(userOutput.getSignupDate().toString()));
-//    }
+
+
 }

@@ -5,6 +5,7 @@ import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.errors.exceptions.ResourceCreationException;
 import com.vagsoft.bookstore.errors.exceptions.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,17 +29,17 @@ import java.util.stream.Collectors;
 /**
  * Global controller advice that handles exceptions
  */
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.vagsoft.bookstore")
 public class GlobalControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(GlobalControllerAdvice.class);
 
     /**
      * Handles argument exceptions
      *
-     * @param ex exception to handle of type {@link ConstraintViolationException}, {@link MethodArgumentTypeMismatchException}, {@link IllegalArgumentException}
+     * @param ex exception to handle of type {@link ConstraintViolationException}, {@link IllegalArgumentException}, {@link ValidationException}
      * @return a {@link ProblemDetail} with the error details
      */
-    @ExceptionHandler({ConstraintViolationException.class, IllegalArgumentException.class})
+    @ExceptionHandler({ConstraintViolationException.class, IllegalArgumentException.class, ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleArgumentExceptions(Exception ex) {
         log.error("ArgumentException", ex);

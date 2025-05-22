@@ -1,6 +1,7 @@
 package com.vagsoft.bookstore.validators;
 
 import com.vagsoft.bookstore.annotations.UniqueField;
+import com.vagsoft.bookstore.utils.AuthUtils;
 import com.vagsoft.bookstore.utils.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintValidator;
@@ -17,7 +18,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * Validates that a resource field is unique
+ * Validator for the {@link UniqueField} annotation.
  */
 public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Object> {
 
@@ -26,6 +27,9 @@ public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Ob
 
     @Autowired
     private HttpServletRequest request;
+
+    @Autowired
+    private AuthUtils authUtils;
 
     private Class<? extends JpaRepository<?, ?>>  repositoryClass;
     private String methodName;
@@ -62,11 +66,9 @@ public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Ob
                     Integer userID;
                     if (request.getRequestURI().contains("/me")) {
                         try {
-                            Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-                            userID = Integer.valueOf(jwt.getClaimAsString("id"));
+                            userID = authUtils.getUserIdFromAuthentication();
                         } catch (Exception e) {
-                            throw new IllegalStateException("No JWT token found in authenticated request");
+                            throw new IllegalArgumentException("No JWT token found in authenticated request");
                         }
                     } else {
                         userID = RequestUtils.getPathVariable(request, pathVariable, Integer.class);

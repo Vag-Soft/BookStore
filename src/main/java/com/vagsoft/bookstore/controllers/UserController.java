@@ -7,6 +7,7 @@ import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.services.UserService;
+import com.vagsoft.bookstore.utils.AuthUtils;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -15,7 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +34,11 @@ import java.util.Optional;
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
+    private final AuthUtils authUtils;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AuthUtils authUtils) {
         this.userService = userService;
+        this.authUtils = authUtils;
     }
 
     /**
@@ -116,14 +121,15 @@ public class UserController {
     /**
      * Retrieves the currently authenticated user
      *
-     * @param jwt the JWT token of the authenticated user
      * @return the currently authenticated user
      */
     @GetMapping(path = "/me")
-    public ResponseEntity<UserReadDTO> getPrincipalUser(@AuthenticationPrincipal Jwt jwt) {
-        log.info("GET /users/me: id={}, username={}, role={}", jwt.getClaimAsString("id"), jwt.getClaimAsString("username"), jwt.getClaimAsString("scope"));
+    public ResponseEntity<UserReadDTO> getPrincipalUser() {
+        log.info("GET /users/me");
 
-        Optional<UserReadDTO> foundUser = userService.getUserByID(Integer.valueOf(jwt.getClaimAsString("id")));
+        Integer userID = authUtils.getUserIdFromAuthentication();
+
+        Optional<UserReadDTO> foundUser = userService.getUserByID(userID);
 
         return ResponseEntity.ok(foundUser.orElseThrow(() -> new UserNotFoundException("No user found with the given JWT token")));
     }
@@ -132,14 +138,15 @@ public class UserController {
      * Updates the currently authenticated user with the given user information
      *
      * @param userUpdateDTO the new user information
-     * @param jwt the JWT token of the authenticated user
      * @return the updated user
      */
     @PutMapping(path = "/me")
-    public ResponseEntity<UserReadDTO> updatePrincipalUser(@RequestBody @Valid UserUpdateDTO userUpdateDTO, @AuthenticationPrincipal Jwt jwt) {
-        log.info("GET /users/me: userUpdateDTO={}, id={}, username={}, role={}", userUpdateDTO, jwt.getClaimAsString("id"), jwt.getClaimAsString("username"), jwt.getClaimAsString("scope"));
+    public ResponseEntity<UserReadDTO> updatePrincipalUser(@RequestBody @Valid UserUpdateDTO userUpdateDTO) {
+        log.info("PUT /users/me: userUpdateDTO={}", userUpdateDTO);
 
-        Optional<UserReadDTO> updatedUser = userService.updateUserByID(Integer.valueOf(jwt.getClaimAsString("id")), userUpdateDTO);
+        Integer userID = authUtils.getUserIdFromAuthentication();;
+
+        Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
 
         return ResponseEntity.ok(updatedUser.orElseThrow(() -> new UserNotFoundException("No user found with the given JWT token")));
     }
@@ -147,15 +154,16 @@ public class UserController {
     /**
      * Deletes the currently authenticated user
      *
-     * @param jwt the JWT token of the authenticated user
      * @return a ResponseEntity with no content
      */
     @ApiResponse(responseCode = "204")
     @DeleteMapping(path = "/me")
-    public ResponseEntity<Void> deleteUserByID(@AuthenticationPrincipal Jwt jwt) {
-        log.info("DELETE /users/me: id={}, username={}, role={}", jwt.getClaimAsString("id"), jwt.getClaimAsString("username"), jwt.getClaimAsString("scope"));
+    public ResponseEntity<Void> deleteUserByID() {
+        log.info("DELETE /users/me");
 
-        Long deletedUsers = userService.deleteUserByID(Long.valueOf(jwt.getClaimAsString("id")));
+        Integer userID = authUtils.getUserIdFromAuthentication();
+
+        Long deletedUsers = userService.deleteUserByID(Long.valueOf(userID));
 
         if (deletedUsers == 0) {
             throw new UserNotFoundException("No user found with the given JWT");
