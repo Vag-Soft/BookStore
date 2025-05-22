@@ -1,0 +1,88 @@
+CREATE TABLE Books (
+    ID SERIAL,
+    title VARCHAR(64) NOT NULL,
+    author VARCHAR(31) NOT NULL,
+    description VARCHAR,
+    pages INT NOT NULL,
+    price DECIMAL DEFAULT 0,
+    availability INT DEFAULT 0,
+    ISBN VARCHAR(31),
+
+    PRIMARY KEY(ID)
+);
+
+CREATE TABLE Genres (
+    ID SERIAL,
+    bookID INT,
+    genre VARCHAR(31),
+
+    PRIMARY KEY(ID),
+    FOREIGN KEY (bookID) REFERENCES Books(ID) ON DELETE CASCADE
+);
+
+
+
+CREATE TABLE Users (
+    ID SERIAL,
+    email VARCHAR(64) NOT NULL,
+    username VARCHAR(31) NOT NULL,
+    hashPassword VARCHAR(63) NOT NULL,
+    role VARCHAR(15) NOT NULL,
+    firstName VARCHAR(31) NOT NULL,
+    lastName VARCHAR(31) NOT NULL,
+    signupDate DATE NOT NULL,
+
+    PRIMARY KEY(ID)
+);
+
+CREATE TABLE Favourites (
+    ID SERIAL,
+    userID INT,
+    bookID INT,
+
+    PRIMARY KEY(ID),
+    FOREIGN KEY (userID) REFERENCES Users(ID) ON DELETE CASCADE,
+    FOREIGN KEY (bookID) REFERENCES Books(ID) ON DELETE CASCADE
+);
+
+CREATE TABLE Orders (
+    ID SERIAL,
+    userID INT NOT NULL,
+    totalAmount DECIMAL NOT NULL,
+    status VARCHAR(15) NOT NULL,
+    orderDate DATE NOT NULL,
+
+    PRIMARY KEY(ID),
+    FOREIGN KEY (userID) REFERENCES Users(ID) ON DELETE CASCADE
+);
+
+CREATE TABLE OrderItems (
+    ID SERIAL,
+    orderID INT,
+    bookID INT,
+    quantity INT DEFAULT 1,
+
+    PRIMARY KEY(ID),
+    FOREIGN KEY (orderID) REFERENCES Orders(ID) ON DELETE CASCADE,
+    FOREIGN KEY (bookID) REFERENCES Books(ID) ON DELETE CASCADE
+);
+
+
+CREATE TABLE Carts (
+    ID SERIAL,
+    userID INT NOT NULL,
+
+    PRIMARY KEY(ID),
+    FOREIGN KEY (userID) REFERENCES Users(ID) ON DELETE CASCADE
+);
+
+CREATE TABLE CartItems (
+    ID SERIAL,
+    cartID INT,
+    userID INT,
+    quantity INT DEFAULT 1,
+
+    PRIMARY KEY(ID),
+    FOREIGN KEY (cartID) REFERENCES Carts(ID) ON DELETE CASCADE,
+    FOREIGN KEY (userID) REFERENCES Users(ID) ON DELETE CASCADE
+);
