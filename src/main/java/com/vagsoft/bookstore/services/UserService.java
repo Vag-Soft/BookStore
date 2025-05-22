@@ -46,7 +46,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public Page<UserReadDTO> getUsers(String username, String email, Role role, String firstName, String lastName, Pageable pageable) {
-        return userMapper.PageUserToPageDto(userRepository.findUsers(username, email, role, firstName, lastName, pageable));
+        return userMapper.pageUserToPageDto(userRepository.findUsers(username, email, role, firstName, lastName, pageable));
     }
 
 

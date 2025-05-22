@@ -50,6 +50,11 @@ public class FavouriteService {
      */
     @Transactional
     public Optional<FavouriteReadDTO> addFavourite(Integer userID, FavouriteWriteDTO favouriteWriteDTO) {
+        if(favouriteRepository.existsByUserIDAndBook_Id(userID, favouriteWriteDTO.getBookID())) {
+            return Optional.empty();
+        }
+
+
         Favourite favouriteToSave = favouriteMapper.dtoToFavourite(favouriteWriteDTO);
         favouriteToSave.setUserID(userID);
         favouriteToSave.setBook(bookRepository.findById(favouriteWriteDTO.getBookID()).orElseThrow(() -> new BookNotFoundException("Book not found with ID: " + favouriteWriteDTO.getBookID())));

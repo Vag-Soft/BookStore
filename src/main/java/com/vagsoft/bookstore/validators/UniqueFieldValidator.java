@@ -53,29 +53,30 @@ public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Ob
         var repository = applicationContext.getBean(repositoryClass);
         var requestMethod = request.getMethod();
 
+
         switch(requestMethod) {
             case "POST":
                 try {
+                    // Running the repository method
                     Method repositoryMethod = repository.getClass().getMethod(methodName, value.getClass());
                     return ! (boolean) repositoryMethod.invoke(repository, value);
+
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
             case "PUT":
                 try {
-                    Integer userID;
-                    if (request.getRequestURI().contains("/me")) {
-                        try {
-                            userID = authUtils.getUserIdFromAuthentication();
-                        } catch (Exception e) {
-                            throw new IllegalArgumentException("No JWT token found in authenticated request");
-                        }
-                    } else {
-                        userID = RequestUtils.getPathVariable(request, pathVariable, Integer.class);
+                    // Getting the ID from the path variable or the JWT
+                    Integer resourceID;
+                    try{
+                        resourceID = RequestUtils.getPathVariable(request, pathVariable, Integer.class);
+                    } catch (Exception e) {
+                        resourceID = authUtils.getUserIdFromAuthentication();
                     }
 
+                    // Running the repository method
                     Method repositoryMethod = repository.getClass().getMethod(methodName, value.getClass(), Integer.class);
-                    return ! (boolean) repositoryMethod.invoke(repository, value, userID);
+                    return ! (boolean) repositoryMethod.invoke(repository, value, resourceID);
 
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException(e);

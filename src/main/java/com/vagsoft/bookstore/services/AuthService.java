@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -39,6 +40,7 @@ public class AuthService {
      * @param userWriteDTO the UserWriteDTO containing user details
      * @return the registered UserReadDTO
      */
+    @Transactional
     public Optional<UserReadDTO> registerUser(UserWriteDTO userWriteDTO) {
         String hashedPassword = passwordEncoder.encode(userWriteDTO.getPassword());
         userWriteDTO.setPassword(hashedPassword);

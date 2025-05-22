@@ -67,7 +67,7 @@ public interface UserMapper {
      * @param users the list of User entities to be converted
      * @return the list of converted UserReadDTOs
      */
-    List<UserReadDTO> ListUserToListDto(List<User> users);
+    List<UserReadDTO> listUserToListDto(List<User> users);
 
     /**
      * Converts a page of User entities to a page of UserReadDTOs
@@ -75,7 +75,7 @@ public interface UserMapper {
      * @param page the page of User entities to be converted
      * @return the page of converted UserReadDTOs
      */
-    default Page<UserReadDTO> PageUserToPageDto(Page<User> page) {
-        return new PageImpl<>(ListUserToListDto(page.getContent()), page.getPageable(), page.getTotalElements());
+    default Page<UserReadDTO> pageUserToPageDto(Page<User> page) {
+        return new PageImpl<>(listUserToListDto(page.getContent()), page.getPageable(), page.getTotalElements());
     }
 }

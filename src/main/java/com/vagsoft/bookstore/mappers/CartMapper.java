@@ -1,0 +1,34 @@
+package com.vagsoft.bookstore.mappers;
+
+import com.vagsoft.bookstore.dto.CartReadDTO;
+import com.vagsoft.bookstore.models.entities.Cart;
+import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+
+import java.util.List;
+
+/**
+ * Mapper class for converting Cart entities and DTOs
+ */
+@Mapper(componentModel = "spring")
+public interface CartMapper {
+
+    /**
+     * Converts a list of Cart entities to a list of CartReadDTOs
+     *
+     * @param carts the list of Cart entities to be converted
+     * @return the list of converted CartReadDTOs
+     */
+    List<CartReadDTO> listCartToDto(List<Cart> carts);
+
+    /**
+     * Converts a page of Cart entities to a page of CartReadDTOs
+     *
+     * @param page the page of Cart entities to be converted
+     * @return the page of converted CartReadDTOs
+     */
+    default Page<CartReadDTO> pageCartToPageDto(Page<Cart> page) {
+        return new PageImpl<>(listCartToDto(page.getContent()), page.getPageable(), page.getTotalElements());
+    }
+}

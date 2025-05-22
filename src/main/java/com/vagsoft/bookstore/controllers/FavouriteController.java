@@ -2,13 +2,13 @@ package com.vagsoft.bookstore.controllers;
 
 import com.vagsoft.bookstore.annotations.ExistsResource;
 import com.vagsoft.bookstore.annotations.IsAdmin;
-import com.vagsoft.bookstore.annotations.UniqueUserFavourite;
+import com.vagsoft.bookstore.annotations.UniqueCompositeFields;
 import com.vagsoft.bookstore.dto.FavouriteReadDTO;
 import com.vagsoft.bookstore.dto.FavouriteWriteDTO;
-import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.errors.exceptions.FavouriteCreationException;
 import com.vagsoft.bookstore.errors.exceptions.FavouriteNotFoundException;
 import com.vagsoft.bookstore.repositories.BookRepository;
+import com.vagsoft.bookstore.repositories.FavouriteRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.FavouriteService;
 import com.vagsoft.bookstore.utils.AuthUtils;
@@ -20,9 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,10 +67,18 @@ public class FavouriteController {
      */
     @ApiResponse(responseCode = "201")
     @IsAdmin
-    @PostMapping("/{userID}/favourites") //TODO: move validation to service layer maybe
+    @PostMapping("/{userID}/favourites")
     public ResponseEntity<FavouriteReadDTO> addFavourite(
                     @PathVariable @Positive @ExistsResource(repository = UserRepository.class)  Integer userID,
-                    @RequestBody @UniqueUserFavourite FavouriteWriteDTO favouriteWriteDTO) {
+                    @RequestBody
+                    @UniqueCompositeFields(
+                            repository = FavouriteRepository.class,
+                            methodName = "existsByUserIDAndBook_Id",
+                            pathVariable = "userID",
+                            dtoClass = FavouriteWriteDTO.class,
+                            dtoFieldName = "bookID",
+                            message = "This book is already in the user's favourites")
+                    FavouriteWriteDTO favouriteWriteDTO) {
         log.info("POST /users/{}/favourites: favouriteWriteDTO={}", userID, favouriteWriteDTO);
 
         Optional<FavouriteReadDTO> savedFavourite = favouriteService.addFavourite(userID, favouriteWriteDTO);
@@ -128,8 +133,17 @@ public class FavouriteController {
      * @return the created favourite
      */
     @ApiResponse(responseCode = "201")
-    @PostMapping("/me/favourites") //TODO: move validation to service layer maybe
-    public ResponseEntity<FavouriteReadDTO> addFavourite(@RequestBody @UniqueUserFavourite FavouriteWriteDTO favouriteWriteDTO) {
+    @PostMapping("/me/favourites")
+    public ResponseEntity<FavouriteReadDTO> addFavourite(
+                    @RequestBody
+                    @UniqueCompositeFields(
+                            repository = FavouriteRepository.class,
+                            methodName = "existsByUserIDAndBook_Id",
+                            usePathVariable = false,
+                            dtoClass = FavouriteWriteDTO.class,
+                            dtoFieldName = "bookID",
+                            message = "This book is already in your favourites")
+                    FavouriteWriteDTO favouriteWriteDTO) {
         log.info("POST /users/me/favourites: favouriteWriteDTO={}", favouriteWriteDTO);
 
         Integer userID = authUtils.getUserIdFromAuthentication();
