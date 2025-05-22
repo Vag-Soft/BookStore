@@ -26,7 +26,6 @@ An Online Bookstore Application designed for browsing, ordering and managing boo
 3. Run the BookStoreApplication class in src/main/java/com/vagsoft/bookstore/BookStoreApplication.java.
 4. Send HTTP requests at ```http://localhost:8080```.
 5. Check the API docs with Swagger UI at ```http://localhost:8080/swagger-ui/index.html```.
-(6. Run ```docker compose down``` to close and delete the main database instance, necessary when getting Flyway errors.)
 
 ## Useful Information
 - Checkout to the testing branch before running the application for testing purposes.
