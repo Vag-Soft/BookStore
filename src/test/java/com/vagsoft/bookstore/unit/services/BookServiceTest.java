@@ -1,6 +1,9 @@
 package com.vagsoft.bookstore.unit.services;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -190,33 +193,34 @@ class BookServiceTest {
         assertThrows(BookNotFoundException.class, () -> bookService.updateBookByID(-1, updateBookDTO));
     }
 
-  @Test
-  @DisplayName("deleteBookByID(1) - Success")
-  void deleteBookByIDFound() {
-    when(bookRepository.deleteById(1L)).thenReturn(1L);
+    @Test
+    @DisplayName("deleteBookByID(1) - Success")
+    void deleteBookByIDFound() {
+        doNothing().when(bookRepository).deleteById(1);
 
-    Long result = bookService.deleteBookByID(1L);
+        bookService.deleteBookByID(1);
 
-    assertEquals(1, result);
-  }
+        verify(bookRepository).deleteById(1);
+    }
 
-  @Test
-  @DisplayName("deleteBookByID(999) - Not Found")
-  void deleteBookByIDNotFound() {
-    when(bookRepository.deleteById(999L)).thenReturn(0L);
+    @Test
+    @DisplayName("deleteBookByID(999) - Not Found")
+    void deleteBookByIDNotFound() {
+        doThrow(new BookNotFoundException("No book found with the given ID: 999")).when(bookRepository).deleteById(999);
 
-    Long result = bookService.deleteBookByID(999L);
+        assertThrows(BookNotFoundException.class, () -> bookService.deleteBookByID(999));
 
-    assertEquals(0, result);
-  }
+        verify(bookRepository).deleteById(999);
+    }
 
-  @Test
-  @DisplayName("deleteBookByID(-1) - Invalid ID")
-  void deleteBookByIDInvalid() {
-    when(bookRepository.deleteById(-1L)).thenReturn(0L);
+    @Test
+    @DisplayName("deleteBookByID(-1) - Invalid ID")
+    void deleteBookByIDInvalid() {
+        doThrow(new IllegalArgumentException("Invalid Book ID: -1")).when(bookRepository).deleteById(-1);
 
-    Long result = bookService.deleteBookByID(-1L);
+        assertThrows(IllegalArgumentException.class, () -> bookService.deleteBookByID(-1));
 
-    assertEquals(0, result);
-  }
+        verify(bookRepository).deleteById(-1);
+    }
+
 }

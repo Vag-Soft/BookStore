@@ -18,5 +18,6 @@ public class BookReadDTO {
     private Double price;
     private Integer availability;
     private String isbn;
+    @Builder.Default
     private List<GenreDTO> genres = new ArrayList<>();
 }

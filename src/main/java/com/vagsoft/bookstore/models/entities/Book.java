@@ -42,6 +42,7 @@ public class Book {
     @Column(name = "ISBN", unique = true)
     private String isbn;
 
+    @Builder.Default
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Genre> genres = new ArrayList<>();
 

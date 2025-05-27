@@ -6,7 +6,6 @@ import com.vagsoft.bookstore.annotations.ExistsResource;
 import com.vagsoft.bookstore.annotations.IsAdmin;
 import com.vagsoft.bookstore.dto.CartReadDTO;
 import com.vagsoft.bookstore.errors.exceptions.CartNotFoundException;
-import com.vagsoft.bookstore.errors.exceptions.ResourceNotFoundException;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.CartService;
 import com.vagsoft.bookstore.utils.AuthUtils;
@@ -65,7 +64,8 @@ public class CartController {
         log.info("GET /carts/{}", userID);
 
         Optional<CartReadDTO> cart = cartService.getCartByUserId(userID);
-        return ResponseEntity.ok(cart.orElseThrow(() -> new CartNotFoundException("Cart not found for user ID: " + userID)));
+        return ResponseEntity
+                .ok(cart.orElseThrow(() -> new CartNotFoundException("Cart not found with the given JWT")));
     }
 
     /**
@@ -73,7 +73,6 @@ public class CartController {
      *
      * @return the cart associated with the authenticated user
      */
-    @IsAdmin
     @GetMapping("/me")
     public ResponseEntity<CartReadDTO> getCartByUserId() {
         log.info("GET /carts/me");
@@ -81,6 +80,7 @@ public class CartController {
         Integer userID = authUtils.getUserIdFromAuthentication();
 
         Optional<CartReadDTO> cart = cartService.getCartByUserId(userID);
-        return ResponseEntity.ok(cart.orElseThrow(() -> new CartNotFoundException("Cart not found for user ID: " + userID)));
+        return ResponseEntity
+                .ok(cart.orElseThrow(() -> new CartNotFoundException("Cart not found with the given JWT")));
     }
 }

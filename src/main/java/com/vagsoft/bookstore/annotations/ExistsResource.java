@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /** Validates that a resource exists */
 @Documented
 @Constraint(validatedBy = ExistsResourceValidator.class)
-@Target({ElementType.PARAMETER})
+@Target({ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExistsResource {
     /** The repository class to use for existence validation */

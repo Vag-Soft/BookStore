@@ -17,10 +17,8 @@ public class UserReadDTO {
     private Integer id;
     private String email;
     private String username;
-
     @Enumerated(EnumType.STRING)
     private Role role;
-
     private String firstName;
     private String lastName;
     private LocalDate signupDate;

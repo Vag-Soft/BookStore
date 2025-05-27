@@ -13,9 +13,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FavouriteWriteDTO {
+public class CartItemWriteDTO {
     @NotNull(message = "bookID must not be null")
     @Positive(message = "bookID must be greater than 0")
     @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist")
     private Integer bookID;
+
+    @Builder.Default
+    @Positive(message = "quantity must be greater than 0")
+    private Integer quantity = 1;
 }

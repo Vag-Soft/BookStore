@@ -39,17 +39,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             AND (:maxPrice IS NULL OR b.price <= :maxPrice)
             AND (:genre IS NULL OR b.id IN (SELECT g.book.id FROM Genre g WHERE g.genre ILIKE %:genre%))
             """)
-    public Page<Book> findBooks(String title, String genre, String author, String description, Double minPrice,
+    Page<Book> findBooks(String title, String genre, String author, String description, Double minPrice,
             Double maxPrice, Pageable pageable);
-
-    /**
-     * Deletes a book by its ID
-     *
-     * @param bookID
-     *            the ID of the book to be deleted
-     * @return the number of books deleted (should be 1)
-     */
-    public Long deleteById(Long bookID);
 
     /**
      * Checks if a book with the given ISBN exists in the database
@@ -58,7 +49,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
      *            the ISBN of the book to be checked
      * @return true if the book exists, false otherwise
      */
-    public boolean existsByIsbn(String isbn);
+    boolean existsByIsbn(String isbn);
 
     /**
      * Checks if a book with the given ISBN exists in the database, excluding the
@@ -70,5 +61,5 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
      *            the ID of the book to be excluded from the check
      * @return true if the book exists, false otherwise
      */
-    public boolean existsByIsbnAndIdNot(String isbn, Integer bookID);
+    boolean existsByIsbnAndIdNot(String isbn, Integer bookID);
 }

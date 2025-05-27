@@ -94,13 +94,12 @@ public class BookService {
     @Transactional
     public Optional<BookReadDTO> updateBookByID(Integer bookID, BookUpdateDTO bookUpdateDTO) {
 
-        Optional<Book> foundBook = bookRepository.findById(bookID);
-        if (foundBook.isEmpty())
-            throw new BookNotFoundException("No book found with the given ID: " + bookID);
+        Book foundBook = bookRepository.findById(bookID)
+                .orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID));
 
-        bookMapper.updateBookFromDto(bookUpdateDTO, foundBook.get());
+        bookMapper.updateBookFromDto(bookUpdateDTO, foundBook);
 
-        Book updatedBook = bookRepository.save(foundBook.get());
+        Book updatedBook = bookRepository.save(foundBook);
 
         return Optional.of(bookMapper.BookToReadDto(updatedBook));
     }
@@ -110,10 +109,9 @@ public class BookService {
      *
      * @param bookID
      *            the ID of the book to be deleted
-     * @return the number of books deleted (should be 1)
      */
     @Transactional
-    public Long deleteBookByID(Long bookID) {
-        return bookRepository.deleteById(bookID);
+    public void deleteBookByID(Integer bookID) {
+        bookRepository.deleteById(bookID);
     }
 }
