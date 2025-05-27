@@ -53,28 +53,4 @@ public class User {
         this.lastName = lastName;
         this.signupDate = signupDate;
     }
-
-    //
-    // @OneToOne
-    // @JoinColumn(name = "userID")
-    // private Cart cart;
-    //
-    // @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval =
-    // true)
-    // @JoinColumn(name = "userID")
-    // private List<Order> orders = new ArrayList<>();
-    //
-    // @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval =
-    // true)
-    // @JoinColumn(name = "userID")
-    // private List<Favourite> favourites = new ArrayList<>();
-    //
-    // public void addOrder(Order order) {
-    // orders.add(order);
-    // }
-    //
-    // public void addFavourite(Favourite favourite) {
-    // favourites.add(favourite);
-    // }
-
 }
