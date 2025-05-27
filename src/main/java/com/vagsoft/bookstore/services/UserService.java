@@ -79,18 +79,17 @@ public class UserService {
      */
     public Optional<UserReadDTO> updateUserByID(Integer userID, UserUpdateDTO userUpdateDTO) {
 
-        Optional<User> foundUser = userRepository.findById(userID);
-        if (foundUser.isEmpty())
-            throw new UserNotFoundException("No user found with the given ID: " + userID);
+        User foundUser = userRepository.findById(userID).orElseThrow(
+                () -> new UserNotFoundException("User with ID " + userID + " not found"));
 
         if (userUpdateDTO.getPassword() != null) {
             String hashedPassword = passwordEncoder.encode(userUpdateDTO.getPassword());
             userUpdateDTO.setPassword(hashedPassword);
         }
 
-        userMapper.updateUserFromDto(userUpdateDTO, foundUser.get());
+        userMapper.updateUserFromDto(userUpdateDTO, foundUser);
 
-        User updatedUser = userRepository.save(foundUser.get());
+        User updatedUser = userRepository.save(foundUser);
 
         return Optional.of(userMapper.UserToReadDto(updatedUser));
     }

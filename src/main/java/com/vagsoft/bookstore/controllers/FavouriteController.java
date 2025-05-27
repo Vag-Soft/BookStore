@@ -15,6 +15,7 @@ import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.FavouriteService;
 import com.vagsoft.bookstore.utils.AuthUtils;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,7 @@ public class FavouriteController {
     @PostMapping("/{userID}/favourites")
     public ResponseEntity<FavouriteReadDTO> addFavourite(
             @PathVariable @Positive @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist") Integer userID,
-            @RequestBody @UniqueCompositeFields(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", pathVariable = "userID", dtoClass = FavouriteWriteDTO.class, dtoFieldName = "bookID", message = "This book is already in the user's favourites") FavouriteWriteDTO favouriteWriteDTO) {
+            @RequestBody @Valid @UniqueCompositeFields(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", pathVariable = "userID", dtoClass = FavouriteWriteDTO.class, dtoFieldName = "bookID", message = "This book is already in the user's favourites") FavouriteWriteDTO favouriteWriteDTO) {
         log.info("POST /users/{}/favourites: favouriteWriteDTO={}", userID, favouriteWriteDTO);
 
         Optional<FavouriteReadDTO> savedFavourite = favouriteService.addFavourite(userID, favouriteWriteDTO);
@@ -151,7 +152,7 @@ public class FavouriteController {
      */
     @ApiResponse(responseCode = "204")
     @DeleteMapping("/me/favourites/{bookID}")
-    public ResponseEntity<Void> deleteFavourite(@PathVariable @Positive Integer bookID) {
+    public ResponseEntity<Void> deleteFavourite(@PathVariable @Positive @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist") Integer bookID) {
         log.info("DELETE /users/me/favourites/{}", bookID);
 
         Integer userID = authUtils.getUserIdFromAuthentication();

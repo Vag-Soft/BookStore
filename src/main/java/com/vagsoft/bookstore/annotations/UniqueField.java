@@ -20,7 +20,7 @@ public @interface UniqueField {
     String methodName();
 
     /** The name of the path variable to use for uniqueness validation */
-    String pathVariable() default "id";
+    String pathVariable() default "";
 
     /** Whether the field can be null or not. If true, the field can be null and */
     boolean nullable() default true;

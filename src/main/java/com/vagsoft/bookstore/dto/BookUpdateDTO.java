@@ -43,6 +43,7 @@ public class BookUpdateDTO {
     @Size(max = 31, message = "isbn must be less than 32 characters")
     private String isbn;
 
+    @Builder.Default
     @Valid
     @UniqueGenresPerBook
     private List<GenreDTO> genres = new ArrayList<>();

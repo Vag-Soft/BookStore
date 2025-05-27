@@ -1,5 +1,6 @@
 package com.vagsoft.bookstore.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -14,5 +15,6 @@ import lombok.NoArgsConstructor;
 public class CartReadDTO {
     private Integer id;
     private Integer userID;
-    private List<CartItemReadDTO> cartItems;
+    @Builder.Default
+    private List<CartItemReadDTO> cartItems = new ArrayList<>();
 }
