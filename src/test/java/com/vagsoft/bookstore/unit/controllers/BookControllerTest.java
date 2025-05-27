@@ -2,6 +2,7 @@ package com.vagsoft.bookstore.unit.controllers;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -245,18 +246,20 @@ class BookControllerTest {
   @Test
   @DisplayName("DELETE /books/1 - Success")
   void deleteBookByIDFound() throws Exception {
-    when(bookService.deleteBookByID(1L)).thenReturn(1L);
+    when(bookRepository.existsById(1)).thenReturn(true);
+    doNothing().when(bookService).deleteBookByID(1);
 
     mockMvc.perform(delete("/books/{bookID}", 1)).andExpect(status().isNoContent());
   }
 
-  @Test
-  @DisplayName("DELETE /books/999 - Not Found")
-  void deleteBookByIDNotFound() throws Exception {
-    when(bookService.deleteBookByID(999L)).thenReturn(0L);
+    @Test
+    @DisplayName("DELETE /books/999 - Not Found")
+    void deleteBookByIDNotFound() throws Exception {
+        when(bookRepository.existsById(999)).thenReturn(false);
+        doNothing().when(bookService).deleteBookByID(999);
 
-    mockMvc.perform(delete("/books/{bookID}", 999)).andExpect(status().isNotFound());
-  }
+        mockMvc.perform(delete("/books/{bookID}", 999)).andExpect(status().isNotFound());
+    }
 
     @Test
     @DisplayName("DELETE /books/-1 - Invalid ID")

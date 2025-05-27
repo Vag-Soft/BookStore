@@ -79,8 +79,8 @@ public class UserService {
      */
     public Optional<UserReadDTO> updateUserByID(Integer userID, UserUpdateDTO userUpdateDTO) {
 
-        User foundUser = userRepository.findById(userID).orElseThrow(
-                () -> new UserNotFoundException("User with ID " + userID + " not found"));
+        User foundUser = userRepository.findById(userID)
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userID + " not found"));
 
         if (userUpdateDTO.getPassword() != null) {
             String hashedPassword = passwordEncoder.encode(userUpdateDTO.getPassword());
@@ -99,11 +99,10 @@ public class UserService {
      *
      * @param userID
      *            the ID of the user to be deleted
-     * @return the number of users deleted (should be 1)
      */
     @Transactional
-    public Long deleteUserByID(Long userID) {
-        return userRepository.deleteById(userID);
+    public void deleteUserByID(Integer userID) {
+        userRepository.deleteById(userID);
     }
 
     /**

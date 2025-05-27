@@ -2,6 +2,7 @@ package com.vagsoft.bookstore.unit.controllers;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -186,7 +187,8 @@ class UserControllerTest {
   @Test
   @DisplayName("DELETE /users/1 - Success")
   void deleteUserByIDFound() throws Exception {
-    when(userService.deleteUserByID(1L)).thenReturn(1L);
+    when(userRepository.existsById(1)).thenReturn(true);
+    doNothing().when(userService).deleteUserByID(1);
 
     mockMvc.perform(delete("/users/{userID}", 1)).andExpect(status().isNoContent());
   }
@@ -194,7 +196,8 @@ class UserControllerTest {
   @Test
   @DisplayName("DELETE /users/999 - Not Found")
   void deleteUserByIDNotFound() throws Exception {
-    when(userService.deleteUserByID(999L)).thenReturn(0L);
+    when(userRepository.existsById(999)).thenReturn(false);
+    doNothing().when(userService).deleteUserByID( 999);
 
     mockMvc.perform(delete("/users/{userID}", 999)).andExpect(status().isNotFound());
   }

@@ -1,5 +1,7 @@
 package com.vagsoft.bookstore.controllers;
 
+import java.util.Optional;
+
 import com.vagsoft.bookstore.annotations.ExistsCompositeResource;
 import com.vagsoft.bookstore.annotations.ExistsResource;
 import com.vagsoft.bookstore.annotations.IsAdmin;
@@ -11,6 +13,7 @@ import com.vagsoft.bookstore.errors.exceptions.CartItemCreationException;
 import com.vagsoft.bookstore.errors.exceptions.CartItemsNotFoundException;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.CartItemsRepository;
+import com.vagsoft.bookstore.repositories.FavouriteRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.CartItemsService;
 import com.vagsoft.bookstore.utils.AuthUtils;
@@ -31,8 +34,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 /** REST controller for endpoints related to cart items */
 @RestController
 @RequestMapping(path = "/carts")
@@ -50,8 +51,10 @@ public class CartItemsController {
     /**
      * Retrieves all cart items for a given user
      *
-     * @param userID the ID of the user
-     * @param pageable pagination information
+     * @param userID
+     *            the ID of the user
+     * @param pageable
+     *            pagination information
      * @return paginated list of cart items for the user
      */
     @IsAdmin
@@ -67,8 +70,10 @@ public class CartItemsController {
     /**
      * Retrieves a specific cart item for a given user using the book's ID
      *
-     * @param userID the ID of the user
-     * @param bookID the ID of the book
+     * @param userID
+     *            the ID of the user
+     * @param bookID
+     *            the ID of the book
      * @return the cart item associated with the user and book's ID
      */
     @IsAdmin
@@ -80,15 +85,19 @@ public class CartItemsController {
 
         Optional<CartItemReadDTO> cartItem = cartItemsService.getCartItem(userID, bookID);
 
-        return ResponseEntity.ok(cartItem.orElseThrow(() -> new CartItemsNotFoundException("Cart item not found for user ID: " + userID + " and book ID: " + bookID)));
+        return ResponseEntity.ok(cartItem.orElseThrow(() -> new CartItemsNotFoundException(
+                "Cart item not found for user ID: " + userID + " and book ID: " + bookID)));
     }
 
     /**
      * Updates a specific cart item for a given user using the book's ID
      *
-     * @param userID the ID of the user
-     * @param bookID the ID of the book
-     * @param cartItemUpdateDTO the new cart item information
+     * @param userID
+     *            the ID of the user
+     * @param bookID
+     *            the ID of the book
+     * @param cartItemUpdateDTO
+     *            the new cart item information
      * @return the updated cart item
      */
     @IsAdmin
@@ -101,28 +110,27 @@ public class CartItemsController {
 
         Optional<CartItemReadDTO> updatedCartItem = cartItemsService.updateCartItem(userID, bookID, cartItemUpdateDTO);
 
-        return ResponseEntity.ok(updatedCartItem.orElseThrow(() -> new CartItemsNotFoundException("Cart item not found for user ID: " + userID + " and book ID: " + bookID)));
+        return ResponseEntity.ok(updatedCartItem.orElseThrow(() -> new CartItemsNotFoundException(
+                "Cart item not found for user ID: " + userID + " and book ID: " + bookID)));
     }
 
     /**
      * Deletes a specific cart item for a given user using the book's ID
      *
-     * @param userID the ID of the user
-     * @param bookID the ID of the book
+     * @param userID
+     *            the ID of the user
+     * @param bookID
+     *            the ID of the book
      * @return no content response if deletion is successful
      */
     @IsAdmin
     @DeleteMapping(path = "/{userID}/items/{bookID}")
     public ResponseEntity<Void> deleteCartItem(
-            @PathVariable @Positive @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist") Integer userID,
-            @PathVariable @Positive @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist") Integer bookID) {
+            @PathVariable @Positive Integer userID,
+            @PathVariable @Positive @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's cart items")  Integer bookID) {
         log.info("DELETE /carts/{}/items/{}", userID, bookID);
 
-        Integer rowsDeleted = cartItemsService.deleteCartItem(userID, bookID);
-
-        if (rowsDeleted == 0) {
-            throw new CartItemsNotFoundException("No cart item found for user ID: " + userID + " and book ID: " + bookID); //TODO: use validation instead
-        }
+        cartItemsService.deleteCartItem(userID, bookID);
 
         return ResponseEntity.noContent().build();
     }
@@ -130,7 +138,8 @@ public class CartItemsController {
     /**
      * Retrieves all cart items for the authenticated user
      *
-     * @param pageable pagination information
+     * @param pageable
+     *            pagination information
      * @return paginated list of cart items for the authenticated user
      */
     @GetMapping(path = "/me/items")
@@ -142,11 +151,11 @@ public class CartItemsController {
         return ResponseEntity.ok(cartItemsService.getAllCartItems(userID, pageable));
     }
 
-
     /**
      * Adds a new cart item for the authenticated user
      *
-     * @param cartItemWriteDTO the cart item to be added
+     * @param cartItemWriteDTO
+     *            the cart item to be added
      * @return the created cart item
      */
     @PostMapping(path = "/me/items")
@@ -158,14 +167,15 @@ public class CartItemsController {
 
         Optional<CartItemReadDTO> savedCartItem = cartItemsService.addCartItem(userID, cartItemWriteDTO);
 
-        return ResponseEntity.ok(savedCartItem.orElseThrow(() -> new CartItemCreationException("Failed to create cart item")));
+        return ResponseEntity
+                .ok(savedCartItem.orElseThrow(() -> new CartItemCreationException("Failed to create cart item")));
     }
-
 
     /**
      * Retrieves a specific cart item for the authenticated user using the book's ID
      *
-     * @param bookID the ID of the book
+     * @param bookID
+     *            the ID of the book
      * @return the cart item associated with the user and book's ID
      */
     @GetMapping(path = "/me/items/{bookID}")
@@ -177,14 +187,17 @@ public class CartItemsController {
 
         Optional<CartItemReadDTO> cartItem = cartItemsService.getCartItem(userID, bookID);
 
-        return ResponseEntity.ok(cartItem.orElseThrow(() -> new CartItemsNotFoundException("Cart item not found with the given JWT and book ID: " + bookID)));
+        return ResponseEntity.ok(cartItem.orElseThrow(
+                () -> new CartItemsNotFoundException("Cart item not found with the given JWT and book ID: " + bookID)));
     }
 
     /**
      * Updates a specific cart item for the authenticated user using the book's ID
      *
-     * @param bookID the ID of the book
-     * @param cartItemUpdateDTO the new cart item information
+     * @param bookID
+     *            the ID of the book
+     * @param cartItemUpdateDTO
+     *            the new cart item information
      * @return the updated cart item
      */
     @PutMapping(path = "/me/items/{bookID}")
@@ -197,27 +210,25 @@ public class CartItemsController {
 
         Optional<CartItemReadDTO> updatedCartItem = cartItemsService.updateCartItem(userID, bookID, cartItemUpdateDTO);
 
-        return ResponseEntity.ok(updatedCartItem.orElseThrow(() -> new CartItemsNotFoundException("Cart item not found with the given JWT and book ID: " + bookID)));
+        return ResponseEntity.ok(updatedCartItem.orElseThrow(
+                () -> new CartItemsNotFoundException("Cart item not found with the given JWT and book ID: " + bookID)));
     }
 
     /**
      * Deletes a specific cart item for the authenticated user using the book's ID
      *
-     * @param bookID the ID of the book
+     * @param bookID
+     *            the ID of the book
      * @return no content response if deletion is successful
      */
     @DeleteMapping(path = "/me/items/{bookID}")
     public ResponseEntity<Void> deleteCartItem(
-            @PathVariable @Positive @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist") Integer bookID) {
+            @PathVariable @Positive @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", useJWT = true, secondPathVariable = "bookID", message = "The book with the given ID is not in your cart items") Integer bookID) {
         log.info("DELETE /carts/me/items/{}", bookID);
 
         Integer userID = authUtils.getUserIdFromAuthentication();
 
-        Integer rowsDeleted = cartItemsService.deleteCartItem(userID, bookID);
-
-        if (rowsDeleted == 0) {
-            throw new CartItemsNotFoundException("Cart item not found with the given JWT and book ID: " + bookID); //TODO: use validation instead
-        }
+        cartItemsService.deleteCartItem(userID, bookID);
 
         return ResponseEntity.noContent().build();
     }

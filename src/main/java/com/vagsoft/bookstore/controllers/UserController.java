@@ -2,12 +2,14 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
+import com.vagsoft.bookstore.annotations.ExistsResource;
 import com.vagsoft.bookstore.annotations.IsAdmin;
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.models.enums.Role;
+import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.UserService;
 import com.vagsoft.bookstore.utils.AuthUtils;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -114,14 +116,10 @@ public class UserController {
     @ApiResponse(responseCode = "204")
     @IsAdmin()
     @DeleteMapping(path = "/{userID}")
-    public ResponseEntity<Void> deleteUserByID(@PathVariable @Positive Long userID) {
+    public ResponseEntity<Void> deleteUserByID(@PathVariable @Positive @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist") Integer userID) {
         log.info("DELETE /users/{userID}: userID={}", userID);
 
-        Long deletedUsers = userService.deleteUserByID(userID);
-
-        if (deletedUsers == 0) {
-            throw new UserNotFoundException("No user found with the given ID");
-        }
+        userService.deleteUserByID(userID);
 
         return ResponseEntity.noContent().build();
     }
@@ -174,11 +172,7 @@ public class UserController {
 
         Integer userID = authUtils.getUserIdFromAuthentication();
 
-        Long deletedUsers = userService.deleteUserByID(Long.valueOf(userID));
-
-        if (deletedUsers == 0) {
-            throw new UserNotFoundException("No user found with the given JWT");
-        }
+        userService.deleteUserByID(userID);
 
         return ResponseEntity.noContent().build();
     }

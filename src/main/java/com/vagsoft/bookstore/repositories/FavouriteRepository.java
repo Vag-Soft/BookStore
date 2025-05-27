@@ -38,7 +38,6 @@ public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
      *            the ID of the user
      * @param bookID
      *            the ID of the book
-     * @return the number of deleted favourites
      */
-    Long deleteByUserIDAndBook_Id(Integer userID, Integer bookID);
+    void deleteByUserIDAndBook_Id(Integer userID, Integer bookID);
 }

@@ -1,7 +1,5 @@
 package com.vagsoft.bookstore.dto;
 
-import com.vagsoft.bookstore.annotations.ExistsResource;
-import com.vagsoft.bookstore.repositories.BookRepository;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;

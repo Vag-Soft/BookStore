@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import com.vagsoft.bookstore.dto.FavouriteReadDTO;
 import com.vagsoft.bookstore.dto.FavouriteWriteDTO;
-import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.mappers.FavouriteMapper;
 import com.vagsoft.bookstore.models.entities.Favourite;
 import com.vagsoft.bookstore.repositories.BookRepository;
@@ -71,7 +70,7 @@ public class FavouriteService {
      * @return a response entity with no content
      */
     @Transactional
-    public Long deleteFavourite(Integer userID, Integer bookID) {
-        return favouriteRepository.deleteByUserIDAndBook_Id(userID, bookID);
+    public void deleteFavourite(Integer userID, Integer bookID) {
+        favouriteRepository.deleteByUserIDAndBook_Id(userID, bookID);
     }
 }

@@ -1,8 +1,9 @@
 package com.vagsoft.bookstore.validators;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import com.vagsoft.bookstore.annotations.ExistsCompositeResource;
-import com.vagsoft.bookstore.annotations.UniqueCompositeFields;
 import com.vagsoft.bookstore.utils.AuthUtils;
 import com.vagsoft.bookstore.utils.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,9 +12,6 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /** Validator for the {@link ExistsCompositeResource} annotation. */
 public class ExistsCompositeResourceValidator implements ConstraintValidator<ExistsCompositeResource, Object> {

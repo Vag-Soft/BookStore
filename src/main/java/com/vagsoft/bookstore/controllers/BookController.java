@@ -2,6 +2,7 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
+import com.vagsoft.bookstore.annotations.ExistsResource;
 import com.vagsoft.bookstore.annotations.IsAdmin;
 import com.vagsoft.bookstore.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.dto.BookReadDTO;
@@ -9,6 +10,7 @@ import com.vagsoft.bookstore.dto.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.BookWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
+import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.services.BookService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -133,14 +135,11 @@ public class BookController {
     @ApiResponse(responseCode = "204")
     @IsAdmin()
     @DeleteMapping(path = "/{bookID}")
-    public ResponseEntity<Void> deleteBookByID(@PathVariable @Positive Long bookID) {
+    public ResponseEntity<Void> deleteBookByID(
+            @PathVariable @Positive @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist") Integer bookID) {
         log.info("DELETE /books/{bookID}: bookID={}", bookID);
 
-        Long deletedBooks = bookService.deleteBookByID(bookID);
-
-        if (deletedBooks == 0) {
-            throw new BookNotFoundException("No book found with the given ID");
-        }
+        bookService.deleteBookByID(bookID);
 
         return ResponseEntity.noContent().build();
     }

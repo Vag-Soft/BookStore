@@ -2,6 +2,7 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
+import com.vagsoft.bookstore.annotations.ExistsCompositeResource;
 import com.vagsoft.bookstore.annotations.ExistsResource;
 import com.vagsoft.bookstore.annotations.IsAdmin;
 import com.vagsoft.bookstore.annotations.UniqueCompositeFields;
@@ -94,15 +95,11 @@ public class FavouriteController {
     @IsAdmin
     @DeleteMapping("/{userID}/favourites/{bookID}")
     public ResponseEntity<Void> deleteFavourite(
-            @PathVariable @Positive @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist") Integer userID,
-            @PathVariable @Positive @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist") Integer bookID) {
+            @PathVariable @Positive Integer userID,
+            @PathVariable @Positive @ExistsCompositeResource(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's favourites") Integer bookID) {
         log.info("DELETE /users/{}/favourites/{}", userID, bookID);
 
-        Long deletedBooks = favouriteService.deleteFavourite(userID, bookID);
-
-        if (deletedBooks == 0) {
-            throw new FavouriteNotFoundException("No favourite book found with the given IDs");
-        }
+        favouriteService.deleteFavourite(userID, bookID);
 
         return ResponseEntity.noContent().build();
     }
@@ -152,16 +149,13 @@ public class FavouriteController {
      */
     @ApiResponse(responseCode = "204")
     @DeleteMapping("/me/favourites/{bookID}")
-    public ResponseEntity<Void> deleteFavourite(@PathVariable @Positive @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist") Integer bookID) {
+    public ResponseEntity<Void> deleteFavourite(
+            @PathVariable @Positive @ExistsCompositeResource(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", useJWT = true, secondPathVariable = "bookID", message = "The book with the given ID is not in your favourites") Integer bookID) {
         log.info("DELETE /users/me/favourites/{}", bookID);
 
         Integer userID = authUtils.getUserIdFromAuthentication();
 
-        Long deletedBooks = favouriteService.deleteFavourite(userID, bookID);
-
-        if (deletedBooks == 0) {
-            throw new FavouriteNotFoundException("No favourite book found with the given IDs");
-        }
+        favouriteService.deleteFavourite(userID, bookID);
 
         return ResponseEntity.noContent().build();
     }

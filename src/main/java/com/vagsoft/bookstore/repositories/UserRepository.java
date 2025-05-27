@@ -39,17 +39,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             AND (:firstName IS NULL OR u.firstName ILIKE %:firstName%)
             AND (:lastName IS NULL OR u.lastName ILIKE %:lastName%)
             """)
-    public Page<User> findUsers(String username, String email, Role role, String firstName, String lastName,
+    Page<User> findUsers(String username, String email, Role role, String firstName, String lastName,
             Pageable pageable);
-
-    /**
-     * Deletes a user by its ID
-     *
-     * @param userID
-     *            the ID of the user to be deleted
-     * @return the number of users deleted (should be 1)
-     */
-    public Long deleteById(Long userID);
 
     /**
      * Finds a user by its username
@@ -58,7 +49,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      *            the username of the user to be found
      * @return the user with the specified username
      */
-    public Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     /**
      * Checks if a user with the given email exists in the database
@@ -67,7 +58,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      *            the email of the user to be checked
      * @return true if the user exists, false otherwise
      */
-    public boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
 
     /**
      * Checks if a user with the given email exists in the database, excluding the
@@ -77,7 +68,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      *            the email of the user to be checked
      * @return true if the user exists, false otherwise
      */
-    public boolean existsByEmailAndIdNot(String email, Integer userID);
+    boolean existsByEmailAndIdNot(String email, Integer userID);
 
     /**
      * Checks if a user with the given username exists in the database
@@ -86,7 +77,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      *            the username of the user to be checked
      * @return true if the user exists, false otherwise
      */
-    public boolean existsByUsername(String username);
+    boolean existsByUsername(String username);
 
     /**
      * Checks if a user with the given username exists in the database, excluding
@@ -96,5 +87,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
      *            the username of the user to be checked
      * @return true if the user exists, false otherwise
      */
-    public boolean existsByUsernameAndIdNot(String username, Integer userID);
+    boolean existsByUsernameAndIdNot(String username, Integer userID);
 }

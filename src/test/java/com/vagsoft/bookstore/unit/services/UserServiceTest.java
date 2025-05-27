@@ -1,6 +1,9 @@
 package com.vagsoft.bookstore.unit.services;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -10,6 +13,7 @@ import java.util.Optional;
 
 import com.vagsoft.bookstore.dto.UserReadDTO;
 import com.vagsoft.bookstore.dto.UserUpdateDTO;
+import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.models.entities.User;
@@ -148,30 +152,30 @@ class UserServiceTest {
   @Test
   @DisplayName("deleteUserByID(1) - Success")
   void deletedUserByIDFound() {
-    when(userRepository.deleteById(1L)).thenReturn(1L);
+    doNothing().when(userRepository).deleteById(1);
 
-    Long deletedUsers = userService.deleteUserByID(1L);
+    userService.deleteUserByID(1);
 
-    assertEquals(1, deletedUsers);
+    verify(userRepository).deleteById(1);
   }
 
   @Test
   @DisplayName("deleteUserByID(999) - Not Found")
   void deletedUserByIDNotFound() {
-    when(userRepository.deleteById(999L)).thenReturn(0L);
+    doThrow(new UserNotFoundException("No user found with the given ID: 999")).when(userRepository).deleteById(999);
 
-    Long deletedUsers = userService.deleteUserByID(999L);
+    assertThrows(UserNotFoundException.class, () -> userService.deleteUserByID(999));
 
-    assertEquals(0, deletedUsers);
+    verify(userRepository).deleteById(999);
   }
 
   @Test
   @DisplayName("deleteUserByID(-1) - Invalid ID")
   void deletedUserByIDInvalid() {
-    when(userRepository.deleteById(-1L)).thenReturn(0L);
+      doThrow(new IllegalArgumentException("Invalid User ID: -1")).when(userRepository).deleteById(-1);
 
-    Long deletedUsers = userService.deleteUserByID(-1L);
+      assertThrows(IllegalArgumentException.class, () -> userService.deleteUserByID(-1));
 
-    assertEquals(0, deletedUsers);
+      verify(userRepository).deleteById(-1);
   }
 }
