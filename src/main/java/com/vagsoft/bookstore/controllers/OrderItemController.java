@@ -31,11 +31,9 @@ import java.util.Optional;
 public class OrderItemController {
     private static final Logger log = LoggerFactory.getLogger(OrderItemController.class);
     private final OrderItemService orderItemService;
-    private final AuthUtils authUtils;
 
-    public OrderItemController(OrderItemService orderItemService, AuthUtils authUtils) {
+    public OrderItemController(OrderItemService orderItemService) {
         this.orderItemService = orderItemService;
-        this.authUtils = authUtils;
     }
 
     /**
@@ -48,7 +46,7 @@ public class OrderItemController {
     @IsAdmin
     @GetMapping("/{orderID}/items")
     public ResponseEntity<Page<OrderItemReadDTO>> getOrderItems(
-            @PathVariable @Positive @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist") Integer orderID,
+            @PathVariable @Positive @ExistsResource(repository = OrderRepository.class, message = "Order with the given ID does not exist") Integer orderID,
             Pageable pageable) {
         log.info("GET /orders/{}/items", orderID);
 
@@ -73,7 +71,7 @@ public class OrderItemController {
 
         Optional<OrderItemReadDTO> orderItem = orderItemService.getOrderItemByBookID(orderID, bookID);
 
-        return ResponseEntity.ok(orderItem.orElseThrow(() -> new OrderItemNotFoundException("Order item with book ID " + bookID + " not found in order " + orderID)));
+        return ResponseEntity.ok(orderItem.orElseThrow(() -> new OrderItemNotFoundException("The order with ID: " + orderID + "does not contain the book with ID: " + bookID)));
     }
 
     /**
@@ -109,6 +107,6 @@ public class OrderItemController {
 
         Optional<OrderItemReadDTO> orderItem = orderItemService.getOrderItemByBookID(orderID, bookID);
 
-        return ResponseEntity.ok(orderItem.orElseThrow(() -> new OrderItemNotFoundException("Order item with book ID " + bookID + " not found in order " + orderID)));
+        return ResponseEntity.ok(orderItem.orElseThrow(() -> new OrderItemNotFoundException("The order with ID: " + orderID + "does not contain the book with ID: " + bookID)));
     }
 }

@@ -39,6 +39,10 @@ public class GlobalControllerAdvice {
     public ProblemDetail handleArgumentExceptions(Exception ex) {
         log.error("ArgumentException", ex);
 
+        if (ex.getCause() instanceof ResourceNotFoundException) {
+            return handleResourceNotFoundException((ResourceNotFoundException) ex.getCause()); //TODO: handle this case more gracefully
+        }
+
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         problemDetail.setTitle("Invalid request parameters");
         return problemDetail;

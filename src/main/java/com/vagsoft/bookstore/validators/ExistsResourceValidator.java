@@ -7,7 +7,9 @@ import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 /** Validator for the {@link ExistsResource} annotation. */
 public class ExistsResourceValidator implements ConstraintValidator<ExistsResource, Integer> {
@@ -31,8 +33,7 @@ public class ExistsResourceValidator implements ConstraintValidator<ExistsResour
         var repository = applicationContext.getBean(repositoryClass);
 
         if (!repository.existsById(value)) {
-            return false;
-//            throw new ResourceNotFoundException("Resource with ID: " + value + " does not exist");
+            throw new ResourceNotFoundException("Resource with ID: " + value + " does not exist");
         }
 
         return true;
