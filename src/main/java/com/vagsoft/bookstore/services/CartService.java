@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.vagsoft.bookstore.dto.CartReadDTO;
 import com.vagsoft.bookstore.mappers.CartMapper;
+import com.vagsoft.bookstore.models.entities.Cart;
 import com.vagsoft.bookstore.repositories.CartRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +41,9 @@ public class CartService {
      *            the ID of the user
      * @return the cart associated with the user ID
      */
+    @Transactional(readOnly = true)
     public Optional<CartReadDTO> getCartByUserId(Integer userID) {
-        return cartRepository.findById(userID).map(cartMapper::cartToReadDto);
+        return cartRepository.findByUserID(userID).map(cartMapper::cartToReadDto);
     }
+
 }

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,8 +20,9 @@ public class OrderItem {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer orderID;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orderID", nullable = false)
+    private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bookID", nullable = false)
@@ -27,4 +30,26 @@ public class OrderItem {
 
     @Column
     private Integer quantity;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
+        return Objects.equals(id, orderItem.id) && Objects.equals(order.getId(), orderItem.order.getId()) && Objects.equals(book, orderItem.book) && Objects.equals(quantity, orderItem.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, order.getId(), book, quantity);
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", orderID=" + order.getId() +
+                ", book=" + book +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

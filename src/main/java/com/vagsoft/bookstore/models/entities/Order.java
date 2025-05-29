@@ -27,19 +27,18 @@ public class Order {
     @Column(nullable = false)
     private Integer userID;
 
-    @Column(nullable = false)
+    @Column(name = "totalamount", nullable = false)
     private Double totalAmount;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(nullable = false)
+    @Column(name = "orderdate", nullable = false)
     private LocalDate orderDate;
 
     @Builder.Default
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "orderID")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
 }

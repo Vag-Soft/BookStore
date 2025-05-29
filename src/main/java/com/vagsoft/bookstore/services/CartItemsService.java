@@ -1,10 +1,12 @@
 package com.vagsoft.bookstore.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.vagsoft.bookstore.dto.CartItemReadDTO;
 import com.vagsoft.bookstore.dto.CartItemUpdateDTO;
 import com.vagsoft.bookstore.dto.CartItemWriteDTO;
+import com.vagsoft.bookstore.errors.exceptions.CartItemsNotFoundException;
 import com.vagsoft.bookstore.mappers.CartItemMapper;
 import com.vagsoft.bookstore.models.entities.CartItem;
 import com.vagsoft.bookstore.repositories.BookRepository;
@@ -101,8 +103,34 @@ public class CartItemsService {
         return Optional.of(cartItemMapper.cartItemToReadDto(updatedCartItem));
     }
 
+    /**
+     * Deletes a specific cart item for a given user using the book's ID
+     *
+     * @param userID
+     *            the ID of the user
+     * @param bookID
+     *            the ID of the book
+     */
     @Transactional
     public void deleteCartItem(Integer userID, Integer bookID) {
         cartItemsRepository.deleteByUserIDAndBookID(userID, bookID);
+    }
+
+    /**
+     * Retrieves all cart items for a given user and deletes them from the cart
+     *
+     * @param userID
+     *            the ID of the user
+     * @return a list of cart items that were checked out
+     * @throws CartItemsNotFoundException if no items are found in the user's cart
+     */
+    @Transactional
+    public List<CartItem> checkout(Integer userID) {
+        List<CartItem> cartItems = cartItemsRepository.findAllByUserID(userID);
+        if (cartItems.isEmpty()) {
+            throw new CartItemsNotFoundException("No items in the cart of the user with ID: " + userID);
+        }
+        cartItemsRepository.deleteAllByUserID(userID);
+        return cartItems;
     }
 }

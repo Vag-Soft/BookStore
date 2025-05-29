@@ -1,5 +1,6 @@
 package com.vagsoft.bookstore.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.vagsoft.bookstore.models.entities.CartItem;
@@ -30,6 +31,20 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
                 INNER JOIN Cart c ON ci.cartID = c.id AND c.userID = :userID
             """)
     Page<CartItem> findAllByUserID(Integer userID, Pageable pageable);
+
+    /**
+     * Retrieves all cart items by user ID
+     *
+     * @param userID
+     *            the ID of the user
+     * @return list of cart items associated with the user ID
+     */
+    @Query("""
+                SELECT ci
+                FROM CartItem ci
+                INNER JOIN Cart c ON ci.cartID = c.id AND c.userID = :userID
+            """)
+    List<CartItem> findAllByUserID(Integer userID);
 
     /**
      * Checks if a cart item exists for a given user ID and book ID
@@ -82,5 +97,23 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
                 )
             """)
     void deleteByUserIDAndBookID(Integer userID, Integer bookID);
+
+    /**
+     * Deletes all cart items associated with a user ID
+     *
+     * @param userID
+     *            the ID of the user
+     */
+    @Modifying
+    @Query("""
+                DELETE
+                FROM CartItem ci
+                WHERE ci.cartID IN (
+                    SELECT c.id
+                    FROM Cart c
+                    WHERE c.userID = :userID
+                )
+            """)
+    void deleteAllByUserID(Integer userID);
 
 }

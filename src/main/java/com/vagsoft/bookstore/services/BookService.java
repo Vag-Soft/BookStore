@@ -50,7 +50,7 @@ public class BookService {
     @Transactional(readOnly = true)
     public Page<BookReadDTO> getBooks(String title, String genre, String author, String description, Double minPrice,
             Double maxPrice, Pageable pageable) {
-        return bookMapper.PageBookToPageDto(
+        return bookMapper.pageBookToPageDto(
                 bookRepository.findBooks(title, genre, author, description, minPrice, maxPrice, pageable));
     }
 
@@ -63,9 +63,9 @@ public class BookService {
      */
     @Transactional
     public Optional<BookReadDTO> addBook(BookWriteDTO bookWriteDTO) {
-        Book book = bookMapper.DtoToBook(bookWriteDTO);
+        Book bookToSave = bookMapper.DtoToBook(bookWriteDTO);
 
-        Book savedBook = bookRepository.save(book);
+        Book savedBook = bookRepository.save(bookToSave);
         return Optional.of(bookMapper.BookToReadDto(savedBook));
     }
 

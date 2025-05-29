@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.vagsoft.bookstore.annotations.ExistsCompositeResource;
+import com.vagsoft.bookstore.errors.exceptions.ResourceNotFoundException;
 import com.vagsoft.bookstore.utils.AuthUtils;
 import com.vagsoft.bookstore.utils.RequestUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,7 +58,12 @@ public class ExistsCompositeResourceValidator implements ConstraintValidator<Exi
 
             // Running the repository method
             Method repositoryMethod = repository.getClass().getMethod(methodName, Integer.class, Integer.class);
-            return (boolean) repositoryMethod.invoke(repository, firstResourceID, secondResourceID);
+
+            if (!(boolean) repositoryMethod.invoke(repository, firstResourceID, secondResourceID)) {
+                throw new ResourceNotFoundException("Composite resource with IDs: " + firstResourceID + " and " + secondResourceID + " does not exist");
+            }
+
+            return true;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }

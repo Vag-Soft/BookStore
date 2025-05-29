@@ -39,6 +39,10 @@ public class GlobalControllerAdvice {
     public ProblemDetail handleArgumentExceptions(Exception ex) {
         log.error("ArgumentException", ex);
 
+        if (ex.getCause() instanceof ResourceNotFoundException) {
+            return handleResourceNotFoundException((ResourceNotFoundException) ex.getCause()); //TODO: handle this case more gracefully
+        }
+
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         problemDetail.setTitle("Invalid request parameters");
         return problemDetail;
@@ -150,7 +154,7 @@ public class GlobalControllerAdvice {
     public ProblemDetail handleException(DataIntegrityViolationException ex) {
         log.error("DataIntegrityViolationException", ex);
 
-        String errorMessage = "Unique constraint violation";
+        String errorMessage = "Data integrity violation";
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, errorMessage);
         problemDetail.setTitle("Internal server error");

@@ -20,6 +20,9 @@ public @interface ExistsResource {
     /** The repository class to use for existence validation */
     Class<? extends JpaRepository<?, Integer>> repository();
 
+    /** Whether the resource can be null */
+    boolean nullable() default false;
+
     /** The error message to be used when the constraint is violated */
     String message() default "Resource not found with the given ID";
 
