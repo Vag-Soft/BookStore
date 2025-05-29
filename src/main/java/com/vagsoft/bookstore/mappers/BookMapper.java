@@ -79,7 +79,6 @@ public interface BookMapper {
      * @param book
      *            the Book entity to be updated
      */
-    @Mapping(ignore = true, target = "bookUpdateDTO.id")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateBookFromDto(BookUpdateDTO bookUpdateDTO, @MappingTarget Book book);
 

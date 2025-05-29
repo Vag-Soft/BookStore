@@ -54,7 +54,7 @@ VALUES
 
 INSERT INTO Orders (userID, totalAmount, status, orderDate)
 VALUES
-    (1, 20.0, 'Delivered', '2022-01-15');
+    (1, 20.0, 'DELIVERED', '2022-01-15');
 
 INSERT INTO OrderItems (orderID, bookID, quantity)
 VALUES

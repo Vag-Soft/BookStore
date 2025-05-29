@@ -150,7 +150,7 @@ public class GlobalControllerAdvice {
     public ProblemDetail handleException(DataIntegrityViolationException ex) {
         log.error("DataIntegrityViolationException", ex);
 
-        String errorMessage = "Unique constraint violation";
+        String errorMessage = "Data integrity violation";
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, errorMessage);
         problemDetail.setTitle("Internal server error");

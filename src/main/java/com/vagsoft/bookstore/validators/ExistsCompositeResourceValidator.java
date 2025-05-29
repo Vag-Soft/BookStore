@@ -54,7 +54,8 @@ public class ExistsCompositeResourceValidator implements ConstraintValidator<Exi
                 firstResourceID = RequestUtils.getPathVariable(request, firstPathVariable, Integer.class);
             }
             secondResourceID = RequestUtils.getPathVariable(request, secondPathVariable, Integer.class);
-
+            System.out.println("First Resource ID: " + firstResourceID);
+            System.out.println("Second Resource ID: " + secondResourceID);
             // Running the repository method
             Method repositoryMethod = repository.getClass().getMethod(methodName, Integer.class, Integer.class);
             return (boolean) repositoryMethod.invoke(repository, firstResourceID, secondResourceID);

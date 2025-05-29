@@ -61,8 +61,8 @@ public class BookController {
             @RequestParam(name = "genre", required = false) @Size(max = 31, message = "genre must be less than 32 characters") @NullOrNotBlank String genre,
             @RequestParam(name = "author", required = false) @Size(max = 31, message = "author must be less than 32 characters") @NullOrNotBlank String author,
             @RequestParam(name = "description", required = false) @NullOrNotBlank String description,
-            @RequestParam(name = "minPrice", required = false) @Min(value = 0, message = "minPrice must be greater than 0") Double minPrice,
-            @RequestParam(name = "maxPrice", required = false) @Min(value = 0, message = "maxPrice must be greater than 0") Double maxPrice,
+            @RequestParam(name = "minPrice", required = false) @Min(value = 0, message = "minPrice must be equal or greater than 0") Double minPrice,
+            @RequestParam(name = "maxPrice", required = false) @Min(value = 0, message = "maxPrice must be equal or greater than 0") Double maxPrice,
             Pageable pageable) {
 
         log.info("GET /books: title={}, genre={}, author={}, description={}, minPrice={}, maxPrice={}, pageable={}",
@@ -102,7 +102,7 @@ public class BookController {
 
         Optional<BookReadDTO> foundBook = bookService.getBookByID(bookID);
         return ResponseEntity
-                .ok(foundBook.orElseThrow(() -> new BookNotFoundException("No book found with the given ID")));
+                .ok(foundBook.orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID)));
     }
 
     /**

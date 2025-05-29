@@ -63,9 +63,9 @@ public class BookService {
      */
     @Transactional
     public Optional<BookReadDTO> addBook(BookWriteDTO bookWriteDTO) {
-        Book book = bookMapper.DtoToBook(bookWriteDTO);
+        Book bookToSave = bookMapper.DtoToBook(bookWriteDTO);
 
-        Book savedBook = bookRepository.save(book);
+        Book savedBook = bookRepository.save(bookToSave);
         return Optional.of(bookMapper.BookToReadDto(savedBook));
     }
 

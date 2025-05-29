@@ -25,13 +25,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderReadDTO {
-    private Integer id;
+public class OrderWriteDTO {
     private Integer userID;
     private Double totalAmount;
     @Enumerated(EnumType.STRING)
     private Status status;
     private LocalDate orderDate;
     @Builder.Default
-    private List<OrderItemReadDTO> orderItems = new ArrayList<>();
+    private List<OrderItem> orderItems = new ArrayList<>();
 }
