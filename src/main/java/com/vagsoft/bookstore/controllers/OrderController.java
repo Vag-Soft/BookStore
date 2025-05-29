@@ -5,6 +5,7 @@ import com.vagsoft.bookstore.annotations.ExistsResource;
 import com.vagsoft.bookstore.annotations.IsAdmin;
 import com.vagsoft.bookstore.dto.OrderReadDTO;
 import com.vagsoft.bookstore.dto.OrderUpdateDTO;
+import com.vagsoft.bookstore.errors.exceptions.FavouriteCreationException;
 import com.vagsoft.bookstore.errors.exceptions.OrderCreationException;
 import com.vagsoft.bookstore.errors.exceptions.OrderNotFoundException;
 import com.vagsoft.bookstore.models.enums.Status;
@@ -12,6 +13,7 @@ import com.vagsoft.bookstore.repositories.OrderRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.OrderService;
 import com.vagsoft.bookstore.utils.AuthUtils;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
@@ -19,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -138,6 +141,7 @@ public class OrderController {
      *
      * @return the added order
      */
+    @ApiResponse(responseCode = "201")
     @PostMapping(path = "/me")
     public ResponseEntity<OrderReadDTO> getOrders() {
         log.info("POST /orders/me");
@@ -146,11 +150,12 @@ public class OrderController {
 
         Optional<OrderReadDTO> savedOrder = orderService.addOrderByUserID(userID);
 
-        return ResponseEntity.ok(savedOrder.orElseThrow(() -> new OrderCreationException("Order creation failed")));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(savedOrder.orElseThrow(() -> new OrderCreationException("Order creation failed")));
     }
 
     /**
-     * Retrieves an order by its ID for the authenticated user
+     * Retrieves an order by its ID, accessible only to the user who placed the order.
      *
      * @param orderID the ID of the order to retrieve
      * @return the order with the specified ID

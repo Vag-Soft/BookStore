@@ -50,7 +50,7 @@ public class BookService {
     @Transactional(readOnly = true)
     public Page<BookReadDTO> getBooks(String title, String genre, String author, String description, Double minPrice,
             Double maxPrice, Pageable pageable) {
-        return bookMapper.PageBookToPageDto(
+        return bookMapper.pageBookToPageDto(
                 bookRepository.findBooks(title, genre, author, description, minPrice, maxPrice, pageable));
     }
 

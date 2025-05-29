@@ -138,7 +138,7 @@ public interface BookMapper {
      *            the list of Book entities to be converted
      * @return the list of converted BookReadDTOs
      */
-    List<BookReadDTO> ListBookToListDto(List<Book> books);
+    List<BookReadDTO> listBookToListDto(List<Book> books);
 
     /**
      * Converts a page of Book entities to a page of BookReadDTOs
@@ -147,7 +147,7 @@ public interface BookMapper {
      *            the page of Book entities to be converted
      * @return the page of converted BookReadDTOs
      */
-    default Page<BookReadDTO> PageBookToPageDto(Page<Book> page) {
-        return new PageImpl<>(ListBookToListDto(page.getContent()), page.getPageable(), page.getTotalElements());
+    default Page<BookReadDTO> pageBookToPageDto(Page<Book> page) {
+        return new PageImpl<>(listBookToListDto(page.getContent()), page.getPageable(), page.getTotalElements());
     }
 }
