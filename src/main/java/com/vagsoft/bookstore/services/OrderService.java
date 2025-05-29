@@ -1,7 +1,7 @@
 package com.vagsoft.bookstore.services;
 
-import com.vagsoft.bookstore.dto.OrderReadDTO;
-import com.vagsoft.bookstore.dto.OrderUpdateDTO;
+import com.vagsoft.bookstore.dto.orderDTOs.OrderReadDTO;
+import com.vagsoft.bookstore.dto.orderDTOs.OrderUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.CartItemsNotFoundException;
 import com.vagsoft.bookstore.mappers.OrderItemMapper;
 import com.vagsoft.bookstore.mappers.OrderMapper;

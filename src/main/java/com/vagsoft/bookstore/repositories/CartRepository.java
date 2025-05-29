@@ -1,6 +1,5 @@
 package com.vagsoft.bookstore.repositories;
 
-import com.vagsoft.bookstore.dto.CartReadDTO;
 import com.vagsoft.bookstore.models.entities.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

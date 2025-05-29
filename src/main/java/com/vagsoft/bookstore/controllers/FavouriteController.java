@@ -2,19 +2,20 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.annotations.ExistsCompositeResource;
-import com.vagsoft.bookstore.annotations.ExistsResource;
-import com.vagsoft.bookstore.annotations.IsAdmin;
-import com.vagsoft.bookstore.annotations.UniqueCompositeFields;
-import com.vagsoft.bookstore.dto.FavouriteReadDTO;
-import com.vagsoft.bookstore.dto.FavouriteWriteDTO;
+import com.vagsoft.bookstore.validations.annotations.ExistsCompositeResource;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
+import com.vagsoft.bookstore.validations.annotations.IsAdmin;
+import com.vagsoft.bookstore.validations.annotations.UniqueCompositeFields;
+import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteReadDTO;
+import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.FavouriteCreationException;
-import com.vagsoft.bookstore.errors.exceptions.FavouriteNotFoundException;
-import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.FavouriteRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.FavouriteService;
 import com.vagsoft.bookstore.utils.AuthUtils;
+import com.vagsoft.bookstore.validations.groups.BasicValidation;
+import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
+import com.vagsoft.bookstore.validations.groups.OrderedValidation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -30,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 /** REST controller for endpoints related to favourites */
 @RestController
 @RequestMapping(path = "/users")
-@Validated
+@Validated(OrderedValidation.class)
 public class FavouriteController {
     private static final Logger log = LoggerFactory.getLogger(FavouriteController.class);
     private final FavouriteService favouriteService;
@@ -53,7 +54,7 @@ public class FavouriteController {
     @IsAdmin
     @GetMapping("/{userID}/favourites")
     public ResponseEntity<Page<FavouriteReadDTO>> getFavourites(
-            @PathVariable @Positive @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist") Integer userID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
             Pageable pageable) {
         log.info("GET /users/{}/favourites", userID);
 
@@ -73,8 +74,8 @@ public class FavouriteController {
     @IsAdmin
     @PostMapping("/{userID}/favourites")
     public ResponseEntity<FavouriteReadDTO> addFavourite(
-            @PathVariable @Positive @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist") Integer userID,
-            @RequestBody @Valid @UniqueCompositeFields(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", pathVariable = "userID", dtoClass = FavouriteWriteDTO.class, dtoFieldName = "bookID", message = "This book is already in the user's favourites") FavouriteWriteDTO favouriteWriteDTO) {
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
+            @RequestBody @Valid @UniqueCompositeFields(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", pathVariable = "userID", dtoClass = FavouriteWriteDTO.class, dtoFieldName = "bookID", message = "This book is already in the user's favourites", groups = ExtendedValidation.class) FavouriteWriteDTO favouriteWriteDTO) {
         log.info("POST /users/{}/favourites: favouriteWriteDTO={}", userID, favouriteWriteDTO);
 
         Optional<FavouriteReadDTO> savedFavourite = favouriteService.addFavourite(userID, favouriteWriteDTO);
@@ -95,8 +96,8 @@ public class FavouriteController {
     @IsAdmin
     @DeleteMapping("/{userID}/favourites/{bookID}")
     public ResponseEntity<Void> deleteFavourite(
-            @PathVariable @Positive Integer userID,
-            @PathVariable @Positive @ExistsCompositeResource(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's favourites") Integer bookID) {
+            @PathVariable @Positive(groups = BasicValidation.class) Integer userID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's favourites", groups = ExtendedValidation.class) Integer bookID) {
         log.info("DELETE /users/{}/favourites/{}", userID, bookID);
 
         favouriteService.deleteFavourite(userID, bookID);
@@ -130,7 +131,7 @@ public class FavouriteController {
     @ApiResponse(responseCode = "201")
     @PostMapping("/me/favourites")
     public ResponseEntity<FavouriteReadDTO> addFavourite(
-            @RequestBody @UniqueCompositeFields(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", usePathVariable = false, dtoClass = FavouriteWriteDTO.class, dtoFieldName = "bookID", message = "This book is already in your favourites") FavouriteWriteDTO favouriteWriteDTO) {
+            @RequestBody @UniqueCompositeFields(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", usePathVariable = false, dtoClass = FavouriteWriteDTO.class, dtoFieldName = "bookID", message = "This book is already in your favourites", groups = ExtendedValidation.class) FavouriteWriteDTO favouriteWriteDTO) {
         log.info("POST /users/me/favourites: favouriteWriteDTO={}", favouriteWriteDTO);
 
         Integer userID = authUtils.getUserIdFromAuthentication();
@@ -150,7 +151,7 @@ public class FavouriteController {
     @ApiResponse(responseCode = "204")
     @DeleteMapping("/me/favourites/{bookID}")
     public ResponseEntity<Void> deleteFavourite(
-            @PathVariable @Positive @ExistsCompositeResource(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", useJWT = true, secondPathVariable = "bookID", message = "The book with the given ID is not in your favourites") Integer bookID) {
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = FavouriteRepository.class, methodName = "existsByUserIDAndBook_Id", useJWT = true, secondPathVariable = "bookID", message = "The book with the given ID is not in your favourites", groups = ExtendedValidation.class) Integer bookID) {
         log.info("DELETE /users/me/favourites/{}", bookID);
 
         Integer userID = authUtils.getUserIdFromAuthentication();

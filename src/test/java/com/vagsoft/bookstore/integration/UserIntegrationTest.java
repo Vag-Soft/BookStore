@@ -8,8 +8,8 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vagsoft.bookstore.dto.UserReadDTO;
-import com.vagsoft.bookstore.dto.UserUpdateDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserUpdateDTO;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.models.entities.User;
 import com.vagsoft.bookstore.models.enums.Role;

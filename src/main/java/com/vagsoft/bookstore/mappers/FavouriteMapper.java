@@ -2,8 +2,8 @@ package com.vagsoft.bookstore.mappers;
 
 import java.util.List;
 
-import com.vagsoft.bookstore.dto.FavouriteReadDTO;
-import com.vagsoft.bookstore.dto.FavouriteWriteDTO;
+import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteReadDTO;
+import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteWriteDTO;
 import com.vagsoft.bookstore.models.entities.Favourite;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;

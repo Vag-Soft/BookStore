@@ -1,8 +1,7 @@
 package com.vagsoft.bookstore.services;
 
-import com.vagsoft.bookstore.dto.OrderItemReadDTO;
+import com.vagsoft.bookstore.dto.orderDTOs.OrderItemReadDTO;
 import com.vagsoft.bookstore.mappers.OrderItemMapper;
-import com.vagsoft.bookstore.models.entities.OrderItem;
 import com.vagsoft.bookstore.repositories.OrderItemsRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

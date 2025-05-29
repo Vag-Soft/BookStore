@@ -2,13 +2,16 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.annotations.ExistsResource;
-import com.vagsoft.bookstore.annotations.IsAdmin;
-import com.vagsoft.bookstore.dto.CartReadDTO;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
+import com.vagsoft.bookstore.validations.annotations.IsAdmin;
+import com.vagsoft.bookstore.dto.cartDTOs.CartReadDTO;
 import com.vagsoft.bookstore.errors.exceptions.CartNotFoundException;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.CartService;
 import com.vagsoft.bookstore.utils.AuthUtils;
+import com.vagsoft.bookstore.validations.groups.BasicValidation;
+import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
+import com.vagsoft.bookstore.validations.groups.OrderedValidation;
 import jakarta.validation.constraints.Positive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 /** REST controller for endpoints related to carts */
 @RestController
 @RequestMapping(path = "/carts")
-@Validated
+@Validated(OrderedValidation.class)
 public class CartController {
     private static final Logger log = LoggerFactory.getLogger(CartController.class);
     private final CartService cartService;
@@ -60,7 +63,7 @@ public class CartController {
     @IsAdmin
     @GetMapping("/{userID}")
     public ResponseEntity<CartReadDTO> getCartByUserId(
-            @PathVariable @Positive @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist") Integer userID) {
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
         log.info("GET /carts/{}", userID);
 
         Optional<CartReadDTO> cart = cartService.getCartByUserId(userID);

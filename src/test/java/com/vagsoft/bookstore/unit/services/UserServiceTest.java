@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.vagsoft.bookstore.dto.UserReadDTO;
-import com.vagsoft.bookstore.dto.UserUpdateDTO;
-import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
+import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.models.entities.User;

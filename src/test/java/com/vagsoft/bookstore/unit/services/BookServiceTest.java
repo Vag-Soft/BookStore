@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.BookUpdateDTO;
-import com.vagsoft.bookstore.dto.BookWriteDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookUpdateDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.mappers.BookMapper;
 import com.vagsoft.bookstore.models.entities.Book;

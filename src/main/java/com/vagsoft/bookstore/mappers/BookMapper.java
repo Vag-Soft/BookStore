@@ -2,10 +2,10 @@ package com.vagsoft.bookstore.mappers;
 
 import java.util.List;
 
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.BookUpdateDTO;
-import com.vagsoft.bookstore.dto.BookWriteDTO;
-import com.vagsoft.bookstore.dto.GenreDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookUpdateDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookWriteDTO;
+import com.vagsoft.bookstore.dto.genreDTOs.GenreDTO;
 import com.vagsoft.bookstore.models.entities.Book;
 import com.vagsoft.bookstore.models.entities.Genre;
 import org.mapstruct.*;

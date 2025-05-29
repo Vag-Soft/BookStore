@@ -3,9 +3,9 @@ package com.vagsoft.bookstore.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.vagsoft.bookstore.dto.CartItemReadDTO;
-import com.vagsoft.bookstore.dto.CartItemUpdateDTO;
-import com.vagsoft.bookstore.dto.CartItemWriteDTO;
+import com.vagsoft.bookstore.dto.cartDTOs.CartItemReadDTO;
+import com.vagsoft.bookstore.dto.cartDTOs.CartItemUpdateDTO;
+import com.vagsoft.bookstore.dto.cartDTOs.CartItemWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.CartItemsNotFoundException;
 import com.vagsoft.bookstore.mappers.CartItemMapper;
 import com.vagsoft.bookstore.models.entities.CartItem;

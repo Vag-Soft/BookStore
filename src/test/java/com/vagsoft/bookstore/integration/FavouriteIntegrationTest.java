@@ -11,8 +11,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vagsoft.bookstore.dto.FavouriteReadDTO;
-import com.vagsoft.bookstore.dto.FavouriteWriteDTO;
+import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteReadDTO;
+import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteWriteDTO;
 import com.vagsoft.bookstore.mappers.FavouriteMapper;
 import com.vagsoft.bookstore.models.entities.Book;
 import com.vagsoft.bookstore.models.entities.Favourite;
@@ -141,7 +141,7 @@ public class FavouriteIntegrationTest {
         ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response = client.exchange(uri, HttpMethod.GET, null,
                 classType);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
         Page<FavouriteReadDTO> foundFavourites = favouriteService.getFavouritesByUserID(-1, null);
         assertTrue(foundFavourites.isEmpty());
@@ -191,7 +191,7 @@ public class FavouriteIntegrationTest {
         ResponseEntity<FavouriteReadDTO> response = client.postForEntity("/users/99/favourites", favouriteWriteDTO,
                 FavouriteReadDTO.class);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
         assertFalse(favouriteRepository.existsByUserIDAndBook_Id(99, book2.getId()));
     }
@@ -226,7 +226,7 @@ public class FavouriteIntegrationTest {
         ResponseEntity<Void> response = client.exchange("/users/99/favourites/" + book1.getId(), HttpMethod.DELETE,
                 null, Void.class);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
         assertFalse(favouriteRepository.existsByUserIDAndBook_Id(99, book1.getId()));
     }

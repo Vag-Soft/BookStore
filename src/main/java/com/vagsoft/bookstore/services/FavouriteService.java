@@ -2,8 +2,8 @@ package com.vagsoft.bookstore.services;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.dto.FavouriteReadDTO;
-import com.vagsoft.bookstore.dto.FavouriteWriteDTO;
+import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteReadDTO;
+import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteWriteDTO;
 import com.vagsoft.bookstore.mappers.FavouriteMapper;
 import com.vagsoft.bookstore.models.entities.Favourite;
 import com.vagsoft.bookstore.repositories.BookRepository;
@@ -67,7 +67,6 @@ public class FavouriteService {
      *            the ID of the user whose favourite is to be deleted
      * @param bookID
      *            the ID of the favourite book to be deleted
-     * @return a response entity with no content
      */
     @Transactional
     public void deleteFavourite(Integer userID, Integer bookID) {

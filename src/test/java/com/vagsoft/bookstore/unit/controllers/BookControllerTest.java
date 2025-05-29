@@ -13,10 +13,10 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vagsoft.bookstore.controllers.BookController;
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.BookUpdateDTO;
-import com.vagsoft.bookstore.dto.BookWriteDTO;
-import com.vagsoft.bookstore.dto.GenreDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookUpdateDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookWriteDTO;
+import com.vagsoft.bookstore.dto.genreDTOs.GenreDTO;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.services.BookService;
 import com.vagsoft.bookstore.utils.AuthUtils;

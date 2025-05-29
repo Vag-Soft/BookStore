@@ -2,14 +2,15 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.annotations.ValidAdminRegistration;
-import com.vagsoft.bookstore.dto.UserLoginDTO;
-import com.vagsoft.bookstore.dto.UserReadDTO;
-import com.vagsoft.bookstore.dto.UserWriteDTO;
+import com.vagsoft.bookstore.validations.annotations.ValidAdminRegistration;
+import com.vagsoft.bookstore.dto.userDTOs.UserLoginDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.UserCreationException;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.services.AuthService;
-import com.vagsoft.bookstore.services.JwtService;
+import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
+import com.vagsoft.bookstore.validations.groups.OrderedValidation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -17,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,19 +27,14 @@ import org.springframework.web.bind.annotation.RestController;
 /** Controller class for handling authentication-related requests */
 @RestController
 @RequestMapping(path = "/auth")
-@Validated
+@Validated(OrderedValidation.class)
 public class AuthController {
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
     private final AuthService authService;
-    private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
 
-    public AuthController(AuthService authService, JwtService jwtService, AuthenticationManager authenticationManager,
-            UserMapper userMapper) {
+    public AuthController(AuthService authService, UserMapper userMapper) {
         this.authService = authService;
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
         this.userMapper = userMapper;
     }
 
@@ -53,7 +48,7 @@ public class AuthController {
     @ApiResponse(responseCode = "201")
     @PostMapping("/register")
     public ResponseEntity<UserReadDTO> registerUser(
-            @RequestBody @ValidAdminRegistration @Valid UserWriteDTO userWriteDTO) {
+            @RequestBody @ValidAdminRegistration(groups = ExtendedValidation.class) @Valid UserWriteDTO userWriteDTO) {
         log.info("POST /auth/register: userWriteDTO={}", userWriteDTO);
 
         UserLoginDTO userLoginDTO = userMapper.UserWriteToLoginDto(userWriteDTO);

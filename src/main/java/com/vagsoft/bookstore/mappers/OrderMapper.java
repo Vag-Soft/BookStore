@@ -1,13 +1,10 @@
 package com.vagsoft.bookstore.mappers;
 
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.OrderReadDTO;
-import com.vagsoft.bookstore.dto.OrderUpdateDTO;
-import com.vagsoft.bookstore.models.entities.Book;
+import com.vagsoft.bookstore.dto.orderDTOs.OrderReadDTO;
+import com.vagsoft.bookstore.dto.orderDTOs.OrderUpdateDTO;
 import com.vagsoft.bookstore.models.entities.Order;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.data.domain.Page;

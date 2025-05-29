@@ -2,7 +2,10 @@ package com.vagsoft.bookstore.mappers;
 
 import java.util.List;
 
-import com.vagsoft.bookstore.dto.*;
+import com.vagsoft.bookstore.dto.userDTOs.UserLoginDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserUpdateDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserWriteDTO;
 import com.vagsoft.bookstore.models.entities.User;
 import org.mapstruct.*;
 import org.springframework.data.domain.Page;

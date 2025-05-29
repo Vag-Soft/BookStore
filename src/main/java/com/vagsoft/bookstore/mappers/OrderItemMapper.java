@@ -1,8 +1,6 @@
 package com.vagsoft.bookstore.mappers;
 
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.OrderItemReadDTO;
-import com.vagsoft.bookstore.models.entities.Book;
+import com.vagsoft.bookstore.dto.orderDTOs.OrderItemReadDTO;
 import com.vagsoft.bookstore.models.entities.CartItem;
 import com.vagsoft.bookstore.models.entities.OrderItem;
 import org.mapstruct.Mapper;

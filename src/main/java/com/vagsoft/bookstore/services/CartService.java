@@ -2,9 +2,8 @@ package com.vagsoft.bookstore.services;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.dto.CartReadDTO;
+import com.vagsoft.bookstore.dto.cartDTOs.CartReadDTO;
 import com.vagsoft.bookstore.mappers.CartMapper;
-import com.vagsoft.bookstore.models.entities.Cart;
 import com.vagsoft.bookstore.repositories.CartRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

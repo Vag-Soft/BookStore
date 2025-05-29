@@ -14,8 +14,8 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vagsoft.bookstore.controllers.UserController;
-import com.vagsoft.bookstore.dto.UserReadDTO;
-import com.vagsoft.bookstore.dto.UserUpdateDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserUpdateDTO;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.UserService;

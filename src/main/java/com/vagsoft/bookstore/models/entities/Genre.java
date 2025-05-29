@@ -24,8 +24,6 @@ public class Genre {
     private Book book;
 
     @Column(nullable = false)
-    @NotBlank(message = "genre must not be blank")
-    @Size(max = 31, message = "genre must be less than 32 characters")
     private String genre;
 
     public Genre(Integer id, String genre) {

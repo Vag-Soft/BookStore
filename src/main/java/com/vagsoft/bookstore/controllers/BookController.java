@@ -2,16 +2,19 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.annotations.ExistsResource;
-import com.vagsoft.bookstore.annotations.IsAdmin;
-import com.vagsoft.bookstore.annotations.NullOrNotBlank;
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.BookUpdateDTO;
-import com.vagsoft.bookstore.dto.BookWriteDTO;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
+import com.vagsoft.bookstore.validations.annotations.IsAdmin;
+import com.vagsoft.bookstore.validations.annotations.NullOrNotBlank;
+import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookUpdateDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.services.BookService;
+import com.vagsoft.bookstore.validations.groups.BasicValidation;
+import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
+import com.vagsoft.bookstore.validations.groups.OrderedValidation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -27,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 /** REST controller for endpoints related to books */
 @RestController
 @RequestMapping(path = "/books")
-@Validated
+@Validated(OrderedValidation.class)
 public class BookController {
     private static final Logger log = LoggerFactory.getLogger(BookController.class);
     private final BookService bookService;
@@ -57,12 +60,12 @@ public class BookController {
      */
     @GetMapping
     public ResponseEntity<Page<BookReadDTO>> getBooks(
-            @RequestParam(name = "title", required = false) @Size(max = 61, message = "title must be less than 64 characters") @NullOrNotBlank String title,
-            @RequestParam(name = "genre", required = false) @Size(max = 31, message = "genre must be less than 32 characters") @NullOrNotBlank String genre,
-            @RequestParam(name = "author", required = false) @Size(max = 31, message = "author must be less than 32 characters") @NullOrNotBlank String author,
-            @RequestParam(name = "description", required = false) @NullOrNotBlank String description,
-            @RequestParam(name = "minPrice", required = false) @Min(value = 0, message = "minPrice must be equal or greater than 0") Double minPrice,
-            @RequestParam(name = "maxPrice", required = false) @Min(value = 0, message = "maxPrice must be equal or greater than 0") Double maxPrice,
+            @RequestParam(name = "title", required = false) @Size(max = 61, message = "title must be less than 64 characters", groups = BasicValidation.class) @NullOrNotBlank(groups = BasicValidation.class) String title,
+            @RequestParam(name = "genre", required = false) @Size(max = 31, message = "genre must be less than 32 characters", groups = BasicValidation.class) @NullOrNotBlank(groups = BasicValidation.class) String genre,
+            @RequestParam(name = "author", required = false) @Size(max = 31, message = "author must be less than 32 characters", groups = BasicValidation.class) @NullOrNotBlank(groups = BasicValidation.class) String author,
+            @RequestParam(name = "description", required = false) @NullOrNotBlank(groups = BasicValidation.class) String description,
+            @RequestParam(name = "minPrice", required = false) @Min(value = 0, message = "minPrice must be equal or greater than 0", groups = BasicValidation.class) Double minPrice,
+            @RequestParam(name = "maxPrice", required = false) @Min(value = 0, message = "maxPrice must be equal or greater than 0", groups = BasicValidation.class) Double maxPrice,
             Pageable pageable) {
 
         log.info("GET /books: title={}, genre={}, author={}, description={}, minPrice={}, maxPrice={}, pageable={}",
@@ -97,7 +100,7 @@ public class BookController {
      * @return the retrieved book
      */
     @GetMapping(path = "/{bookID}")
-    public ResponseEntity<BookReadDTO> getBookByID(@PathVariable @Positive Integer bookID) {
+    public ResponseEntity<BookReadDTO> getBookByID(@PathVariable @Positive(groups = BasicValidation.class) Integer bookID) {
         log.info("GET /books/{bookID}: bookID={}", bookID);
 
         Optional<BookReadDTO> foundBook = bookService.getBookByID(bookID);
@@ -114,9 +117,9 @@ public class BookController {
      *            the new book information
      * @return the updated book
      */
-    @IsAdmin()
+    @IsAdmin
     @PutMapping(path = "/{bookID}")
-    public ResponseEntity<BookReadDTO> updateBookByID(@PathVariable @Positive Integer bookID,
+    public ResponseEntity<BookReadDTO> updateBookByID(@PathVariable @Positive(groups = BasicValidation.class) Integer bookID,
             @Valid @RequestBody BookUpdateDTO bookUpdateDTO) {
         log.info("PUT /books/{bookID}: bookID={}, book={}", bookID, bookUpdateDTO);
 
@@ -133,10 +136,11 @@ public class BookController {
      * @return a ResponseEntity with no content
      */
     @ApiResponse(responseCode = "204")
-    @IsAdmin()
+    @IsAdmin
     @DeleteMapping(path = "/{bookID}")
     public ResponseEntity<Void> deleteBookByID(
-            @PathVariable @Positive @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist") Integer bookID) {
+            @PathVariable @Positive(groups = BasicValidation.class)
+            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
         log.info("DELETE /books/{bookID}: bookID={}", bookID);
 
         bookService.deleteBookByID(bookID);

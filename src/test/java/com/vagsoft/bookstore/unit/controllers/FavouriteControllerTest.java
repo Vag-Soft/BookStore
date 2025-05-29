@@ -11,9 +11,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vagsoft.bookstore.controllers.FavouriteController;
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.FavouriteReadDTO;
-import com.vagsoft.bookstore.dto.GenreDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
+import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteReadDTO;
+import com.vagsoft.bookstore.dto.genreDTOs.GenreDTO;
 import com.vagsoft.bookstore.repositories.FavouriteRepository;
 import com.vagsoft.bookstore.services.FavouriteService;
 import com.vagsoft.bookstore.utils.AuthUtils;

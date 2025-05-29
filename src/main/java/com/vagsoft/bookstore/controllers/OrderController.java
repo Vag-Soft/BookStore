@@ -1,11 +1,10 @@
 package com.vagsoft.bookstore.controllers;
 
-import com.vagsoft.bookstore.annotations.ExistsCompositeResource;
-import com.vagsoft.bookstore.annotations.ExistsResource;
-import com.vagsoft.bookstore.annotations.IsAdmin;
-import com.vagsoft.bookstore.dto.OrderReadDTO;
-import com.vagsoft.bookstore.dto.OrderUpdateDTO;
-import com.vagsoft.bookstore.errors.exceptions.FavouriteCreationException;
+import com.vagsoft.bookstore.validations.annotations.ExistsCompositeResource;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
+import com.vagsoft.bookstore.validations.annotations.IsAdmin;
+import com.vagsoft.bookstore.dto.orderDTOs.OrderReadDTO;
+import com.vagsoft.bookstore.dto.orderDTOs.OrderUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.OrderCreationException;
 import com.vagsoft.bookstore.errors.exceptions.OrderNotFoundException;
 import com.vagsoft.bookstore.models.enums.Status;
@@ -13,6 +12,9 @@ import com.vagsoft.bookstore.repositories.OrderRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.OrderService;
 import com.vagsoft.bookstore.utils.AuthUtils;
+import com.vagsoft.bookstore.validations.groups.BasicValidation;
+import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
+import com.vagsoft.bookstore.validations.groups.OrderedValidation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -38,7 +40,7 @@ import java.util.Optional;
 /** REST controller for endpoints related to orders */
 @RestController
 @RequestMapping(path = "/orders")
-@Validated
+@Validated(OrderedValidation.class)
 public class OrderController {
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
     private final OrderService orderService;
@@ -61,9 +63,9 @@ public class OrderController {
     @IsAdmin
     @GetMapping
     public ResponseEntity<Page<OrderReadDTO>> getOrders(
-            @RequestParam(name = "userID", required = false) @Positive  @ExistsResource(repository = UserRepository.class, nullable = true, message = "User with given ID does not exist")  Integer userID,
-            @RequestParam(name = "minTotalAmount", required = false) @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0") Double minTotalAmount,
-            @RequestParam(name = "maxTotalAmount", required = false) @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0") Double maxTotalAmount,
+            @RequestParam(name = "userID", required = false) @Positive(groups = BasicValidation.class)  @ExistsResource(repository = UserRepository.class, nullable = true, message = "User with given ID does not exist", groups = ExtendedValidation.class)  Integer userID,
+            @RequestParam(name = "minTotalAmount", required = false) @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double minTotalAmount,
+            @RequestParam(name = "maxTotalAmount", required = false) @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double maxTotalAmount,
             @RequestParam(name = "status", required = false) Status status,
             Pageable pageable) {
 
@@ -82,7 +84,7 @@ public class OrderController {
     @IsAdmin
     @GetMapping(path = "/{orderID}")
     public ResponseEntity<OrderReadDTO> getOrderByID(
-            @PathVariable @Positive @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist") Integer orderID) {
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) Integer orderID) {
 
         log.info("GET /orders/{}", orderID);
 
@@ -102,7 +104,7 @@ public class OrderController {
     @IsAdmin
     @PutMapping(path = "/{orderID}")
     public ResponseEntity<OrderReadDTO> updateOrderByID(
-            @PathVariable @Positive @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist") Integer orderID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) Integer orderID,
             @RequestBody @Valid OrderUpdateDTO orderUpdateDTO) {
 
         log.info("GET /orders/{}: orderUpdateDTO={}", orderID, orderUpdateDTO);
@@ -123,8 +125,8 @@ public class OrderController {
      */
     @GetMapping(path = "/me")
     public ResponseEntity<Page<OrderReadDTO>> getOrders(
-            @RequestParam(name = "minTotalAmount", required = false) @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0") Double minTotalAmount,
-            @RequestParam(name = "maxTotalAmount", required = false) @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0") Double maxTotalAmount,
+            @RequestParam(name = "minTotalAmount", required = false) @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double minTotalAmount,
+            @RequestParam(name = "maxTotalAmount", required = false) @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double maxTotalAmount,
             @RequestParam(name = "status", required = false) Status status,
             Pageable pageable) {
 
@@ -162,7 +164,7 @@ public class OrderController {
      */
     @GetMapping(path = "/me/{orderID}")
     public ResponseEntity<OrderReadDTO> getOrderMeByID(
-            @PathVariable @Positive @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUserIDAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders") Integer orderID) {
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUserIDAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID) {
 
         log.info("GET /orders/me/{}", orderID);
 

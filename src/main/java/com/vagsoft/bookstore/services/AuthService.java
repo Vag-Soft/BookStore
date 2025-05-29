@@ -2,9 +2,9 @@ package com.vagsoft.bookstore.services;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.dto.UserLoginDTO;
-import com.vagsoft.bookstore.dto.UserReadDTO;
-import com.vagsoft.bookstore.dto.UserWriteDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserLoginDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
+import com.vagsoft.bookstore.dto.userDTOs.UserWriteDTO;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.models.entities.User;
 import com.vagsoft.bookstore.repositories.UserRepository;

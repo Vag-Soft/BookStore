@@ -2,7 +2,7 @@ package com.vagsoft.bookstore.mappers;
 
 import java.util.List;
 
-import com.vagsoft.bookstore.dto.CartItemReadDTO;
+import com.vagsoft.bookstore.dto.cartDTOs.CartItemReadDTO;
 import com.vagsoft.bookstore.models.entities.CartItem;
 import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;

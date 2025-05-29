@@ -1,15 +1,16 @@
 package com.vagsoft.bookstore.controllers;
 
-import com.vagsoft.bookstore.annotations.ExistsCompositeResource;
-import com.vagsoft.bookstore.annotations.ExistsResource;
-import com.vagsoft.bookstore.annotations.IsAdmin;
-import com.vagsoft.bookstore.dto.OrderItemReadDTO;
+import com.vagsoft.bookstore.validations.annotations.ExistsCompositeResource;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
+import com.vagsoft.bookstore.validations.annotations.IsAdmin;
+import com.vagsoft.bookstore.dto.orderDTOs.OrderItemReadDTO;
 import com.vagsoft.bookstore.errors.exceptions.OrderItemNotFoundException;
-import com.vagsoft.bookstore.repositories.CartItemsRepository;
 import com.vagsoft.bookstore.repositories.OrderItemsRepository;
 import com.vagsoft.bookstore.repositories.OrderRepository;
 import com.vagsoft.bookstore.services.OrderItemService;
-import com.vagsoft.bookstore.utils.AuthUtils;
+import com.vagsoft.bookstore.validations.groups.BasicValidation;
+import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
+import com.vagsoft.bookstore.validations.groups.OrderedValidation;
 import jakarta.validation.constraints.Positive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ import java.util.Optional;
 /** REST controller for endpoints related to order items*/
 @RestController
 @RequestMapping(path = "/orders")
-@Validated
+@Validated(OrderedValidation.class)
 public class OrderItemController {
     private static final Logger log = LoggerFactory.getLogger(OrderItemController.class);
     private final OrderItemService orderItemService;
@@ -46,7 +47,7 @@ public class OrderItemController {
     @IsAdmin
     @GetMapping("/{orderID}/items")
     public ResponseEntity<Page<OrderItemReadDTO>> getOrderItems(
-            @PathVariable @Positive @ExistsResource(repository = OrderRepository.class, message = "Order with the given ID does not exist") Integer orderID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = OrderRepository.class, message = "Order with the given ID does not exist", groups = ExtendedValidation.class) Integer orderID,
             Pageable pageable) {
         log.info("GET /orders/{}/items", orderID);
 
@@ -64,8 +65,8 @@ public class OrderItemController {
     @IsAdmin
     @GetMapping("/{orderID}/items/{bookID}")
     public ResponseEntity<OrderItemReadDTO> getOrderItemByBookID(
-            @PathVariable @Positive Integer orderID,
-            @PathVariable @Positive @ExistsCompositeResource(repository = OrderItemsRepository.class, methodName = "existsByOrderIdAndBookId", firstPathVariable = "orderID", secondPathVariable = "bookID", message = "The order with the given ID does not contain the book with the given ID")  Integer bookID,
+            @PathVariable @Positive(groups = BasicValidation.class) Integer orderID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderItemsRepository.class, methodName = "existsByOrderIdAndBookId", firstPathVariable = "orderID", secondPathVariable = "bookID", message = "The order with the given ID does not contain the book with the given ID", groups = ExtendedValidation.class)  Integer bookID,
             Pageable pageable) {
         log.info("GET /orders/{}/items/{}", orderID, bookID);
 
@@ -83,7 +84,7 @@ public class OrderItemController {
      */
     @GetMapping("/me/{orderID}/items")
     public ResponseEntity<Page<OrderItemReadDTO>> getOrderMeItems(
-            @PathVariable @Positive @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUserIDAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders") Integer orderID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUserIDAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID,
             Pageable pageable) {
         log.info("GET /orders/me/{}/items", orderID);
 
@@ -100,8 +101,8 @@ public class OrderItemController {
      */
     @GetMapping("/me/{orderID}/items/{bookID}")
     public ResponseEntity<OrderItemReadDTO> getOrderMeItemByBookID(
-            @PathVariable @Positive @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUserIDAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders") Integer orderID,
-            @PathVariable @Positive @ExistsCompositeResource(repository = OrderItemsRepository.class, methodName = "existsByOrderIdAndBookId", firstPathVariable = "orderID", secondPathVariable = "bookID", message = "The order with the given ID does not contain the book with the given ID")  Integer bookID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUserIDAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderItemsRepository.class, methodName = "existsByOrderIdAndBookId", firstPathVariable = "orderID", secondPathVariable = "bookID", message = "The order with the given ID does not contain the book with the given ID", groups = ExtendedValidation.class)  Integer bookID,
             Pageable pageable) {
         log.info("GET /orders/{}/items/{}", orderID, bookID);
 

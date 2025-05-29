@@ -1,6 +1,6 @@
 package com.vagsoft.bookstore.mappers;
 
-import com.vagsoft.bookstore.dto.GenreDTO;
+import com.vagsoft.bookstore.dto.genreDTOs.GenreDTO;
 import com.vagsoft.bookstore.models.entities.Genre;
 import org.mapstruct.Mapper;
 
