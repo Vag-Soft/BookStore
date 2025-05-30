@@ -9,8 +9,6 @@ import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.mappers.BookMapper;
 import com.vagsoft.bookstore.models.entities.Book;
 import com.vagsoft.bookstore.repositories.BookRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 /** Service class for book operations */
 @Service
 public class BookService {
-    private static final Logger log = LoggerFactory.getLogger(BookService.class);
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
@@ -113,5 +110,42 @@ public class BookService {
     @Transactional
     public void deleteBookByID(Integer bookID) {
         bookRepository.deleteById(bookID);
+    }
+
+    /**
+     * Checks if a book has enough stock and delets the requested quantity from the
+     * stock.
+     *
+     * @param bookID
+     *            the ID of the book to check
+     * @param quantity
+     *            the quantity of the book
+     */
+    @Transactional
+    public void requestBooks(Integer bookID, Integer quantity) {
+        Book book = bookRepository.findById(bookID)
+                .orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID));
+
+        if (book.getAvailability() >= quantity) {
+            book.setAvailability(book.getAvailability() - quantity);
+        } else {
+            throw new IllegalArgumentException("Not enough stock for book with ID: " + bookID);
+        }
+    }
+
+    /**
+     * Returns books to the stock by increasing the availability of the book.
+     *
+     * @param bookID
+     *            the ID of the book to return
+     * @param quantity
+     *            the quantity of the book to return
+     */
+    @Transactional
+    public void returnBooks(Integer bookID, Integer quantity) {
+        Book book = bookRepository.findById(bookID)
+                .orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID));
+
+        book.setAvailability(book.getAvailability() + quantity);
     }
 }

@@ -25,13 +25,15 @@ public class CartItemsService {
     private final CartItemsRepository cartItemsRepository;
     private final CartRepository cartRepository;
     private final BookRepository bookRepository;
+    private final BookService bookService;
     private final CartItemMapper cartItemMapper;
 
     public CartItemsService(CartItemsRepository cartItemsRepository, CartRepository cartRepository,
-            BookRepository bookRepository, CartItemMapper cartItemMapper) {
+            BookRepository bookRepository, BookService bookService, CartItemMapper cartItemMapper) {
         this.cartItemsRepository = cartItemsRepository;
         this.cartRepository = cartRepository;
         this.bookRepository = bookRepository;
+        this.bookService = bookService;
         this.cartItemMapper = cartItemMapper;
     }
 
@@ -72,6 +74,9 @@ public class CartItemsService {
      */
     @Transactional
     public Optional<CartItemReadDTO> addCartItem(Integer userID, CartItemWriteDTO cartItemWriteDTO) {
+        // Requesting books from the book service to ensure availability
+        bookService.requestBooks(cartItemWriteDTO.getBookID(), cartItemWriteDTO.getQuantity());
+
         CartItem cartItemToSave = CartItem.builder().quantity(cartItemWriteDTO.getQuantity())
                 .book(bookRepository.getReferenceById(cartItemWriteDTO.getBookID()))
                 .cart(cartRepository.getReferenceById(userID)).build();
@@ -94,6 +99,9 @@ public class CartItemsService {
     @Transactional
     public Optional<CartItemReadDTO> updateCartItem(Integer userID, Integer bookID,
             CartItemUpdateDTO cartItemUpdateDTO) {
+        // Requesting books from the book service to ensure availability
+        bookService.requestBooks(bookID, cartItemUpdateDTO.getQuantity());
+
         CartItem cartItem = cartItemsRepository.findByUserIDAndBookID(userID, bookID).orElseThrow(
                 () -> new RuntimeException("Cart item not found for user ID: " + userID + " and book ID: " + bookID));
 
@@ -113,6 +121,12 @@ public class CartItemsService {
      */
     @Transactional
     public void deleteCartItem(Integer userID, Integer bookID) {
+        CartItem cartItem = cartItemsRepository.findByUserIDAndBookID(userID, bookID).orElseThrow(
+                () -> new RuntimeException("Cart item not found for user ID: " + userID + " and book ID: " + bookID));
+
+        // Returning books to the book service to increase availability
+        bookService.returnBooks(bookID, cartItem.getQuantity());
+
         cartItemsRepository.deleteByUserIDAndBookID(userID, bookID);
     }
 
@@ -122,7 +136,8 @@ public class CartItemsService {
      * @param userID
      *            the ID of the user
      * @return a list of cart items that were checked out
-     * @throws CartItemsNotFoundException if no items are found in the user's cart
+     * @throws CartItemsNotFoundException
+     *             if no items are found in the user's cart
      */
     @Transactional
     public List<CartItem> checkout(Integer userID) {
