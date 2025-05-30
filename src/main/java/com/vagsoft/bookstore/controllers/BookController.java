@@ -100,7 +100,7 @@ public class BookController {
      * @return the retrieved book
      */
     @GetMapping(path = "/{bookID}")
-    public ResponseEntity<BookReadDTO> getBookByID(@PathVariable @Positive(groups = BasicValidation.class) Integer bookID) {
+    public ResponseEntity<BookReadDTO> getBookByID(@PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
         log.info("GET /books/{bookID}: bookID={}", bookID);
 
         Optional<BookReadDTO> foundBook = bookService.getBookByID(bookID);
@@ -119,7 +119,7 @@ public class BookController {
      */
     @IsAdmin
     @PutMapping(path = "/{bookID}")
-    public ResponseEntity<BookReadDTO> updateBookByID(@PathVariable @Positive(groups = BasicValidation.class) Integer bookID,
+    public ResponseEntity<BookReadDTO> updateBookByID(@PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID,
             @Valid @RequestBody BookUpdateDTO bookUpdateDTO) {
         log.info("PUT /books/{bookID}: bookID={}, book={}", bookID, bookUpdateDTO);
 

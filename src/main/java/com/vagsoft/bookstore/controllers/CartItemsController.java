@@ -204,7 +204,7 @@ public class CartItemsController {
      */
     @PutMapping(path = "/me/items/{bookID}")
     public ResponseEntity<CartItemReadDTO> updateCartItem(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID,
+            @PathVariable @Positive(groups = BasicValidation.class) Integer bookID,
             @RequestBody @Valid @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", useJWT = true, secondPathVariable = "bookID", message = "No Cart item found with the given JWT and book ID", groups = ExtendedValidation.class) CartItemUpdateDTO cartItemUpdateDTO) {
         log.info("GET /carts/me/items/{}: cartItemUpdateDTO={}", bookID, cartItemUpdateDTO);
 

@@ -158,6 +158,7 @@ class BookControllerTest {
     @DisplayName("GET /books/1 - Success")
     void getBookByIDFound() throws Exception {
         BookReadDTO bookOutput = storedBooks.getFirst();
+        when(bookRepository.existsById(1)).thenReturn(true);
         when(bookService.getBookByID(1)).thenReturn(Optional.ofNullable(bookOutput));
 
         assertNotNull(bookOutput);
@@ -174,17 +175,19 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.genres").value(bookOutput.getGenres()));
     }
 
-  @Test
-  @DisplayName("GET /books/999} - Not Found")
-  void getBookByIDNotFound() throws Exception {
-    when(bookService.getBookByID(999)).thenReturn(Optional.empty());
+    @Test
+    @DisplayName("GET /books/999} - Not Found")
+    void getBookByIDNotFound() throws Exception {
+        when(bookRepository.existsById(999)).thenReturn(false);
+        when(bookService.getBookByID(999)).thenReturn(Optional.empty());
 
-    mockMvc.perform(get("/books/{bookID}", 999)).andExpect(status().isNotFound());
-  }
+        mockMvc.perform(get("/books/{bookID}", 999)).andExpect(status().isNotFound());
+    }
 
     @Test
     @DisplayName("GET /books/-1} - Invalid ID")
     void getBookByIDInvalid() throws Exception {
+        when(bookRepository.existsById(-1)).thenReturn(false);
         mockMvc.perform(get("/books/{bookID}", -1)).andExpect(status().isBadRequest());
     }
 
@@ -200,6 +203,7 @@ class BookControllerTest {
         bookOutput.setTitle(bookUpdateDTO.getTitle());
         bookOutput.setGenres(bookUpdateDTO.getGenres());
 
+        when(bookRepository.existsById(1)).thenReturn(true);
         when(bookService.updateBookByID(1, bookUpdateDTO)).thenReturn(Optional.of(bookOutput));
 
         mockMvc.perform(put("/books/{bookID}", 1).contentType("application/json")
@@ -224,6 +228,7 @@ class BookControllerTest {
         bookUpdateDTO.setTitle("title10");
         bookUpdateDTO.setGenres(List.of(new GenreDTO(4, "genre2")));
 
+        when(bookRepository.existsById(999)).thenReturn(false);
         when(bookService.getBookByID(999)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/books/{bookID}", 999).contentType("application/json")
@@ -237,6 +242,7 @@ class BookControllerTest {
         bookUpdateDTO.setTitle("title10");
         bookUpdateDTO.setGenres(List.of(new GenreDTO(4, "genre2")));
 
+        when(bookRepository.existsById(-1)).thenReturn(false);
         when(bookService.getBookByID(-1)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/books/{bookID}", -1).contentType("application/json")
@@ -264,6 +270,7 @@ class BookControllerTest {
     @Test
     @DisplayName("DELETE /books/-1 - Invalid ID")
     void deleteBookByIDInvalid() throws Exception {
+        when(bookRepository.existsById(-1)).thenReturn(false);
         mockMvc.perform(delete("/books/{bookID}", -1)).andExpect(status().isBadRequest());
     }
 }

@@ -81,7 +81,7 @@ public class UserController {
      */
     @IsAdmin()
     @GetMapping(path = "/{userID}")
-    public ResponseEntity<UserReadDTO> getUserByID(@PathVariable @Positive(groups = BasicValidation.class) Integer userID) {
+    public ResponseEntity<UserReadDTO> getUserByID(@PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
         log.info("GET /users/{userID}: userID={}", userID);
 
         Optional<UserReadDTO> foundUser = userService.getUserByID(userID);
@@ -100,7 +100,7 @@ public class UserController {
      */
     @IsAdmin()
     @PutMapping(path = "/{userID}")
-    public ResponseEntity<UserReadDTO> updateUserByID(@PathVariable @Positive(groups = BasicValidation.class) Integer userID,
+    public ResponseEntity<UserReadDTO> updateUserByID(@PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
             @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
         log.info("PUT /users/{userID}: userID={}, userUpdateDTO={}", userID, userUpdateDTO);
 

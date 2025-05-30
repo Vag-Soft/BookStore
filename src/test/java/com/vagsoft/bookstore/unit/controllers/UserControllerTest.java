@@ -109,6 +109,8 @@ class UserControllerTest {
     @DisplayName("GET /users/1 - Success")
     void getUserByIDFound() throws Exception {
         UserReadDTO userOutput = storedUsers.getFirst();
+
+        when(userRepository.existsById(1)).thenReturn(true);
         when(userService.getUserByID(1)).thenReturn(Optional.ofNullable(userOutput));
 
         assertNotNull(userOutput);
@@ -123,17 +125,19 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.signupDate").value(userOutput.getSignupDate().toString()));
     }
 
-  @Test
-  @DisplayName("GET /users/999} - Not Found")
-  void getUserByIDNotFound() throws Exception {
-    when(userService.getUserByID(999)).thenReturn(Optional.empty());
+    @Test
+    @DisplayName("GET /users/999} - Not Found")
+    void getUserByIDNotFound() throws Exception {
+        when(userRepository.existsById(999)).thenReturn(false);
+        when(userService.getUserByID(999)).thenReturn(Optional.empty());
 
-    mockMvc.perform(get("/users/{userID}", 999)).andExpect(status().isNotFound());
-  }
+        mockMvc.perform(get("/users/{userID}", 999)).andExpect(status().isNotFound());
+    }
 
     @Test
     @DisplayName("GET /users/-1} - Invalid ID")
     void getUserByIDInvalid() throws Exception {
+        when(userRepository.existsById(-1)).thenReturn(false);
         mockMvc.perform(get("/users/{userID}", -1)).andExpect(status().isBadRequest());
     }
 
@@ -148,6 +152,7 @@ class UserControllerTest {
         userOutput.setUsername(userUpdateDTO.getUsername());
 
         when(userService.updateUserByID(1, userUpdateDTO)).thenReturn(Optional.of(userOutput));
+        when(userRepository.existsById(1)).thenReturn(true);
         when(userRepository.existsByUsernameAndIdNot("jane", 1)).thenReturn(false);
 
         mockMvc.perform(put("/users/{userID}", 1).contentType("application/json")
@@ -168,6 +173,7 @@ class UserControllerTest {
         userUpdateDTO.setUsername("jane");
 
         when(userService.updateUserByID(999, userUpdateDTO)).thenReturn(Optional.empty());
+        when(userRepository.existsById(999)).thenReturn(false);
         when(userRepository.existsByUsernameAndIdNot("jane", 999)).thenReturn(false);
 
         mockMvc.perform(put("/users/{userID}", 999).contentType("application/json")
@@ -179,6 +185,8 @@ class UserControllerTest {
     void updateUserByIDInvalid() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
+
+        when(userRepository.existsById(-1)).thenReturn(false);
 
         mockMvc.perform(put("/users/{userID}", -1).contentType("application/json")
                 .content(objectMapper.writeValueAsString(userUpdateDTO))).andExpect(status().isBadRequest());
@@ -205,6 +213,7 @@ class UserControllerTest {
     @Test
     @DisplayName("DELETE /users/-1 - Invalid ID")
     void deleteUserByIDInvalid() throws Exception {
+        when(userRepository.existsById(-1)).thenReturn(false);
         mockMvc.perform(delete("/users/{userID}", -1)).andExpect(status().isBadRequest());
     }
 }

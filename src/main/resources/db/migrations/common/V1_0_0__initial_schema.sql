@@ -14,8 +14,8 @@ CREATE TABLE Books (
 
 CREATE TABLE Genres (
     ID SERIAL,
-    bookID INT,
-    genre VARCHAR(31),
+    bookID INT NOT NULL,
+    genre VARCHAR(31) NOT NULL,
 
     PRIMARY KEY(ID),
     UNIQUE (bookID, genre),
@@ -41,8 +41,8 @@ CREATE TABLE Users (
 
 CREATE TABLE Favourites (
     ID SERIAL,
-    userID INT,
-    bookID INT,
+    userID INT NOT NULL,
+    bookID INT NOT NULL,
 
     PRIMARY KEY(ID),
     UNIQUE (userID, bookID),
@@ -63,8 +63,8 @@ CREATE TABLE Orders (
 
 CREATE TABLE OrderItems (
     ID SERIAL,
-    orderID INT,
-    bookID INT,
+    orderID INT NOT NULL,
+    bookID INT NOT NULL,
     quantity INT DEFAULT 1,
 
     PRIMARY KEY(ID),
@@ -84,8 +84,8 @@ CREATE TABLE Carts (
 
 CREATE TABLE CartItems (
     ID SERIAL,
-    cartID INT,
-    bookID INT,
+    cartID INT NOT NULL,
+    bookID INT NOT NULL,
     quantity INT DEFAULT 1,
 
     PRIMARY KEY(ID),

@@ -22,15 +22,17 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final CartService cartService;
 
     public AuthService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager, AuthenticationManager authenticationManager1,
-            JwtService jwtService) {
+                       AuthenticationManager authenticationManager, AuthenticationManager authenticationManager1,
+                       JwtService jwtService, CartService cartService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager1;
         this.jwtService = jwtService;
+        this.cartService = cartService;
     }
 
     /**
@@ -45,9 +47,13 @@ public class AuthService {
         String hashedPassword = passwordEncoder.encode(userWriteDTO.getPassword());
         userWriteDTO.setPassword(hashedPassword);
 
-        User user = userMapper.DtoToUser(userWriteDTO);
+        User userToSave = userMapper.DtoToUser(userWriteDTO);
 
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.save(userToSave);
+
+        // Create an empty cart for the newly registered user
+        cartService.createEmptyCart(savedUser.getId());
+
         return Optional.of(userMapper.UserToReadDto(savedUser));
     }
 

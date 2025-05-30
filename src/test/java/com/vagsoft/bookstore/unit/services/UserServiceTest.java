@@ -83,30 +83,34 @@ class UserServiceTest {
         assertEquals(userMapper.UserToReadDto(storedUsers.getFirst()), result.getContent().getFirst());
     }
 
-  @Test
-  @DisplayName("getUserByID(1) - Success")
-  void getUserByIDFound() {
-    when(userRepository.findById(1)).thenReturn(Optional.of(storedUsers.getFirst()));
+    @Test
+    @DisplayName("getUserByID(1) - Success")
+    void getUserByIDFound() {
+        when(userRepository.existsById(1)).thenReturn(true);
+        when(userRepository.findById(1)).thenReturn(Optional.of(storedUsers.getFirst()));
 
-    Optional<UserReadDTO> result = userService.getUserByID(1);
+        Optional<UserReadDTO> result = userService.getUserByID(1);
 
-    assertFalse(result.isEmpty());
-    assertEquals(userMapper.UserToReadDto(storedUsers.getFirst()), result.get());
-  }
+        assertFalse(result.isEmpty());
+        assertEquals(userMapper.UserToReadDto(storedUsers.getFirst()), result.get());
+    }
 
-  @Test
-  @DisplayName("getUserByID(999) - Not Found")
-  void getUserByIDNotFound() {
-    when(userRepository.findById(999)).thenReturn(Optional.empty());
+    @Test
+    @DisplayName("getUserByID(999) - Not Found")
+    void getUserByIDNotFound() {
+        when(userRepository.existsById(999)).thenReturn(false);
+        when(userRepository.findById(999)).thenReturn(Optional.empty());
 
-    Optional<UserReadDTO> result = userService.getUserByID(999);
+        Optional<UserReadDTO> result = userService.getUserByID(999);
 
-    assertTrue(result.isEmpty());
-  }
+        assertTrue(result.isEmpty());
+    }
 
     @Test
     @DisplayName("getUserByID(-1) - Invalid ID")
     void getUserByIDInvalid() {
+        when(userRepository.existsById(-1)).thenReturn(false);
+
         Optional<UserReadDTO> result = userService.getUserByID(-1);
 
         assertTrue(result.isEmpty());
@@ -118,6 +122,7 @@ class UserServiceTest {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
 
+        when(userRepository.existsById(1)).thenReturn(true);
         when(userRepository.findById(1)).thenReturn(Optional.of(storedUsers.getFirst()));
 
         User updatedUser = storedUsers.getFirst();
@@ -136,6 +141,8 @@ class UserServiceTest {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
 
+        when(userRepository.existsById(999)).thenReturn(false);
+
         assertThrows(UserNotFoundException.class, () -> userService.updateUserByID(999, userUpdateDTO));
     }
 
@@ -145,36 +152,41 @@ class UserServiceTest {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
 
+        when(userRepository.existsById(-1)).thenReturn(false);
+
         assertThrows(UserNotFoundException.class, () -> userService.updateUserByID(-1, userUpdateDTO));
     }
 
-  @Test
-  @DisplayName("deleteUserByID(1) - Success")
-  void deletedUserByIDFound() {
-    doNothing().when(userRepository).deleteById(1);
+    @Test
+    @DisplayName("deleteUserByID(1) - Success")
+    void deletedUserByIDFound() {
+        when(userRepository.existsById(1)).thenReturn(true);
+        doNothing().when(userRepository).deleteById(1);
 
-    userService.deleteUserByID(1);
+        userService.deleteUserByID(1);
 
-    verify(userRepository).deleteById(1);
-  }
+        verify(userRepository).deleteById(1);
+    }
 
-  @Test
-  @DisplayName("deleteUserByID(999) - Not Found")
-  void deletedUserByIDNotFound() {
-    doThrow(new UserNotFoundException("No user found with the given ID: 999")).when(userRepository).deleteById(999);
+    @Test
+    @DisplayName("deleteUserByID(999) - Not Found")
+    void deletedUserByIDNotFound() {
+        when(userRepository.existsById(999)).thenReturn(false);
+        doThrow(new UserNotFoundException("No user found with the given ID: 999")).when(userRepository).deleteById(999);
 
-    assertThrows(UserNotFoundException.class, () -> userService.deleteUserByID(999));
+        assertThrows(UserNotFoundException.class, () -> userService.deleteUserByID(999));
 
-    verify(userRepository).deleteById(999);
-  }
+        verify(userRepository).deleteById(999);
+    }
 
-  @Test
-  @DisplayName("deleteUserByID(-1) - Invalid ID")
-  void deletedUserByIDInvalid() {
-      doThrow(new IllegalArgumentException("Invalid User ID: -1")).when(userRepository).deleteById(-1);
+    @Test
+    @DisplayName("deleteUserByID(-1) - Invalid ID")
+    void deletedUserByIDInvalid() {
+        when(userRepository.existsById(-1)).thenReturn(false);
+        doThrow(new IllegalArgumentException("Invalid User ID: -1")).when(userRepository).deleteById(-1);
 
-      assertThrows(IllegalArgumentException.class, () -> userService.deleteUserByID(-1));
+        assertThrows(IllegalArgumentException.class, () -> userService.deleteUserByID(-1));
 
-      verify(userRepository).deleteById(-1);
-  }
+        verify(userRepository).deleteById(-1);
+    }
 }
