@@ -74,7 +74,7 @@ public class CartItemsService {
     public Optional<CartItemReadDTO> addCartItem(Integer userID, CartItemWriteDTO cartItemWriteDTO) {
         CartItem cartItemToSave = CartItem.builder().quantity(cartItemWriteDTO.getQuantity())
                 .book(bookRepository.getReferenceById(cartItemWriteDTO.getBookID()))
-                .cartID(cartRepository.getReferenceById(userID).getId()).build();
+                .cart(cartRepository.getReferenceById(userID)).build();
 
         CartItem savedCartItem = cartItemsRepository.save(cartItemToSave);
         return Optional.of(cartItemMapper.cartItemToReadDto(savedCartItem));

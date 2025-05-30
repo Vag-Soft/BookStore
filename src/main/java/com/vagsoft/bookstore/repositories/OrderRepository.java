@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 /** Repository interface for accessing order data */
 @Repository
@@ -27,7 +25,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("""
             SELECT o
             FROM Order o
-            WHERE (:userID IS NULL OR o.userID = :userID)
+            WHERE (:userID IS NULL OR o.user.id = :userID)
             AND (:minTotalAmount IS NULL OR o.totalAmount >= :minTotalAmount)
             AND (:maxTotalAmount IS NULL OR o.totalAmount <= :maxTotalAmount)
             AND (:status IS NULL OR o.status = :status)
@@ -41,5 +39,5 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
      * @param orderID the ID of the order to be checked
      * @return true if the order exists, false otherwise
      */
-    boolean existsByUserIDAndId(Integer userID, Integer orderID);
+    boolean existsByUser_IdAndId(Integer userID, Integer orderID);
 }

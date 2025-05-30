@@ -164,7 +164,7 @@ public class OrderController {
      */
     @GetMapping(path = "/me/{orderID}")
     public ResponseEntity<OrderReadDTO> getOrderMeByID(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUserIDAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID) {
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUser_IdAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID) {
 
         log.info("GET /orders/me/{}", orderID);
 

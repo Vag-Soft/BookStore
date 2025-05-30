@@ -28,9 +28,12 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     @Query("""
                 SELECT ci
                 FROM CartItem ci
-                INNER JOIN Cart c ON ci.cartID = c.id AND c.userID = :userID
+                INNER JOIN Cart c ON ci.cart = c AND c.user.id = :userID
             """)
     Page<CartItem> findAllByUserID(Integer userID, Pageable pageable);
+
+
+
 
     /**
      * Retrieves all cart items by user ID
@@ -42,7 +45,7 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     @Query("""
                 SELECT ci
                 FROM CartItem ci
-                INNER JOIN Cart c ON ci.cartID = c.id AND c.userID = :userID
+                INNER JOIN Cart c ON ci.cart = c AND c.user.id = :userID
             """)
     List<CartItem> findAllByUserID(Integer userID);
 
@@ -58,7 +61,7 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     @Query("""
                 SELECT COUNT(ci) > 0
                 FROM CartItem ci
-                INNER JOIN Cart c ON ci.book.id = :bookID AND ci.cartID = c.id AND c.userID = :userID
+                INNER JOIN Cart c ON ci.book.id = :bookID AND ci.cart = c AND c.user.id = :userID
             """)
     boolean existsByUserIDAndBookID(Integer userID, Integer bookID);
 
@@ -74,7 +77,7 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     @Query("""
                 SELECT ci
                 FROM CartItem ci
-                INNER JOIN Cart c ON ci.book.id = :bookID AND ci.cartID = c.id AND c.userID = :userID
+                INNER JOIN Cart c ON ci.book.id = :bookID AND ci.cart = c AND c.user.id = :userID
             """)
     Optional<CartItem> findByUserIDAndBookID(Integer userID, Integer bookID);
 
@@ -90,10 +93,10 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     @Query("""
                 DELETE
                 FROM CartItem ci
-                WHERE ci.book.id = :bookID AND ci.cartID IN (
-                    SELECT c.id
+                WHERE ci.book.id = :bookID AND ci.cart IN (
+                    SELECT c
                     FROM Cart c
-                    WHERE c.userID = :userID
+                    WHERE c.user.id = :userID
                 )
             """)
     void deleteByUserIDAndBookID(Integer userID, Integer bookID);
@@ -108,10 +111,10 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     @Query("""
                 DELETE
                 FROM CartItem ci
-                WHERE ci.cartID IN (
-                    SELECT c.id
+                WHERE ci.cart IN (
+                    SELECT c
                     FROM Cart c
-                    WHERE c.userID = :userID
+                    WHERE c.user.id = :userID
                 )
             """)
     void deleteAllByUserID(Integer userID);

@@ -84,7 +84,7 @@ public class OrderItemController {
      */
     @GetMapping("/me/{orderID}/items")
     public ResponseEntity<Page<OrderItemReadDTO>> getOrderMeItems(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUserIDAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUser_IdAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID,
             Pageable pageable) {
         log.info("GET /orders/me/{}/items", orderID);
 
@@ -101,7 +101,7 @@ public class OrderItemController {
      */
     @GetMapping("/me/{orderID}/items/{bookID}")
     public ResponseEntity<OrderItemReadDTO> getOrderMeItemByBookID(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUserIDAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUser_IdAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID,
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderItemsRepository.class, methodName = "existsByOrderIdAndBookId", firstPathVariable = "orderID", secondPathVariable = "bookID", message = "The order with the given ID does not contain the book with the given ID", groups = ExtendedValidation.class)  Integer bookID,
             Pageable pageable) {
         log.info("GET /orders/{}/items/{}", orderID, bookID);

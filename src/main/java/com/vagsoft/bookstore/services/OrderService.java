@@ -10,6 +10,7 @@ import com.vagsoft.bookstore.models.entities.Order;
 import com.vagsoft.bookstore.models.entities.OrderItem;
 import com.vagsoft.bookstore.models.enums.Status;
 import com.vagsoft.bookstore.repositories.OrderRepository;
+import com.vagsoft.bookstore.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -26,12 +27,14 @@ import java.util.Optional;
 public class OrderService {
     private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
     private final CartItemsService cartItemsService;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
 
-    public OrderService(OrderRepository orderRepository, CartItemsService cartItemsService, OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository, CartItemsService cartItemsService, OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
         this.cartItemsService = cartItemsService;
         this.orderMapper = orderMapper;
         this.orderItemMapper = orderItemMapper;
@@ -76,7 +79,7 @@ public class OrderService {
         });
 
         // Setting order properties
-        orderToSave.setUserID(userID);
+        orderToSave.setUser(userRepository.getReferenceById(userID));
         orderToSave.setOrderItems(orderItems);
         orderToSave.setStatus(Status.PROCESSING);
         orderToSave.setOrderDate(LocalDate.now());

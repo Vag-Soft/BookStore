@@ -18,8 +18,9 @@ public class Favourite {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer userID;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userID", nullable = false)
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bookID", nullable = false)

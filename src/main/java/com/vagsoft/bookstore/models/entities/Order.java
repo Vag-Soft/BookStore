@@ -24,8 +24,9 @@ public class Order {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer userID;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userID", nullable = false)
+    private User user;
 
     @Column(name = "totalamount", nullable = false)
     private Double totalAmount;

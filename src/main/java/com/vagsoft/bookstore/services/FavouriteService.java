@@ -8,6 +8,7 @@ import com.vagsoft.bookstore.mappers.FavouriteMapper;
 import com.vagsoft.bookstore.models.entities.Favourite;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.FavouriteRepository;
+import com.vagsoft.bookstore.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,12 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class FavouriteService {
     private final FavouriteRepository favouriteRepository;
     private final BookRepository bookRepository;
+    private final UserRepository userRepository;
     private final FavouriteMapper favouriteMapper;
 
-    public FavouriteService(FavouriteRepository favouriteRepository, BookRepository bookRepository,
-            FavouriteMapper favouriteMapper) {
+    public FavouriteService(FavouriteRepository favouriteRepository, BookRepository bookRepository, UserRepository userRepository,
+                            FavouriteMapper favouriteMapper) {
         this.favouriteRepository = favouriteRepository;
         this.bookRepository = bookRepository;
+        this.userRepository = userRepository;
         this.favouriteMapper = favouriteMapper;
     }
 
@@ -38,7 +41,7 @@ public class FavouriteService {
      */
     @Transactional(readOnly = true)
     public Page<FavouriteReadDTO> getFavouritesByUserID(Integer userID, Pageable pageable) {
-        return favouriteMapper.pageBookToPageDto(favouriteRepository.findFavouritesByUserID(userID, pageable));
+        return favouriteMapper.pageBookToPageDto(favouriteRepository.findFavouritesByUser_Id(userID, pageable));
     }
 
     /**
@@ -53,7 +56,8 @@ public class FavouriteService {
     @Transactional
     public Optional<FavouriteReadDTO> addFavourite(Integer userID, FavouriteWriteDTO favouriteWriteDTO) {
         Favourite favouriteToSave = favouriteMapper.dtoToFavourite(favouriteWriteDTO);
-        favouriteToSave.setUserID(userID);
+//        favouriteToSave.setUserID(userID);
+        favouriteToSave.setUser(userRepository.getReferenceById(userID));
         favouriteToSave.setBook(bookRepository.getReferenceById(favouriteWriteDTO.getBookID()));
 
         Favourite savedFavourite = favouriteRepository.save(favouriteToSave);
@@ -70,6 +74,6 @@ public class FavouriteService {
      */
     @Transactional
     public void deleteFavourite(Integer userID, Integer bookID) {
-        favouriteRepository.deleteByUserIDAndBook_Id(userID, bookID);
+        favouriteRepository.deleteByUser_IdAndBook_Id(userID, bookID);
     }
 }

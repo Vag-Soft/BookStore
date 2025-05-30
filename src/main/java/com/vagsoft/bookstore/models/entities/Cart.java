@@ -21,8 +21,9 @@ public class Cart {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(nullable = false)
-    private Integer userID;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userID", nullable = false)
+    private User user;
 
     @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

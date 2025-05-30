@@ -17,5 +17,5 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
      * @param userID the ID of the user whose cart is to be found
      * @return an Optional containing the Cart if found, or empty if not found
      */
-    Optional<Cart> findByUserID(Integer userID);
+    Optional<Cart> findByUser_Id(Integer userID);
 }

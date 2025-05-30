@@ -88,11 +88,11 @@ public class FavouriteIntegrationTest {
         userRepository.save(user1);
         userRepository.save(user2);
 
-        favourite1 = Favourite.builder().book(book1).userID(user1.getId()).build();
+        favourite1 = Favourite.builder().book(book1).user(user1).build();
 
-        favourite2 = Favourite.builder().book(book2).userID(user1.getId()).build();
+        favourite2 = Favourite.builder().book(book2).user(user1).build();
 
-        favourite3 = Favourite.builder().book(book1).userID(user2.getId()).build();
+        favourite3 = Favourite.builder().book(book1).user(user2).build();
 
         favouriteRepository.save(favourite1);
         favouriteRepository.save(favourite2);
@@ -177,7 +177,7 @@ public class FavouriteIntegrationTest {
 
         Favourite favourite4 = new Favourite();
         favourite4.setBook(book2);
-        favourite4.setUserID(user2.getId());
+        favourite4.setUser(user2);
 
         FavouriteReadDTO createdFavouriteDTO = response.getBody();
         assertEquals(favouriteMapper.favouriteToReadDto(favourite4), createdFavouriteDTO);
@@ -193,7 +193,7 @@ public class FavouriteIntegrationTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
-        assertFalse(favouriteRepository.existsByUserIDAndBook_Id(99, book2.getId()));
+        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(99, book2.getId()));
     }
 
     @Test
@@ -206,7 +206,7 @@ public class FavouriteIntegrationTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
-        assertFalse(favouriteRepository.existsByUserIDAndBook_Id(-1, book2.getId()));
+        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(-1, book2.getId()));
     }
 
     @Test
@@ -217,7 +217,7 @@ public class FavouriteIntegrationTest {
 
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
-        assertFalse(favouriteRepository.existsByUserIDAndBook_Id(user1.getId(), book1.getId()));
+        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(user1.getId(), book1.getId()));
     }
 
     @Test
@@ -228,7 +228,7 @@ public class FavouriteIntegrationTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
-        assertFalse(favouriteRepository.existsByUserIDAndBook_Id(99, book1.getId()));
+        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(99, book1.getId()));
     }
 
     @Test
@@ -295,7 +295,7 @@ public class FavouriteIntegrationTest {
 
     Favourite favourite4 = new Favourite();
     favourite4.setBook(book2);
-    favourite4.setUserID(user2.getId());
+    favourite4.setUser(user2);
 
     FavouriteReadDTO createdFavouriteDTO = response.getBody();
     assertEquals(favouriteMapper.favouriteToReadDto(favourite4), createdFavouriteDTO);
@@ -326,7 +326,7 @@ public class FavouriteIntegrationTest {
 
     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
-    assertFalse(favouriteRepository.existsByUserIDAndBook_Id(user1.getId(), book1.getId()));
+    assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(user1.getId(), book1.getId()));
   }
 
   @Test

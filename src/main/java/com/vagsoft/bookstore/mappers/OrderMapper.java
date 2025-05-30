@@ -5,6 +5,7 @@ import com.vagsoft.bookstore.dto.orderDTOs.OrderUpdateDTO;
 import com.vagsoft.bookstore.models.entities.Order;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ public interface OrderMapper {
      * @param order the Order entity to be converted
      * @return the converted OrderReadDTO
      */
+    @Mapping(source = "order.user.id", target = "userID")
     OrderReadDTO orderToReadDto(Order order);
 
     /**

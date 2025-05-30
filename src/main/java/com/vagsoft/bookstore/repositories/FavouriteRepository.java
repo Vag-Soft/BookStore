@@ -18,7 +18,7 @@ public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
      *            the pagination information (optional)
      * @return a page of favourites for the specified user
      */
-    Page<Favourite> findFavouritesByUserID(Integer userID, Pageable pageable);
+    Page<Favourite> findFavouritesByUser_Id(Integer userID, Pageable pageable);
 
     /**
      * Checks if a favourite books exists for a specific user
@@ -29,7 +29,7 @@ public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
      *            the ID of the book
      * @return true if the favourite exists, false otherwise
      */
-    boolean existsByUserIDAndBook_Id(Integer userID, Integer bookID);
+    boolean existsByUser_IdAndBook_Id(Integer userID, Integer bookID);
 
     /**
      * Deletes a favourite book for a specific user
@@ -39,5 +39,5 @@ public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
      * @param bookID
      *            the ID of the book
      */
-    void deleteByUserIDAndBook_Id(Integer userID, Integer bookID);
+    void deleteByUser_IdAndBook_Id(Integer userID, Integer bookID);
 }

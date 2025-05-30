@@ -5,11 +5,12 @@ import java.util.List;
 import com.vagsoft.bookstore.dto.cartDTOs.CartReadDTO;
 import com.vagsoft.bookstore.models.entities.Cart;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
 /** Mapper class for converting Cart entities and DTOs */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CartItemMapper.class)
 public interface CartMapper {
 
     /**
@@ -19,6 +20,7 @@ public interface CartMapper {
      *            the Cart entity to be converted
      * @return the converted CartReadDTO
      */
+    @Mapping(source = "cart.user.id", target = "userID")
     CartReadDTO cartToReadDto(Cart cart);
 
     /**
