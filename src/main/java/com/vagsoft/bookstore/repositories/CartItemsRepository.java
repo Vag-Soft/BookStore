@@ -32,9 +32,6 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
             """)
     Page<CartItem> findAllByUserID(Integer userID, Pageable pageable);
 
-
-
-
     /**
      * Retrieves all cart items by user ID
      *

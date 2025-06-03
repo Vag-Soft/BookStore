@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartItemReadDTO {
-    private Integer id;
     private Integer cartID;
     private BookReadDTO book;
     private Integer quantity;

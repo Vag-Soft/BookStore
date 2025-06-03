@@ -1,5 +1,9 @@
 package com.vagsoft.bookstore.services;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.vagsoft.bookstore.dto.orderDTOs.OrderReadDTO;
 import com.vagsoft.bookstore.dto.orderDTOs.OrderUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.CartItemsNotFoundException;
@@ -18,10 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 /** Service class for order operations */
 @Service
 public class OrderService {
@@ -32,7 +32,8 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
 
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository, CartItemsService cartItemsService, OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
+    public OrderService(OrderRepository orderRepository, UserRepository userRepository,
+            CartItemsService cartItemsService, OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.cartItemsService = cartItemsService;
@@ -43,15 +44,21 @@ public class OrderService {
     /**
      * Retrieves a page of orders filtered by the specified parameters
      *
-     * @param userID the ID of the user who placed the orders (optional)
-     * @param minTotalAmount the minimum total amount of the orders to search for (optional)
-     * @param maxTotalAmount the maximum total amount of the orders to search for (optional)
-     * @param status the status of the orders to search for (optional)
-     * @param pageable the pagination information (optional)
+     * @param userID
+     *            the ID of the user who placed the orders (optional)
+     * @param minTotalAmount
+     *            the minimum total amount of the orders to search for (optional)
+     * @param maxTotalAmount
+     *            the maximum total amount of the orders to search for (optional)
+     * @param status
+     *            the status of the orders to search for (optional)
+     * @param pageable
+     *            the pagination information (optional)
      * @return a page of orders
      */
     @Transactional(readOnly = true)
-    public Page<OrderReadDTO> getOrders(Integer userID, Double minTotalAmount, Double maxTotalAmount, Status status, Pageable pageable) {
+    public Page<OrderReadDTO> getOrders(Integer userID, Double minTotalAmount, Double maxTotalAmount, Status status,
+            Pageable pageable) {
         return orderMapper.PageOrderToPageDto(
                 orderRepository.findOrders(userID, minTotalAmount, maxTotalAmount, status, pageable));
     }
@@ -59,7 +66,8 @@ public class OrderService {
     /**
      * Places a new order for the user with the specified ID
      *
-     * @param userID the ID of the user placing the order
+     * @param userID
+     *            the ID of the user placing the order
      * @return an Optional containing the created OrderReadDTO
      */
     @Transactional
@@ -84,8 +92,7 @@ public class OrderService {
         orderToSave.setStatus(Status.PROCESSING);
         orderToSave.setOrderDate(LocalDate.now());
         orderToSave.setTotalAmount(orderItems.stream()
-                .mapToDouble(orderItem -> orderItem.getBook().getPrice() * orderItem.getQuantity())
-                .sum());
+                .mapToDouble(orderItem -> orderItem.getBook().getPrice() * orderItem.getQuantity()).sum());
 
         Order savedOrder = orderRepository.save(orderToSave);
 
@@ -95,20 +102,22 @@ public class OrderService {
     /**
      * Retrieves an order by its ID
      *
-     * @param orderID the ID of the order to be retrieved
+     * @param orderID
+     *            the ID of the order to be retrieved
      * @return an Optional containing the OrderReadDTO
      */
     @Transactional(readOnly = true)
     public Optional<OrderReadDTO> getOrderByID(Integer orderID) {
-        return orderRepository.findById(orderID)
-                .map(orderMapper::orderToReadDto);
+        return orderRepository.findById(orderID).map(orderMapper::orderToReadDto);
     }
 
     /**
      * Updates an order by its ID with the given order information
      *
-     * @param orderID the ID of the order to be updated
-     * @param orderUpdateDTO the new order information
+     * @param orderID
+     *            the ID of the order to be updated
+     * @param orderUpdateDTO
+     *            the new order information
      * @return an Optional containing the updated OrderReadDTO
      */
     @Transactional

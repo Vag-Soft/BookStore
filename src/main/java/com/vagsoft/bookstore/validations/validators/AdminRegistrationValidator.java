@@ -1,8 +1,8 @@
 package com.vagsoft.bookstore.validations.validators;
 
-import com.vagsoft.bookstore.validations.annotations.ValidAdminRegistration;
 import com.vagsoft.bookstore.dto.userDTOs.UserWriteDTO;
 import com.vagsoft.bookstore.models.enums.Role;
+import com.vagsoft.bookstore.validations.annotations.ValidAdminRegistration;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.security.core.Authentication;

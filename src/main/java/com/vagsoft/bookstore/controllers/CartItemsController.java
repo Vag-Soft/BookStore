@@ -2,10 +2,6 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.validations.annotations.ExistsCompositeResource;
-import com.vagsoft.bookstore.validations.annotations.ExistsResource;
-import com.vagsoft.bookstore.validations.annotations.IsAdmin;
-import com.vagsoft.bookstore.validations.annotations.UniqueCompositeFields;
 import com.vagsoft.bookstore.dto.cartDTOs.CartItemReadDTO;
 import com.vagsoft.bookstore.dto.cartDTOs.CartItemUpdateDTO;
 import com.vagsoft.bookstore.dto.cartDTOs.CartItemWriteDTO;
@@ -16,6 +12,10 @@ import com.vagsoft.bookstore.repositories.CartItemsRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.CartItemsService;
 import com.vagsoft.bookstore.utils.AuthUtils;
+import com.vagsoft.bookstore.validations.annotations.ExistsCompositeResource;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
+import com.vagsoft.bookstore.validations.annotations.IsAdmin;
+import com.vagsoft.bookstore.validations.annotations.UniqueCompositeFields;
 import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import com.vagsoft.bookstore.validations.groups.OrderedValidation;
@@ -127,9 +127,8 @@ public class CartItemsController {
      */
     @IsAdmin
     @DeleteMapping(path = "/{userID}/items/{bookID}")
-    public ResponseEntity<Void> deleteCartItem(
-            @PathVariable @Positive(groups = BasicValidation.class) Integer userID,
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's cart items", groups = ExtendedValidation.class)  Integer bookID) {
+    public ResponseEntity<Void> deleteCartItem(@PathVariable @Positive(groups = BasicValidation.class) Integer userID,
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's cart items", groups = ExtendedValidation.class) Integer bookID) {
         log.info("DELETE /carts/{}/items/{}", userID, bookID);
 
         cartItemsService.deleteCartItem(userID, bookID);

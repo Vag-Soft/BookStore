@@ -3,8 +3,6 @@ package com.vagsoft.bookstore.models.entities;
 import java.util.Objects;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Data

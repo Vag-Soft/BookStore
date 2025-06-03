@@ -1,7 +1,7 @@
 package com.vagsoft.bookstore.dto.cartDTOs;
 
-import com.vagsoft.bookstore.validations.annotations.ExistsResource;
 import com.vagsoft.bookstore.repositories.BookRepository;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
 import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import jakarta.validation.constraints.NotNull;

@@ -1,8 +1,8 @@
 package com.vagsoft.bookstore.dto.userDTOs;
 
-import com.vagsoft.bookstore.validations.annotations.UniqueField;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.repositories.UserRepository;
+import com.vagsoft.bookstore.validations.annotations.UniqueField;
 import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import jakarta.persistence.*;

@@ -1,5 +1,7 @@
 package com.vagsoft.bookstore.mappers;
 
+import java.util.List;
+
 import com.vagsoft.bookstore.dto.orderDTOs.OrderItemReadDTO;
 import com.vagsoft.bookstore.models.entities.CartItem;
 import com.vagsoft.bookstore.models.entities.OrderItem;
@@ -7,8 +9,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface OrderItemMapper {
@@ -20,7 +20,6 @@ public interface OrderItemMapper {
     OrderItem cartItemToOrderItem(CartItem cartItem);
 
     List<OrderItem> cartItemsToOrderItems(List<CartItem> cartItems);
-
 
     /**
      * Converts a list of OrderItem entities to a list of OrderItemReadDTOs

@@ -55,9 +55,7 @@ public class CartService {
      */
     @Transactional
     public void createEmptyCart(User user) {
-        Cart cart = Cart.builder()
-            .user(user)
-            .build();
+        Cart cart = Cart.builder().user(user).build();
         cartRepository.save(cart);
     }
 

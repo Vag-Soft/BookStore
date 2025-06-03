@@ -15,6 +15,7 @@ import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
 import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteReadDTO;
 import com.vagsoft.bookstore.dto.genreDTOs.GenreDTO;
 import com.vagsoft.bookstore.repositories.FavouriteRepository;
+import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.FavouriteService;
 import com.vagsoft.bookstore.utils.AuthUtils;
 import org.junit.jupiter.api.*;
@@ -44,6 +45,8 @@ public class FavouriteControllerTest {
     private ObjectMapper objectMapper;
     @MockitoBean
     private AuthUtils authUtils;
+    @MockitoBean
+    private UserRepository userRepository;
 
     private List<BookReadDTO> storedBooks;
     private List<FavouriteReadDTO> storedFavourites;
@@ -61,6 +64,55 @@ public class FavouriteControllerTest {
     }
 
     @Test
+    @DisplayName("GET /users/1/favourites - Success")
+    public void getUserFavouritesSuccess() throws Exception {
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<FavouriteReadDTO> page = new PageImpl<>(storedFavourites, pageable, 2);
+
+        when(userRepository.existsById(1)).thenReturn(true);
+        when(favouriteService.getFavouritesByUserID(1, pageable)).thenReturn(page);
+
+        mockMvc.perform(get("/users/1/favourites")
+                        .param("page", "0")
+                        .param("size", "20")
+                        .accept("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(2)))
+                .andExpect(jsonPath("$.content[0].book.id").value(storedFavourites.get(0).getBook().getId()))
+                .andExpect(jsonPath("$.content[1].book.id").value(storedFavourites.get(1).getBook().getId()));
+    }
+
+    @Test
+    @DisplayName("GET /users/999/favourites - User Not Found")
+    public void getUserFavouritesUserNotFound() throws Exception {
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<FavouriteReadDTO> page = new PageImpl<>(new ArrayList<>(), pageable, 0);
+
+        when(favouriteService.getFavouritesByUserID(999, pageable)).thenReturn(page);
+
+        mockMvc.perform(get("/users/999/favourites")
+                        .param("page", "0")
+                        .param("size", "20")
+                        .accept("application/json"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("GET /users/-1/favourites - Invalid User ID")
+    public void getUserFavouritesUser() throws Exception {
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<FavouriteReadDTO> page = new PageImpl<>(new ArrayList<>(), pageable, 0);
+
+        when(favouriteService.getFavouritesByUserID(-1, pageable)).thenReturn(page);
+
+        mockMvc.perform(get("/users/-1/favourites")
+                        .param("page", "0")
+                        .param("size", "20")
+                        .accept("application/json"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DisplayName("GET /users/me/favourites - Success")
     public void getMeFavouritesSuccess() throws Exception {
         Pageable pageable = PageRequest.of(0, 20);
@@ -70,10 +122,30 @@ public class FavouriteControllerTest {
 
         when(favouriteService.getFavouritesByUserID(1, pageable)).thenReturn(page);
 
-        // Perform the GET request
-        mockMvc.perform(get("/users/me/favourites").param("page", "0").param("size", "20").accept("application/json"))
-                .andExpect(status().isOk()).andExpect(jsonPath("$.content", hasSize(2)))
+        mockMvc.perform(get("/users/me/favourites")
+                        .param("page", "0")
+                        .param("size", "20")
+                        .accept("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", hasSize(2)))
                 .andExpect(jsonPath("$.content[0].book.id").value(storedFavourites.get(0).getBook().getId()))
                 .andExpect(jsonPath("$.content[1].book.id").value(storedFavourites.get(1).getBook().getId()));
     }
+
+    @Test
+    @DisplayName("GET /users/me/favourites - Error JWT")
+    public void getMeFavouritesErrorJwtNotFound() throws Exception {
+        when(authUtils.getUserIdFromAuthentication()).thenThrow(new IllegalArgumentException("Invalid JWT"));
+
+        Pageable pageable = PageRequest.of(0, 20);
+        Page<FavouriteReadDTO> page = new PageImpl<>(storedFavourites, pageable, 2);
+
+        when(favouriteService.getFavouritesByUserID(1, pageable)).thenReturn(page);
+
+        mockMvc.perform(get("/users/me/favourites").param("page", "0").param("size", "20").accept("application/json"))
+                .andExpect(status().isBadRequest());
+    }
+
+
+
 }

@@ -1,12 +1,12 @@
 package com.vagsoft.bookstore.models.entities;
 
+import java.util.Objects;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Objects;
 
 @Data
 @Builder
@@ -33,9 +33,11 @@ public class OrderItem {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(id, orderItem.id) && Objects.equals(order.getId(), orderItem.order.getId()) && Objects.equals(book, orderItem.book) && Objects.equals(quantity, orderItem.quantity);
+        return Objects.equals(id, orderItem.id) && Objects.equals(order.getId(), orderItem.order.getId())
+                && Objects.equals(book, orderItem.book) && Objects.equals(quantity, orderItem.quantity);
     }
 
     @Override
@@ -45,11 +47,7 @@ public class OrderItem {
 
     @Override
     public String toString() {
-        return "OrderItem{" +
-                "id=" + id +
-                ", orderID=" + order.getId() +
-                ", book=" + book +
-                ", quantity=" + quantity +
-                '}';
+        return "OrderItem{" + "id=" + id + ", orderID=" + order.getId() + ", book=" + book + ", quantity=" + quantity
+                + '}';
     }
 }

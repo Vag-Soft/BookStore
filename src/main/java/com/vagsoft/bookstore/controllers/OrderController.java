@@ -1,8 +1,7 @@
 package com.vagsoft.bookstore.controllers;
 
-import com.vagsoft.bookstore.validations.annotations.ExistsCompositeResource;
-import com.vagsoft.bookstore.validations.annotations.ExistsResource;
-import com.vagsoft.bookstore.validations.annotations.IsAdmin;
+import java.util.Optional;
+
 import com.vagsoft.bookstore.dto.orderDTOs.OrderReadDTO;
 import com.vagsoft.bookstore.dto.orderDTOs.OrderUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.OrderCreationException;
@@ -12,6 +11,9 @@ import com.vagsoft.bookstore.repositories.OrderRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.OrderService;
 import com.vagsoft.bookstore.utils.AuthUtils;
+import com.vagsoft.bookstore.validations.annotations.ExistsCompositeResource;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
+import com.vagsoft.bookstore.validations.annotations.IsAdmin;
 import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import com.vagsoft.bookstore.validations.groups.OrderedValidation;
@@ -35,8 +37,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 /** REST controller for endpoints related to orders */
 @RestController
 @RequestMapping(path = "/orders")
@@ -53,24 +53,29 @@ public class OrderController {
 
     /**
      * Retrieves a page of orders filtered by the specified parameters
-     * @param userID the ID of the user who placed the orders (optional)
-     * @param minTotalAmount the minimum total amount of the orders to search for (optional)
-     * @param maxTotalAmount the maximum total amount of the orders to search for (optional)
-     * @param status the status of the orders to search for (optional)
-     * @param pageable the pagination information (optional)
+     * 
+     * @param userID
+     *            the ID of the user who placed the orders (optional)
+     * @param minTotalAmount
+     *            the minimum total amount of the orders to search for (optional)
+     * @param maxTotalAmount
+     *            the maximum total amount of the orders to search for (optional)
+     * @param status
+     *            the status of the orders to search for (optional)
+     * @param pageable
+     *            the pagination information (optional)
      * @return a page of orders
      */
     @IsAdmin
     @GetMapping
     public ResponseEntity<Page<OrderReadDTO>> getOrders(
-            @RequestParam(name = "userID", required = false) @Positive(groups = BasicValidation.class)  @ExistsResource(repository = UserRepository.class, nullable = true, message = "User with given ID does not exist", groups = ExtendedValidation.class)  Integer userID,
+            @RequestParam(name = "userID", required = false) @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, nullable = true, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
             @RequestParam(name = "minTotalAmount", required = false) @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double minTotalAmount,
             @RequestParam(name = "maxTotalAmount", required = false) @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double maxTotalAmount,
-            @RequestParam(name = "status", required = false) Status status,
-            Pageable pageable) {
+            @RequestParam(name = "status", required = false) Status status, Pageable pageable) {
 
-        log.info("GET /orders: userID={}, minTotalAmount={}, maxTotalAmount={}, status={}, pageable={}",
-                userID, minTotalAmount, maxTotalAmount, status, pageable);
+        log.info("GET /orders: userID={}, minTotalAmount={}, maxTotalAmount={}, status={}, pageable={}", userID,
+                minTotalAmount, maxTotalAmount, status, pageable);
 
         return ResponseEntity.ok(orderService.getOrders(userID, minTotalAmount, maxTotalAmount, status, pageable));
     }
@@ -78,7 +83,8 @@ public class OrderController {
     /**
      * Retrieves an order by its ID
      *
-     * @param orderID the ID of the order to retrieve
+     * @param orderID
+     *            the ID of the order to retrieve
      * @return the order with the specified ID
      */
     @IsAdmin
@@ -90,15 +96,17 @@ public class OrderController {
 
         Optional<OrderReadDTO> order = orderService.getOrderByID(orderID);
 
-        return ResponseEntity.ok(order.orElseThrow(() -> new OrderNotFoundException("No order found with the given ID: " + orderID)));
+        return ResponseEntity.ok(
+                order.orElseThrow(() -> new OrderNotFoundException("No order found with the given ID: " + orderID)));
     }
-
 
     /**
      * Updates an order by its ID with the given order information
      *
-     * @param orderID the ID of the order to be updated
-     * @param orderUpdateDTO the new order information
+     * @param orderID
+     *            the ID of the order to be updated
+     * @param orderUpdateDTO
+     *            the new order information
      * @return the updated order
      */
     @IsAdmin
@@ -111,27 +119,32 @@ public class OrderController {
 
         Optional<OrderReadDTO> updatedOrder = orderService.updateOrderByID(orderID, orderUpdateDTO);
 
-        return ResponseEntity.ok(updatedOrder.orElseThrow(() -> new OrderNotFoundException("No order found with the given ID: " + orderID)));
+        return ResponseEntity.ok(updatedOrder
+                .orElseThrow(() -> new OrderNotFoundException("No order found with the given ID: " + orderID)));
     }
 
     /**
-     * Retrieves a page of orders for the authenticated user, filtered by the specified parameters
+     * Retrieves a page of orders for the authenticated user, filtered by the
+     * specified parameters
      *
-     * @param minTotalAmount the minimum total amount of the orders to search for (optional)
-     * @param maxTotalAmount the maximum total amount of the orders to search for (optional)
-     * @param status the status of the orders to search for (optional)
-     * @param pageable the pagination information (optional)
+     * @param minTotalAmount
+     *            the minimum total amount of the orders to search for (optional)
+     * @param maxTotalAmount
+     *            the maximum total amount of the orders to search for (optional)
+     * @param status
+     *            the status of the orders to search for (optional)
+     * @param pageable
+     *            the pagination information (optional)
      * @return a page of orders
      */
     @GetMapping(path = "/me")
     public ResponseEntity<Page<OrderReadDTO>> getOrders(
             @RequestParam(name = "minTotalAmount", required = false) @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double minTotalAmount,
             @RequestParam(name = "maxTotalAmount", required = false) @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double maxTotalAmount,
-            @RequestParam(name = "status", required = false) Status status,
-            Pageable pageable) {
+            @RequestParam(name = "status", required = false) Status status, Pageable pageable) {
 
-        log.info("GET /orders/me: minTotalAmount={}, maxTotalAmount={}, status={}, pageable={}",
-                minTotalAmount, maxTotalAmount, status, pageable);
+        log.info("GET /orders/me: minTotalAmount={}, maxTotalAmount={}, status={}, pageable={}", minTotalAmount,
+                maxTotalAmount, status, pageable);
 
         Integer userID = authUtils.getUserIdFromAuthentication();
 
@@ -145,7 +158,7 @@ public class OrderController {
      */
     @ApiResponse(responseCode = "201")
     @PostMapping(path = "/me")
-    public ResponseEntity<OrderReadDTO> getOrders() {
+    public ResponseEntity<OrderReadDTO> addOrder() {
         log.info("POST /orders/me");
 
         Integer userID = authUtils.getUserIdFromAuthentication();
@@ -157,9 +170,11 @@ public class OrderController {
     }
 
     /**
-     * Retrieves an order by its ID, accessible only to the user who placed the order.
+     * Retrieves an order by its ID, accessible only to the user who placed the
+     * order.
      *
-     * @param orderID the ID of the order to retrieve
+     * @param orderID
+     *            the ID of the order to retrieve
      * @return the order with the specified ID
      */
     @GetMapping(path = "/me/{orderID}")
@@ -170,6 +185,7 @@ public class OrderController {
 
         Optional<OrderReadDTO> order = orderService.getOrderByID(orderID);
 
-        return ResponseEntity.ok(order.orElseThrow(() -> new OrderNotFoundException("No order found with the given ID: " + orderID)));
+        return ResponseEntity.ok(
+                order.orElseThrow(() -> new OrderNotFoundException("No order found with the given ID: " + orderID)));
     }
 }

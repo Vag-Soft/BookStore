@@ -2,8 +2,8 @@ package com.vagsoft.bookstore.validations.validators;
 
 import java.util.List;
 
-import com.vagsoft.bookstore.validations.annotations.UniqueGenresPerBook;
 import com.vagsoft.bookstore.dto.genreDTOs.GenreDTO;
+import com.vagsoft.bookstore.validations.annotations.UniqueGenresPerBook;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

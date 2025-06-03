@@ -177,8 +177,7 @@ public class UserIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
 
-        Optional<UserReadDTO> foundUser = userService.getUserByID(999);
-        assertTrue(foundUser.isEmpty());
+        assertFalse(userRepository.existsById(999));
     }
 
     @Test
@@ -196,8 +195,7 @@ public class UserIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
 
-        Optional<UserReadDTO> foundUser = userService.getUserByID(-1);
-        assertTrue(foundUser.isEmpty());
+        assertFalse(userRepository.existsById(-1));
     }
 
     @Test
@@ -207,8 +205,7 @@ public class UserIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
 
-        Optional<UserReadDTO> foundUser = userService.getUserByID(user1.getId());
-        assertTrue(foundUser.isEmpty());
+        assertFalse(userRepository.existsById(user1.getId()));
     }
 
     @Test
@@ -218,8 +215,7 @@ public class UserIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
 
-        Optional<UserReadDTO> foundUser = userService.getUserByID(999);
-        assertTrue(foundUser.isEmpty());
+        assertFalse(userRepository.existsById(999));
     }
 
     @Test
@@ -229,14 +225,13 @@ public class UserIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
 
-        Optional<UserReadDTO> foundUser = userService.getUserByID(-1);
-        assertTrue(foundUser.isEmpty());
+        assertFalse(userRepository.existsById(-1));
     }
 
     @Test
     @DisplayName("GET /users/me - Success")
     void getUsersMe() throws Exception {
-        lenient().when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
+        when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
         ResponseEntity<UserReadDTO> response = client.getForEntity("/users/me", UserReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -245,9 +240,9 @@ public class UserIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /users/me - Error")
+    @DisplayName("GET /users/me - Error JWT")
     void getUsersMeError() throws Exception {
-        lenient().when(authUtils.getUserIdFromAuthentication())
+        when(authUtils.getUserIdFromAuthentication())
                 .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
         ResponseEntity<UserReadDTO> response = client.getForEntity("/users/me", UserReadDTO.class);
 
@@ -291,7 +286,7 @@ public class UserIntegrationTest {
     }
 
     @Test
-    @DisplayName("PUT /users/me - Error")
+    @DisplayName("PUT /users/me - Error JWT")
     void updateUserMeError() throws Exception {
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
         userUpdateDTO.setUsername("jane");
@@ -318,12 +313,11 @@ public class UserIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
 
-        Optional<UserReadDTO> foundUser = userService.getUserByID(user1.getId());
-        assertTrue(foundUser.isEmpty());
+        assertFalse(userRepository.existsById(user1.getId()));
     }
 
     @Test
-    @DisplayName("DELETE /users/me - Error")
+    @DisplayName("DELETE /users/me - Error JWT")
     void deleteUserMeError() throws Exception {
         lenient().when(authUtils.getUserIdFromAuthentication())
                 .thenThrow(new IllegalArgumentException("Invalid Jwt token"));

@@ -1,5 +1,7 @@
 package com.vagsoft.bookstore.services;
 
+import java.util.Optional;
+
 import com.vagsoft.bookstore.dto.orderDTOs.OrderItemReadDTO;
 import com.vagsoft.bookstore.mappers.OrderItemMapper;
 import com.vagsoft.bookstore.repositories.OrderItemsRepository;
@@ -7,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /** Service class for order item operations */
 @Service
@@ -24,8 +24,10 @@ public class OrderItemService {
     /**
      * Retrieves a page of order items for the specified order ID.
      *
-     * @param orderID the ID of the order to retrieve items for
-     * @param pageable the pagination information
+     * @param orderID
+     *            the ID of the order to retrieve items for
+     * @param pageable
+     *            the pagination information
      * @return a page of OrderItemReadDTO objects
      */
     @Transactional(readOnly = true)
@@ -36,8 +38,10 @@ public class OrderItemService {
     /**
      * Retrieves an order item by the specified order ID and book ID.
      *
-     * @param orderID the ID of the order
-     * @param bookID the ID of the book
+     * @param orderID
+     *            the ID of the order
+     * @param bookID
+     *            the ID of the book
      * @return an OrderItemReadDTO object representing the order item
      */
     @Transactional(readOnly = true)

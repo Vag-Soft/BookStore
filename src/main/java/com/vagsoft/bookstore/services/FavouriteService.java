@@ -22,8 +22,8 @@ public class FavouriteService {
     private final UserRepository userRepository;
     private final FavouriteMapper favouriteMapper;
 
-    public FavouriteService(FavouriteRepository favouriteRepository, BookRepository bookRepository, UserRepository userRepository,
-                            FavouriteMapper favouriteMapper) {
+    public FavouriteService(FavouriteRepository favouriteRepository, BookRepository bookRepository,
+            UserRepository userRepository, FavouriteMapper favouriteMapper) {
         this.favouriteRepository = favouriteRepository;
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
@@ -56,7 +56,7 @@ public class FavouriteService {
     @Transactional
     public Optional<FavouriteReadDTO> addFavourite(Integer userID, FavouriteWriteDTO favouriteWriteDTO) {
         Favourite favouriteToSave = favouriteMapper.dtoToFavourite(favouriteWriteDTO);
-//        favouriteToSave.setUserID(userID);
+        // favouriteToSave.setUserID(userID);
         favouriteToSave.setUser(userRepository.getReferenceById(userID));
         favouriteToSave.setBook(bookRepository.getReferenceById(favouriteWriteDTO.getBookID()));
 

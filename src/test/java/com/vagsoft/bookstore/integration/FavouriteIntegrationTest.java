@@ -114,14 +114,12 @@ public class FavouriteIntegrationTest {
         URI uri = UriComponentsBuilder.fromUriString("/users/" + user1.getId() + "/favourites").build().encode()
                 .toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>>() {
-        };
+        ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType = new ParameterizedTypeReference<>() {};
         ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response = client.exchange(uri, HttpMethod.GET, null,
                 classType);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        System.out.println(response.getBody());
         assertNotNull(response.getBody());
 
         FavouriteReadDTO firstFavourite = response.getBody().getContent().getFirst();
@@ -132,9 +130,9 @@ public class FavouriteIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /users/99/favourites - User Not Found")
+    @DisplayName("GET /users/999/favourites - User Not Found")
     void getUsersIDFavouritesNotFound() {
-        URI uri = UriComponentsBuilder.fromUriString("/users/99/favourites").build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/users/999/favourites").build().encode().toUri();
 
         ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>>() {
         };
@@ -184,16 +182,16 @@ public class FavouriteIntegrationTest {
     }
 
     @Test
-    @DisplayName("POST /users/99/favourites - User Not Found")
+    @DisplayName("POST /users/999/favourites - User Not Found")
     void addUsersIDFavouritesNotFound() {
         FavouriteWriteDTO favouriteWriteDTO = new FavouriteWriteDTO(book2.getId());
 
-        ResponseEntity<FavouriteReadDTO> response = client.postForEntity("/users/99/favourites", favouriteWriteDTO,
+        ResponseEntity<FavouriteReadDTO> response = client.postForEntity("/users/999/favourites", favouriteWriteDTO,
                 FavouriteReadDTO.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
-        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(99, book2.getId()));
+        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(999, book2.getId()));
     }
 
     @Test
@@ -221,14 +219,14 @@ public class FavouriteIntegrationTest {
     }
 
     @Test
-    @DisplayName("DELETE /users/99/favourites/{bookID} - User Not Found")
+    @DisplayName("DELETE /users/999/favourites/{bookID} - User Not Found")
     void deleteUsersIDFavouriteNotFound() {
-        ResponseEntity<Void> response = client.exchange("/users/99/favourites/" + book1.getId(), HttpMethod.DELETE,
+        ResponseEntity<Void> response = client.exchange("/users/999/favourites/" + book1.getId(), HttpMethod.DELETE,
                 null, Void.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
-        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(99, book1.getId()));
+        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(999, book1.getId()));
     }
 
     @Test
@@ -238,107 +236,114 @@ public class FavouriteIntegrationTest {
                 null, Void.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(-1, book1.getId()));
     }
 
-  @Test
-  @DisplayName("GET /users/me/favourites - Success")
-  void getUsersMeFavourites() {
-    when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
+    @Test
+    @DisplayName("GET /users/me/favourites - Success")
+    void getUsersMeFavourites() {
+        when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
 
-    URI uri = UriComponentsBuilder.fromUriString("/users/me/favourites").build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/users/me/favourites").build().encode().toUri();
 
-    ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType =
-        new ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>>() {};
-    ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response =
-        client.exchange(uri, HttpMethod.GET, null, classType);
+        ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType =
+            new ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>>() {};
+        ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response =
+            client.exchange(uri, HttpMethod.GET, null, classType);
 
-    assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
 
-    assertNotNull(response.getBody());
+        assertNotNull(response.getBody());
 
-    FavouriteReadDTO firstFavourite = response.getBody().getContent().getFirst();
-    assertEquals(favouriteMapper.favouriteToReadDto(favourite1), firstFavourite);
+        FavouriteReadDTO firstFavourite = response.getBody().getContent().getFirst();
+        assertEquals(favouriteMapper.favouriteToReadDto(favourite1), firstFavourite);
 
-    FavouriteReadDTO secondFavourite = response.getBody().getContent().getLast();
-    assertEquals(favouriteMapper.favouriteToReadDto(favourite2), secondFavourite);
-  }
+        FavouriteReadDTO secondFavourite = response.getBody().getContent().getLast();
+        assertEquals(favouriteMapper.favouriteToReadDto(favourite2), secondFavourite);
+    }
 
-  @Test
-  @DisplayName("GET /users/me/favourites - Error")
-  void getUsersMeFavouritesError() {
-    when(authUtils.getUserIdFromAuthentication())
-        .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
+    @Test
+    @DisplayName("GET /users/me/favourites - Error JWT")
+    void getUsersMeFavouritesError() {
+        when(authUtils.getUserIdFromAuthentication())
+            .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
 
-    URI uri = UriComponentsBuilder.fromUriString("/users/me/favourites").build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/users/me/favourites").build().encode().toUri();
 
-    ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType =
-        new ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>>() {};
-    ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response =
-        client.exchange(uri, HttpMethod.GET, null, classType);
+        ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType =
+            new ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>>() {};
+        ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response =
+            client.exchange(uri, HttpMethod.GET, null, classType);
 
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-  }
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 
-  @Test
-  @DisplayName("POST /users/me/favourites - Success")
-  void addUsersMeFavourites() {
-    when(authUtils.getUserIdFromAuthentication()).thenReturn(user2.getId());
+    @Test
+    @DisplayName("POST /users/me/favourites - Success")
+    void addUsersMeFavourites() {
+        when(authUtils.getUserIdFromAuthentication()).thenReturn(user2.getId());
 
-    FavouriteWriteDTO favouriteWriteDTO = new FavouriteWriteDTO(book2.getId());
+        FavouriteWriteDTO favouriteWriteDTO = new FavouriteWriteDTO(book2.getId());
 
-    ResponseEntity<FavouriteReadDTO> response =
-        client.postForEntity("/users/me/favourites", favouriteWriteDTO, FavouriteReadDTO.class);
+        ResponseEntity<FavouriteReadDTO> response =
+            client.postForEntity("/users/me/favourites", favouriteWriteDTO, FavouriteReadDTO.class);
 
-    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
-    assertNotNull(response.getBody());
+        assertNotNull(response.getBody());
 
-    Favourite favourite4 = new Favourite();
-    favourite4.setBook(book2);
-    favourite4.setUser(user2);
+        Favourite favourite4 = new Favourite();
+        favourite4.setBook(book2);
+        favourite4.setUser(user2);
 
-    FavouriteReadDTO createdFavouriteDTO = response.getBody();
-    assertEquals(favouriteMapper.favouriteToReadDto(favourite4), createdFavouriteDTO);
-  }
+        FavouriteReadDTO createdFavouriteDTO = response.getBody();
+        assertEquals(favouriteMapper.favouriteToReadDto(favourite4), createdFavouriteDTO);
 
-  @Test
-  @DisplayName("POST /users/me/favourites - Error")
-  void addUsersMeFavouritesError() {
-    when(authUtils.getUserIdFromAuthentication())
-        .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
+        assertTrue(favouriteRepository.existsByUser_IdAndBook_Id(user2.getId(), book2.getId()));
+    }
 
-    FavouriteWriteDTO favouriteWriteDTO = new FavouriteWriteDTO(book2.getId());
+    @Test
+    @DisplayName("POST /users/me/favourites - Error JWT")
+    void addUsersMeFavouritesError() {
+        when(authUtils.getUserIdFromAuthentication())
+            .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
 
-    ResponseEntity<FavouriteReadDTO> response =
-        client.postForEntity("/users/me/favourites", favouriteWriteDTO, FavouriteReadDTO.class);
+        FavouriteWriteDTO favouriteWriteDTO = new FavouriteWriteDTO(book2.getId());
 
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-  }
+        ResponseEntity<FavouriteReadDTO> response =
+            client.postForEntity("/users/me/favourites", favouriteWriteDTO, FavouriteReadDTO.class);
 
-  @Test
-  @DisplayName("DELETE /users/me/favourites/{bookID} - Success")
-  void deleteUsersMeFavourite() {
-    when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
-    ResponseEntity<Void> response =
-        client.exchange(
-            "/users/me/favourites/" + book1.getId(), HttpMethod.DELETE, null, Void.class);
 
-    assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(user2.getId(), book2.getId()));
+    }
 
-    assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(user1.getId(), book1.getId()));
-  }
+    @Test
+    @DisplayName("DELETE /users/me/favourites/{bookID} - Success")
+    void deleteUsersMeFavourite() {
+        when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
 
-  @Test
-  @DisplayName("DELETE /users/me/favourites/{bookID} - Error")
-  void deleteUsersMeFavouriteError() {
-    when(authUtils.getUserIdFromAuthentication())
-        .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
+        ResponseEntity<Void> response =
+            client.exchange(
+                "/users/me/favourites/" + book1.getId(), HttpMethod.DELETE, null, Void.class);
 
-    ResponseEntity<Void> response =
-        client.exchange(
-            "/users/me/favourites/" + book1.getId(), HttpMethod.DELETE, null, Void.class);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
 
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-  }
+        assertFalse(favouriteRepository.existsByUser_IdAndBook_Id(user1.getId(), book1.getId()));
+    }
+
+    @Test
+    @DisplayName("DELETE /users/me/favourites/{bookID} - Error JWT")
+    void deleteUsersMeFavouriteError() {
+        when(authUtils.getUserIdFromAuthentication())
+            .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
+
+        ResponseEntity<Void> response =
+            client.exchange(
+                "/users/me/favourites/" + book1.getId(), HttpMethod.DELETE, null, Void.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 }

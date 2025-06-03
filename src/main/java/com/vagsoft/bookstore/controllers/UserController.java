@@ -2,9 +2,6 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.validations.annotations.ExistsResource;
-import com.vagsoft.bookstore.validations.annotations.IsAdmin;
-import com.vagsoft.bookstore.validations.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
 import com.vagsoft.bookstore.dto.userDTOs.UserUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
@@ -12,6 +9,9 @@ import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.UserService;
 import com.vagsoft.bookstore.utils.AuthUtils;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
+import com.vagsoft.bookstore.validations.annotations.IsAdmin;
+import com.vagsoft.bookstore.validations.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import com.vagsoft.bookstore.validations.groups.OrderedValidation;
@@ -81,7 +81,8 @@ public class UserController {
      */
     @IsAdmin()
     @GetMapping(path = "/{userID}")
-    public ResponseEntity<UserReadDTO> getUserByID(@PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
+    public ResponseEntity<UserReadDTO> getUserByID(
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
         log.info("GET /users/{userID}: userID={}", userID);
 
         Optional<UserReadDTO> foundUser = userService.getUserByID(userID);
@@ -100,7 +101,8 @@ public class UserController {
      */
     @IsAdmin()
     @PutMapping(path = "/{userID}")
-    public ResponseEntity<UserReadDTO> updateUserByID(@PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
+    public ResponseEntity<UserReadDTO> updateUserByID(
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
             @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
         log.info("PUT /users/{userID}: userID={}, userUpdateDTO={}", userID, userUpdateDTO);
 
@@ -119,7 +121,8 @@ public class UserController {
     @ApiResponse(responseCode = "204")
     @IsAdmin()
     @DeleteMapping(path = "/{userID}")
-    public ResponseEntity<Void> deleteUserByID(@PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
+    public ResponseEntity<Void> deleteUserByID(
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
         log.info("DELETE /users/{userID}: userID={}", userID);
 
         userService.deleteUserByID(userID);

@@ -2,9 +2,6 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.validations.annotations.ExistsResource;
-import com.vagsoft.bookstore.validations.annotations.IsAdmin;
-import com.vagsoft.bookstore.validations.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
 import com.vagsoft.bookstore.dto.bookDTOs.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.bookDTOs.BookWriteDTO;
@@ -12,6 +9,9 @@ import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.services.BookService;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
+import com.vagsoft.bookstore.validations.annotations.IsAdmin;
+import com.vagsoft.bookstore.validations.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import com.vagsoft.bookstore.validations.groups.OrderedValidation;
@@ -100,12 +100,13 @@ public class BookController {
      * @return the retrieved book
      */
     @GetMapping(path = "/{bookID}")
-    public ResponseEntity<BookReadDTO> getBookByID(@PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
+    public ResponseEntity<BookReadDTO> getBookByID(
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
         log.info("GET /books/{bookID}: bookID={}", bookID);
 
         Optional<BookReadDTO> foundBook = bookService.getBookByID(bookID);
-        return ResponseEntity
-                .ok(foundBook.orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID)));
+        return ResponseEntity.ok(
+                foundBook.orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID)));
     }
 
     /**
@@ -119,7 +120,8 @@ public class BookController {
      */
     @IsAdmin
     @PutMapping(path = "/{bookID}")
-    public ResponseEntity<BookReadDTO> updateBookByID(@PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID,
+    public ResponseEntity<BookReadDTO> updateBookByID(
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID,
             @Valid @RequestBody BookUpdateDTO bookUpdateDTO) {
         log.info("PUT /books/{bookID}: bookID={}, book={}", bookID, bookUpdateDTO);
 
@@ -139,8 +141,7 @@ public class BookController {
     @IsAdmin
     @DeleteMapping(path = "/{bookID}")
     public ResponseEntity<Void> deleteBookByID(
-            @PathVariable @Positive(groups = BasicValidation.class)
-            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
+            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
         log.info("DELETE /books/{bookID}: bookID={}", bookID);
 
         bookService.deleteBookByID(bookID);

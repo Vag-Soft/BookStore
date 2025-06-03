@@ -2,10 +2,6 @@ package com.vagsoft.bookstore.controllers;
 
 import java.util.Optional;
 
-import com.vagsoft.bookstore.validations.annotations.ExistsCompositeResource;
-import com.vagsoft.bookstore.validations.annotations.ExistsResource;
-import com.vagsoft.bookstore.validations.annotations.IsAdmin;
-import com.vagsoft.bookstore.validations.annotations.UniqueCompositeFields;
 import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteReadDTO;
 import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.FavouriteCreationException;
@@ -13,6 +9,10 @@ import com.vagsoft.bookstore.repositories.FavouriteRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.FavouriteService;
 import com.vagsoft.bookstore.utils.AuthUtils;
+import com.vagsoft.bookstore.validations.annotations.ExistsCompositeResource;
+import com.vagsoft.bookstore.validations.annotations.ExistsResource;
+import com.vagsoft.bookstore.validations.annotations.IsAdmin;
+import com.vagsoft.bookstore.validations.annotations.UniqueCompositeFields;
 import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import com.vagsoft.bookstore.validations.groups.OrderedValidation;
@@ -95,8 +95,7 @@ public class FavouriteController {
     @ApiResponse(responseCode = "204")
     @IsAdmin
     @DeleteMapping("/{userID}/favourites/{bookID}")
-    public ResponseEntity<Void> deleteFavourite(
-            @PathVariable @Positive(groups = BasicValidation.class) Integer userID,
+    public ResponseEntity<Void> deleteFavourite(@PathVariable @Positive(groups = BasicValidation.class) Integer userID,
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = FavouriteRepository.class, methodName = "existsByUser_IdAndBook_Id", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's favourites", groups = ExtendedValidation.class) Integer bookID) {
         log.info("DELETE /users/{}/favourites/{}", userID, bookID);
 

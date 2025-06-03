@@ -3,11 +3,11 @@ package com.vagsoft.bookstore.dto.bookDTOs;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vagsoft.bookstore.dto.genreDTOs.GenreDTO;
+import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.validations.annotations.NullOrNotBlank;
 import com.vagsoft.bookstore.validations.annotations.UniqueField;
 import com.vagsoft.bookstore.validations.annotations.UniqueGenresPerBook;
-import com.vagsoft.bookstore.dto.genreDTOs.GenreDTO;
-import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import jakarta.validation.Valid;
