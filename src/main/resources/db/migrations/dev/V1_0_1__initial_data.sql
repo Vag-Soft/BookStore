@@ -10,10 +10,10 @@ VALUES
 
 INSERT INTO Users (email, username, hashPassword, role, firstName, lastName, signupDate)
 VALUES
-    ('jane.smith@example.com', 'janesmith', 'hashed_password_value', 'User', 'Jane', 'Smith', '2022-01-05'),
-    ('bob.johnson@example.com', 'bobjohnson', 'hashed_password_value', 'Admin', 'Bob', 'Johnson', '2022-01-10'),
-    ('alice.williams@example.com', 'alicewilliams', 'hashed_password_value', 'User', 'Alice', 'Williams', '2022-01-15'),
-    ('mike.davis@example.com', 'mikedavis', 'hashed_password_value', 'Admin', 'Mike', 'Davis', '2022-01-20');
+    ('john.doe@example.com', 'john.doe', '$2a$10$1Mn20VjeC1Gvpbei3cFHdOq.FU1AQgrWvmi6R3Kbqxlos1d.La9OO', 'USER', 'John', 'Doe', '2023-04-28'),-- hashed from 'SecurePass123!'
+    ('admin.jones@bookstore.com', 'admin.jones', '$2a$10$3YYtS3FDrzxWxYcN.VB2NevDPDqLsouWAiLgGXhkN6.t5dcDJbkOK', 'ADMIN', 'Robert', 'Jones', '2020-03-15'), -- hashed from 'AdminPass789!'
+    ('admin@bookstore.com', 'admin', '$2a$10$6T849dwtDHzHr.VsO/yUHuuvHe4zAamoNf20C9/Zuj2cWmHJ6oZIS', 'ADMIN', 'Mr', 'Admin', '2020-03-15'), -- hashed from 'admin'
+    ('user@bookstore.com', 'user', '$2a$10$zpqetztH8zDi7QTKNVoyGOYJ9J8kvNjDGujwMsiWuaq1OtYIH5BvK' , 'USER', 'Urs', 'User', '2020-03-05'); -- hashed from 'user'
 
 
 INSERT INTO Favourites (userID, bookID)
@@ -45,16 +45,16 @@ INSERT INTO Carts (userID)
 VALUES
     (1), (2), (3), (4);
 
-INSERT INTO CartItems (cartID, userID, quantity)
+INSERT INTO CartItems (cartID, bookID, quantity)
 VALUES
     (1, 1, 1),
-    (1, 2, 1),
+    (2, 2, 1),
     (3, 4, 1),
     (4, 2, 3);
 
 INSERT INTO Orders (userID, totalAmount, status, orderDate)
 VALUES
-    (1, 20.0, 'Delivered', '2022-01-15');
+    (1, 25.0, 'DELIVERED', '2022-01-15');
 
 INSERT INTO OrderItems (orderID, bookID, quantity)
 VALUES

@@ -1,0 +1,56 @@
+package com.vagsoft.bookstore.models.entities;
+
+import java.time.LocalDate;
+
+import com.vagsoft.bookstore.models.enums.Role;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "Users")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Integer id;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String username;
+
+    @Column(name = "hashpassword", nullable = false)
+    private String hashPassword;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @Column(name = "firstname", nullable = false)
+    private String firstName;
+
+    @Column(name = "lastname", nullable = false)
+    private String lastName;
+
+    @Column(name = "signupdate", nullable = false)
+    private LocalDate signupDate;
+
+    public User(String email, String username, String hashPassword, Role role, String firstName, String lastName,
+            LocalDate signupDate) {
+        this.email = email;
+        this.username = username;
+        this.hashPassword = hashPassword;
+        this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.signupDate = signupDate;
+    }
+}

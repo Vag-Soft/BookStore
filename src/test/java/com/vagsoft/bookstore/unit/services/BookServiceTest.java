@@ -1,12 +1,22 @@
 package com.vagsoft.bookstore.unit.services;
 
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.BookUpdateDTO;
-import com.vagsoft.bookstore.dto.BookWriteDTO;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookUpdateDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.mappers.BookMapper;
-import com.vagsoft.bookstore.models.Book;
-import com.vagsoft.bookstore.models.Genre;
+import com.vagsoft.bookstore.models.entities.Book;
+import com.vagsoft.bookstore.models.entities.Genre;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.services.BookService;
 import org.junit.jupiter.api.*;
@@ -21,13 +31,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.DisplayName.class)
@@ -41,21 +44,22 @@ class BookServiceTest {
     private BookMapper bookMapper;
 
     private List<Book> storedBooks;
+
     @BeforeEach
     void setUp() {
         storedBooks = new ArrayList<>();
         storedBooks.add(new Book(1, "title", "author", "description", 1, 1.0, 1, "isbn", new ArrayList<>()));
-        storedBooks.add(new Book(2, "title2", "author2", "description2", 2, 2.0, 2, "isbn2", List.of(new Genre(1, "genre1"), new Genre(2, "genre2"))));
+        storedBooks.add(new Book(2, "title2", "author2", "description2", 2, 2.0, 2, "isbn2",
+                List.of(new Genre(1, "genre1"), new Genre(2, "genre2"))));
     }
 
     @Test
-    @DisplayName("getBooks - Success No Filters")
+    @DisplayName("getBooks() - Success No Filters")
     void getBooksNoFilters() {
         Pageable pageable = PageRequest.of(0, 20);
         Page<Book> page = new PageImpl<>(storedBooks, pageable, 2);
 
-        when(bookRepository.findBooks(null, null, null, null, null, null, pageable))
-                .thenReturn(page);
+        when(bookRepository.findBooks(null, null, null, null, null, null, pageable)).thenReturn(page);
 
         Page<BookReadDTO> result = bookService.getBooks(null, null, null, null, null, null, pageable);
 
@@ -65,7 +69,7 @@ class BookServiceTest {
     }
 
     @Test
-    @DisplayName("getBooks - Success With Filters")
+    @DisplayName("getBooks() - Success With Filters")
     void getBooksWithFilters() {
         Pageable pageable = PageRequest.of(0, 20);
         Page<Book> page = new PageImpl<>(List.of(storedBooks.getLast()), pageable, 2);
@@ -73,14 +77,15 @@ class BookServiceTest {
         when(bookRepository.findBooks("title", "genre1", "author", "description2", 1.0, 2.0, pageable))
                 .thenReturn(page);
 
-        Page<BookReadDTO> result = bookService.getBooks("title", "genre1", "author", "description2", 1.0, 2.0, pageable);
+        Page<BookReadDTO> result = bookService.getBooks("title", "genre1", "author", "description2", 1.0, 2.0,
+                pageable);
 
         assertEquals(1, result.getContent().size());
         assertEquals(bookMapper.BookToReadDto(storedBooks.get(1)), result.getContent().getFirst());
     }
 
     @Test
-    @DisplayName("addBook - Success")
+    @DisplayName("addBook() - Success")
     void addBook() {
         // Create a BookCreateDTO object with some sample data
         BookWriteDTO bookToAdd = new BookWriteDTO();
@@ -112,6 +117,7 @@ class BookServiceTest {
     @Test
     @DisplayName("getBookByID(1) - Success")
     void getBookByIDFound() {
+        when(bookRepository.existsById(1)).thenReturn(true);
         when(bookRepository.findById(1)).thenReturn(Optional.of(storedBooks.getFirst()));
 
         Optional<BookReadDTO> result = bookService.getBookByID(1);
@@ -130,6 +136,7 @@ class BookServiceTest {
     @Test
     @DisplayName("getBookByID(999) - Not Found")
     void getBookByIDNotFound() {
+        when(bookRepository.existsById(999)).thenReturn(false);
         when(bookRepository.findById(999)).thenReturn(Optional.empty());
 
         Optional<BookReadDTO> result = bookService.getBookByID(999);
@@ -140,6 +147,7 @@ class BookServiceTest {
     @Test
     @DisplayName("getBookByID(-1) - Invalid ID")
     void getBookByIDInvalid() {
+        when(bookRepository.existsById(-1)).thenReturn(false);
         Optional<BookReadDTO> result = bookService.getBookByID(-1);
 
         assertTrue(result.isEmpty());
@@ -151,6 +159,7 @@ class BookServiceTest {
         BookUpdateDTO updateBookDTO = new BookUpdateDTO();
         updateBookDTO.setTitle("New Title");
 
+        when(bookRepository.existsById(1)).thenReturn(true);
         when(bookRepository.findById(1)).thenReturn(Optional.of(storedBooks.getFirst()));
 
         Book updatedBook = storedBooks.getFirst();
@@ -176,6 +185,8 @@ class BookServiceTest {
         BookUpdateDTO updateBookDTO = new BookUpdateDTO();
         updateBookDTO.setTitle("New Title");
 
+        when(bookRepository.existsById(999)).thenReturn(false);
+
         assertThrows(BookNotFoundException.class, () -> bookService.updateBookByID(999, updateBookDTO));
     }
 
@@ -185,36 +196,42 @@ class BookServiceTest {
         BookUpdateDTO updateBookDTO = new BookUpdateDTO();
         updateBookDTO.setTitle("New Title");
 
+        when(bookRepository.existsById(-1)).thenReturn(false);
+
         assertThrows(BookNotFoundException.class, () -> bookService.updateBookByID(-1, updateBookDTO));
     }
 
     @Test
-    @DisplayName("deletedBookByID(1) - Success")
+    @DisplayName("deleteBookByID(1) - Success")
     void deleteBookByIDFound() {
-        when(bookRepository.deleteById(1L)).thenReturn(1L);
+        when(bookRepository.existsById(1)).thenReturn(true);
+        doNothing().when(bookRepository).deleteById(1);
 
-        Long result = bookService.deleteBookByID(1L);
+        bookService.deleteBookByID(1);
 
-        assertEquals(1, result);
+        verify(bookRepository).deleteById(1);
     }
 
     @Test
-    @DisplayName("deletedBookByID(999) - Not Found")
+    @DisplayName("deleteBookByID(999) - Not Found")
     void deleteBookByIDNotFound() {
-        when(bookRepository.deleteById(999L)).thenReturn(0L);
+        when(bookRepository.existsById(999)).thenReturn(false);
+        doThrow(new BookNotFoundException("No book found with the given ID: 999")).when(bookRepository).deleteById(999);
 
-        Long result = bookService.deleteBookByID(999L);
+        assertThrows(BookNotFoundException.class, () -> bookService.deleteBookByID(999));
 
-        assertEquals(0, result);
+        verify(bookRepository).deleteById(999);
     }
 
     @Test
-    @DisplayName("deletedBookByID(-1) - Invalid ID")
+    @DisplayName("deleteBookByID(-1) - Invalid ID")
     void deleteBookByIDInvalid() {
-        when(bookRepository.deleteById(-1L)).thenReturn(0L);
+        when(bookRepository.existsById(-1)).thenReturn(false);
+        doThrow(new IllegalArgumentException("Invalid Book ID: -1")).when(bookRepository).deleteById(-1);
 
-        Long result = bookService.deleteBookByID(-1L);
+        assertThrows(IllegalArgumentException.class, () -> bookService.deleteBookByID(-1));
 
-        assertEquals(0, result);
+        verify(bookRepository).deleteById(-1);
     }
+
 }

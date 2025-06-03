@@ -1,27 +1,22 @@
 package com.vagsoft.bookstore.services;
 
-import com.vagsoft.bookstore.dto.BookReadDTO;
-import com.vagsoft.bookstore.dto.BookUpdateDTO;
-import com.vagsoft.bookstore.dto.BookWriteDTO;
+import java.util.Optional;
+
+import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookUpdateDTO;
+import com.vagsoft.bookstore.dto.bookDTOs.BookWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.mappers.BookMapper;
-import com.vagsoft.bookstore.models.Book;
+import com.vagsoft.bookstore.models.entities.Book;
 import com.vagsoft.bookstore.repositories.BookRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-/**
- * Service class for book operations
- */
+/** Service class for book operations */
 @Service
 public class BookService {
-    private static final Logger log = LoggerFactory.getLogger(BookService.class);
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
@@ -31,41 +26,51 @@ public class BookService {
     }
 
     /**
-     * Retrieves a list of books filtered by title, genre, author, description, minPrice and maxPrice
+     * Retrieves a list of books filtered by the specified parameters
      *
-     * @param title the title of the books search for (optional)
-     * @param genre the genre of the books search for (optional)
-     * @param author the author of the books search for (optional)
-     * @param description the description of the books search for (optional)
-     * @param minPrice the minimum price of the books search for (optional)
-     * @param maxPrice the maximum price of the books search for (optional)
-     * @param pageable the pagination information (optional)
+     * @param title
+     *            the title of the books search for (optional)
+     * @param genre
+     *            the genre of the books search for (optional)
+     * @param author
+     *            the author of the books search for (optional)
+     * @param description
+     *            the description of the books search for (optional)
+     * @param minPrice
+     *            the minimum price of the books search for (optional)
+     * @param maxPrice
+     *            the maximum price of the books search for (optional)
+     * @param pageable
+     *            the pagination information (optional)
      * @return a page of books
      */
     @Transactional(readOnly = true)
-    public Page<BookReadDTO> getBooks(String title, String genre, String author, String description, Double minPrice, Double maxPrice, Pageable pageable) {
-        return bookMapper.PageBookToPageDto(bookRepository.findBooks(title, genre, author, description, minPrice, maxPrice, pageable));
+    public Page<BookReadDTO> getBooks(String title, String genre, String author, String description, Double minPrice,
+            Double maxPrice, Pageable pageable) {
+        return bookMapper.pageBookToPageDto(
+                bookRepository.findBooks(title, genre, author, description, minPrice, maxPrice, pageable));
     }
-
 
     /**
      * Adds a new book
      *
-     * @param bookWriteDTO the book to be added
+     * @param bookWriteDTO
+     *            the book to be added
      * @return the added book
      */
     @Transactional
     public Optional<BookReadDTO> addBook(BookWriteDTO bookWriteDTO) {
-        Book book = bookMapper.DtoToBook(bookWriteDTO);
+        Book bookToSave = bookMapper.DtoToBook(bookWriteDTO);
 
-        Book savedBook = bookRepository.save(book);
+        Book savedBook = bookRepository.save(bookToSave);
         return Optional.of(bookMapper.BookToReadDto(savedBook));
     }
 
     /**
      * Retrieves a book by its ID
      *
-     * @param bookID the ID of the book to be retrieved
+     * @param bookID
+     *            the ID of the book to be retrieved
      * @return the retrieved book
      */
     @Transactional(readOnly = true)
@@ -77,19 +82,21 @@ public class BookService {
     /**
      * Updates a book by its ID with the given book information
      *
-     * @param bookID the ID of the book to be updated
-     * @param bookUpdateDTO the new book information
+     * @param bookID
+     *            the ID of the book to be updated
+     * @param bookUpdateDTO
+     *            the new book information
      * @return the updated book
      */
     @Transactional
     public Optional<BookReadDTO> updateBookByID(Integer bookID, BookUpdateDTO bookUpdateDTO) {
 
-        Optional<Book> foundBook = bookRepository.findById(bookID);
-        if (foundBook.isEmpty()) throw new BookNotFoundException("No book found with the given ID");
+        Book foundBook = bookRepository.findById(bookID)
+                .orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID));
 
-        bookMapper.updateBookFromDto(bookUpdateDTO, foundBook.get());
+        bookMapper.updateBookFromDto(bookUpdateDTO, foundBook);
 
-        Book updatedBook = bookRepository.save(foundBook.get());
+        Book updatedBook = bookRepository.save(foundBook);
 
         return Optional.of(bookMapper.BookToReadDto(updatedBook));
     }
@@ -97,11 +104,48 @@ public class BookService {
     /**
      * Deletes a book by its ID
      *
-     * @param bookID the ID of the book to be deleted
-     * @return the number of books deleted (should be 1)
+     * @param bookID
+     *            the ID of the book to be deleted
      */
     @Transactional
-    public Long deleteBookByID(Long bookID) {
-        return bookRepository.deleteById(bookID);
+    public void deleteBookByID(Integer bookID) {
+        bookRepository.deleteById(bookID);
+    }
+
+    /**
+     * Checks if a book has enough stock and delets the requested quantity from the
+     * stock.
+     *
+     * @param bookID
+     *            the ID of the book to check
+     * @param quantity
+     *            the quantity of the book
+     */
+    @Transactional
+    public void requestBooks(Integer bookID, Integer quantity) {
+        Book book = bookRepository.findById(bookID)
+                .orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID));
+
+        if (book.getAvailability() >= quantity) {
+            book.setAvailability(book.getAvailability() - quantity);
+        } else {
+            throw new IllegalArgumentException("Not enough stock for book with ID: " + bookID);
+        }
+    }
+
+    /**
+     * Returns books to the stock by increasing the availability of the book.
+     *
+     * @param bookID
+     *            the ID of the book to return
+     * @param quantity
+     *            the quantity of the book to return
+     */
+    @Transactional
+    public void returnBooks(Integer bookID, Integer quantity) {
+        Book book = bookRepository.findById(bookID)
+                .orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID));
+
+        book.setAvailability(book.getAvailability() + quantity);
     }
 }
