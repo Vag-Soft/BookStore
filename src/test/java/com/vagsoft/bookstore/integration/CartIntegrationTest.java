@@ -1,12 +1,16 @@
 package com.vagsoft.bookstore.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
+
+import java.net.URI;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vagsoft.bookstore.dto.cartDTOs.CartItemReadDTO;
 import com.vagsoft.bookstore.dto.cartDTOs.CartReadDTO;
-import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteReadDTO;
-import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
 import com.vagsoft.bookstore.mappers.CartMapper;
-import com.vagsoft.bookstore.mappers.FavouriteMapper;
 import com.vagsoft.bookstore.models.entities.Book;
 import com.vagsoft.bookstore.models.entities.Cart;
 import com.vagsoft.bookstore.models.entities.CartItem;
@@ -16,9 +20,7 @@ import com.vagsoft.bookstore.pagination.CustomPageImpl;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.CartItemsRepository;
 import com.vagsoft.bookstore.repositories.CartRepository;
-import com.vagsoft.bookstore.repositories.FavouriteRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
-import com.vagsoft.bookstore.services.FavouriteService;
 import com.vagsoft.bookstore.utils.AuthUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,15 +38,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
-import java.time.LocalDate;
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
@@ -67,7 +60,6 @@ public class CartIntegrationTest {
     @MockitoBean
     private AuthUtils authUtils;
 
-
     Book book1, book2;
     User user1, user2;
     Cart cart1, cart2;
@@ -76,11 +68,11 @@ public class CartIntegrationTest {
     @BeforeEach
     public void setUp() {
         book1 = Book.builder().title("The Lord of the Rings").author("J. R. R. Tolkien").description(
-                        "The Lord of the Rings is a series of three fantasy novels written by English author and scholar J. R. R. Tolkien.")
+                "The Lord of the Rings is a series of three fantasy novels written by English author and scholar J. R. R. Tolkien.")
                 .pages(1178).price(15.0).availability(5).isbn("978-0-395-36381-0").genres(new ArrayList<>()).build();
 
         book2 = Book.builder().title("Harry Potter and the Philosopher's Stone").author("J. K. Rowling").description(
-                        "Harry Potter and the Philosopher's Stone is a fantasy novel written by British author J. K. Rowling.")
+                "Harry Potter and the Philosopher's Stone is a fantasy novel written by British author J. K. Rowling.")
                 .pages(223).price(20.0).availability(10).isbn("978-0-7-152-20664-5").genres(new ArrayList<>()).build();
 
         book1 = bookRepository.save(book1);
@@ -94,34 +86,15 @@ public class CartIntegrationTest {
         userRepository.save(user1);
         userRepository.save(user2);
 
-        cart1 = Cart.builder()
-                .user(user1)
-                .cartItems(new ArrayList<>())
-                .build();
+        cart1 = Cart.builder().user(user1).cartItems(new ArrayList<>()).build();
 
-        cart2 = Cart.builder()
-                .user(user2)
-                .cartItems(new ArrayList<>())
-                .build();
+        cart2 = Cart.builder().user(user2).cartItems(new ArrayList<>()).build();
 
-        cartItem1 = CartItem.builder()
-                .cart(cart1)
-                .book(book1)
-                .quantity(2)
-                .build();
+        cartItem1 = CartItem.builder().cart(cart1).book(book1).quantity(2).build();
 
-        cartItem2 = CartItem.builder()
-                .cart(cart1)
-                .book(book2)
-                .quantity(1)
-                .build();
+        cartItem2 = CartItem.builder().cart(cart1).book(book2).quantity(1).build();
 
-        cartItem3 = CartItem.builder()
-                .cart(cart2)
-                .book(book1)
-                .quantity(3)
-                .build();
-
+        cartItem3 = CartItem.builder().cart(cart2).book(book1).quantity(3).build();
 
         cart1.getCartItems().add(cartItem1);
         cart1.getCartItems().add(cartItem2);
@@ -145,10 +118,10 @@ public class CartIntegrationTest {
     @Test
     @DisplayName("GET /carts - Success")
     void getAllCarts() {
-        URI uri = UriComponentsBuilder.fromUriString("/carts")
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/carts").build().encode().toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<CartReadDTO>> classType = new ParameterizedTypeReference<>() {};
+        ParameterizedTypeReference<CustomPageImpl<CartReadDTO>> classType = new ParameterizedTypeReference<>() {
+        };
         ResponseEntity<CustomPageImpl<CartReadDTO>> response = client.exchange(uri, HttpMethod.GET, null, classType);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());

@@ -13,8 +13,6 @@ import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import com.vagsoft.bookstore.validations.groups.OrderedValidation;
 import jakarta.validation.constraints.Positive;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/carts")
 @Validated(OrderedValidation.class)
 public class CartController {
-    private static final Logger log = LoggerFactory.getLogger(CartController.class);
     private final CartService cartService;
     private final AuthUtils authUtils;
 
@@ -48,8 +45,6 @@ public class CartController {
     @IsAdmin
     @GetMapping
     public ResponseEntity<Page<CartReadDTO>> getAllCarts(Pageable pageable) {
-        log.info("GET /carts: pageable={}", pageable);
-
         return ResponseEntity.ok(cartService.getAllCarts(pageable));
     }
 
@@ -64,8 +59,6 @@ public class CartController {
     @GetMapping("/{userID}")
     public ResponseEntity<CartReadDTO> getCartByUserId(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
-        log.info("GET /carts/{}", userID);
-
         Optional<CartReadDTO> cart = cartService.getCartByUserId(userID);
         return ResponseEntity
                 .ok(cart.orElseThrow(() -> new CartNotFoundException("Cart not found with the given JWT")));
@@ -78,8 +71,6 @@ public class CartController {
      */
     @GetMapping("/me")
     public ResponseEntity<CartReadDTO> getCartByUserId() {
-        log.info("GET /carts/me");
-
         Integer userID = authUtils.getUserIdFromAuthentication();
 
         Optional<CartReadDTO> cart = cartService.getCartByUserId(userID);

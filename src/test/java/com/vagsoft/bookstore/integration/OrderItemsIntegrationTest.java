@@ -1,7 +1,14 @@
 package com.vagsoft.bookstore.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
+
+import java.net.URI;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vagsoft.bookstore.dto.cartDTOs.CartItemReadDTO;
 import com.vagsoft.bookstore.dto.orderDTOs.OrderItemReadDTO;
 import com.vagsoft.bookstore.mappers.OrderItemMapper;
 import com.vagsoft.bookstore.mappers.OrderMapper;
@@ -37,14 +44,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
-import java.time.LocalDate;
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
@@ -83,11 +82,11 @@ public class OrderItemsIntegrationTest {
     @BeforeEach
     public void setUp() {
         book1 = Book.builder().title("The Lord of the Rings").author("J. R. R. Tolkien").description(
-                        "The Lord of the Rings is a series of three fantasy novels written by English author and scholar J. R. R. Tolkien.")
+                "The Lord of the Rings is a series of three fantasy novels written by English author and scholar J. R. R. Tolkien.")
                 .pages(1178).price(15.0).availability(5).isbn("978-0-395-36381-0").genres(new ArrayList<>()).build();
 
         book2 = Book.builder().title("Harry Potter and the Philosopher's Stone").author("J. K. Rowling").description(
-                        "Harry Potter and the Philosopher's Stone is a fantasy novel written by British author J. K. Rowling.")
+                "Harry Potter and the Philosopher's Stone is a fantasy novel written by British author J. K. Rowling.")
                 .pages(223).price(20.0).availability(10).isbn("978-0-7-152-20664-5").genres(new ArrayList<>()).build();
 
         book1 = bookRepository.save(book1);
@@ -101,34 +100,15 @@ public class OrderItemsIntegrationTest {
         userRepository.save(user1);
         userRepository.save(user2);
 
-        cart1 = Cart.builder()
-                .user(user1)
-                .cartItems(new ArrayList<>())
-                .build();
+        cart1 = Cart.builder().user(user1).cartItems(new ArrayList<>()).build();
 
-        cart2 = Cart.builder()
-                .user(user2)
-                .cartItems(new ArrayList<>())
-                .build();
+        cart2 = Cart.builder().user(user2).cartItems(new ArrayList<>()).build();
 
-        cartItem1 = CartItem.builder()
-                .cart(cart1)
-                .book(book1)
-                .quantity(2)
-                .build();
+        cartItem1 = CartItem.builder().cart(cart1).book(book1).quantity(2).build();
 
-        cartItem2 = CartItem.builder()
-                .cart(cart1)
-                .book(book2)
-                .quantity(1)
-                .build();
+        cartItem2 = CartItem.builder().cart(cart1).book(book2).quantity(1).build();
 
-        cartItem3 = CartItem.builder()
-                .cart(cart2)
-                .book(book1)
-                .quantity(3)
-                .build();
-
+        cartItem3 = CartItem.builder().cart(cart2).book(book1).quantity(3).build();
 
         cart1.getCartItems().add(cartItem1);
         cart1.getCartItems().add(cartItem2);
@@ -137,40 +117,17 @@ public class OrderItemsIntegrationTest {
         cartRepository.save(cart1);
         cartRepository.save(cart2);
 
-        order1 = Order.builder()
-                .user(user1)
-                .orderItems(new ArrayList<>())
-                .totalAmount(50.0)
-                .orderDate(LocalDate.now())
-                .status(Status.PROCESSING)
-                .build();
+        order1 = Order.builder().user(user1).orderItems(new ArrayList<>()).totalAmount(50.0).orderDate(LocalDate.now())
+                .status(Status.PROCESSING).build();
 
-        order2 = Order.builder()
-                .user(user2)
-                .orderItems(new ArrayList<>())
-                .totalAmount(60.0)
-                .orderDate(LocalDate.now())
-                .status(Status.DELIVERED)
-                .build();
+        order2 = Order.builder().user(user2).orderItems(new ArrayList<>()).totalAmount(60.0).orderDate(LocalDate.now())
+                .status(Status.DELIVERED).build();
 
+        orderItem1 = OrderItem.builder().order(order1).book(book1).quantity(2).build();
 
-        orderItem1 = OrderItem.builder()
-                .order(order1)
-                .book(book1)
-                .quantity(2)
-                .build();
+        orderItem2 = OrderItem.builder().order(order1).book(book2).quantity(1).build();
 
-        orderItem2 = OrderItem.builder()
-                .order(order1)
-                .book(book2)
-                .quantity(1)
-                .build();
-
-        orderItem3 = OrderItem.builder()
-                .order(order2)
-                .book(book1)
-                .quantity(3)
-                .build();
+        orderItem3 = OrderItem.builder().order(order2).book(book1).quantity(3).build();
 
         order1.getOrderItems().add(orderItem1);
         order1.getOrderItems().add(orderItem2);
@@ -198,11 +155,12 @@ public class OrderItemsIntegrationTest {
     @Test
     @DisplayName("GET /orders/{orderID}/items - Success")
     void getOrderItemsByOrderID() {
-        URI uri = UriComponentsBuilder.fromUriString("/orders/" + order1.getId() + "/items")
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/orders/" + order1.getId() + "/items").build().encode().toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<OrderItemReadDTO>> classType = new ParameterizedTypeReference<>() {};
-        ResponseEntity<CustomPageImpl<OrderItemReadDTO>> response = client.exchange(uri, HttpMethod.GET, null, classType);
+        ParameterizedTypeReference<CustomPageImpl<OrderItemReadDTO>> classType = new ParameterizedTypeReference<>() {
+        };
+        ResponseEntity<CustomPageImpl<OrderItemReadDTO>> response = client.exchange(uri, HttpMethod.GET, null,
+                classType);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
@@ -218,11 +176,11 @@ public class OrderItemsIntegrationTest {
     @Test
     @DisplayName("GET /orders/999/items - Order Not Found")
     void getOrderItemsByOrderIDNotFound() {
-        URI uri = UriComponentsBuilder.fromUriString("/orders/999/items")
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/orders/999/items").build().encode().toUri();
 
         ResponseEntity<CustomPageImpl<OrderItemReadDTO>> response = client.exchange(uri, HttpMethod.GET, null,
-                new ParameterizedTypeReference<>() {});
+                new ParameterizedTypeReference<>() {
+                });
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -230,11 +188,11 @@ public class OrderItemsIntegrationTest {
     @Test
     @DisplayName("GET /orders/-1/items - Invalid Order ID")
     void getOrderItemsByOrderIDInvalid() {
-        URI uri = UriComponentsBuilder.fromUriString("/orders/-1/items")
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/orders/-1/items").build().encode().toUri();
 
         ResponseEntity<CustomPageImpl<OrderItemReadDTO>> response = client.exchange(uri, HttpMethod.GET, null,
-                new ParameterizedTypeReference<>() {});
+                new ParameterizedTypeReference<>() {
+                });
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
@@ -242,8 +200,8 @@ public class OrderItemsIntegrationTest {
     @Test
     @DisplayName("GET /orders/{orderID}/items/{bookID} - Success")
     void getOrderItemByOrderIDAndBookID() {
-        URI uri = UriComponentsBuilder.fromUriString("/orders/" + order1.getId() + "/items/" + book1.getId())
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/orders/" + order1.getId() + "/items/" + book1.getId()).build()
+                .encode().toUri();
 
         ResponseEntity<OrderItemReadDTO> response = client.getForEntity(uri, OrderItemReadDTO.class);
 
@@ -258,20 +216,17 @@ public class OrderItemsIntegrationTest {
     @Test
     @DisplayName("GET /orders/999/items/{bookID} - Order Not Found")
     void getOrderItemByOrderIDAndBookIDNotFoundOrder() {
-        URI uri = UriComponentsBuilder.fromUriString("/orders/999/items/" + book1.getId())
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/orders/999/items/" + book1.getId()).build().encode().toUri();
 
         ResponseEntity<OrderItemReadDTO> response = client.getForEntity(uri, OrderItemReadDTO.class);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
-
     @Test
     @DisplayName("GET /orders/-1/items/{bookID} - Invalid Order ID")
     void getOrderItemByOrderIDAndBookIDInvalidOrder() {
-        URI uri = UriComponentsBuilder.fromUriString("/orders/-1/items/" + book1.getId())
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/orders/-1/items/" + book1.getId()).build().encode().toUri();
 
         ResponseEntity<OrderItemReadDTO> response = client.getForEntity(uri, OrderItemReadDTO.class);
 
@@ -281,8 +236,8 @@ public class OrderItemsIntegrationTest {
     @Test
     @DisplayName("GET /orders/{orderID}/items/999 - Book Not Found")
     void getOrderItemByOrderIDAndBookIDNotFoundBook() {
-        URI uri = UriComponentsBuilder.fromUriString("/orders/" + order1.getId() + "/items/999")
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/orders/" + order1.getId() + "/items/999").build().encode()
+                .toUri();
 
         ResponseEntity<OrderItemReadDTO> response = client.getForEntity(uri, OrderItemReadDTO.class);
 
@@ -292,8 +247,8 @@ public class OrderItemsIntegrationTest {
     @Test
     @DisplayName("GET /orders/{orderID}/items/-1 - Invalid Book ID")
     void getOrderItemByOrderIDAndBookIDInvalidBook() {
-        URI uri = UriComponentsBuilder.fromUriString("/orders/" + order1.getId() + "/items/-1")
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/orders/" + order1.getId() + "/items/-1").build().encode()
+                .toUri();
 
         ResponseEntity<OrderItemReadDTO> response = client.getForEntity(uri, OrderItemReadDTO.class);
 
@@ -303,8 +258,7 @@ public class OrderItemsIntegrationTest {
     @Test
     @DisplayName("GET /orders/999/items/999 - Order and Book Not Found")
     void getOrderItemByOrderIDAndBookIDBothNotFound() {
-        URI uri = UriComponentsBuilder.fromUriString("/orders/999/items/999")
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/orders/999/items/999").build().encode().toUri();
 
         ResponseEntity<OrderItemReadDTO> response = client.getForEntity(uri, OrderItemReadDTO.class);
 
@@ -314,8 +268,7 @@ public class OrderItemsIntegrationTest {
     @Test
     @DisplayName("GET /orders/-1/items/-1 - Invalid User and Book IDs")
     void getOrderItemByOrderIDAndBookIDInvalidIDs() {
-        URI uri = UriComponentsBuilder.fromUriString("/orders/-1/items/-1")
-                .build().encode().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("/orders/-1/items/-1").build().encode().toUri();
 
         ResponseEntity<OrderItemReadDTO> response = client.getForEntity(uri, OrderItemReadDTO.class);
 

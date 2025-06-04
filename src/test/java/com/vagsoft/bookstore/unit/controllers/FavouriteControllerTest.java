@@ -72,12 +72,8 @@ public class FavouriteControllerTest {
         when(userRepository.existsById(1)).thenReturn(true);
         when(favouriteService.getFavouritesByUserID(1, pageable)).thenReturn(page);
 
-        mockMvc.perform(get("/users/1/favourites")
-                        .param("page", "0")
-                        .param("size", "20")
-                        .accept("application/json"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(2)))
+        mockMvc.perform(get("/users/1/favourites").param("page", "0").param("size", "20").accept("application/json"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.content", hasSize(2)))
                 .andExpect(jsonPath("$.content[0].book.id").value(storedFavourites.get(0).getBook().getId()))
                 .andExpect(jsonPath("$.content[1].book.id").value(storedFavourites.get(1).getBook().getId()));
     }
@@ -90,10 +86,7 @@ public class FavouriteControllerTest {
 
         when(favouriteService.getFavouritesByUserID(999, pageable)).thenReturn(page);
 
-        mockMvc.perform(get("/users/999/favourites")
-                        .param("page", "0")
-                        .param("size", "20")
-                        .accept("application/json"))
+        mockMvc.perform(get("/users/999/favourites").param("page", "0").param("size", "20").accept("application/json"))
                 .andExpect(status().isNotFound());
     }
 
@@ -105,10 +98,7 @@ public class FavouriteControllerTest {
 
         when(favouriteService.getFavouritesByUserID(-1, pageable)).thenReturn(page);
 
-        mockMvc.perform(get("/users/-1/favourites")
-                        .param("page", "0")
-                        .param("size", "20")
-                        .accept("application/json"))
+        mockMvc.perform(get("/users/-1/favourites").param("page", "0").param("size", "20").accept("application/json"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -122,12 +112,8 @@ public class FavouriteControllerTest {
 
         when(favouriteService.getFavouritesByUserID(1, pageable)).thenReturn(page);
 
-        mockMvc.perform(get("/users/me/favourites")
-                        .param("page", "0")
-                        .param("size", "20")
-                        .accept("application/json"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(2)))
+        mockMvc.perform(get("/users/me/favourites").param("page", "0").param("size", "20").accept("application/json"))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.content", hasSize(2)))
                 .andExpect(jsonPath("$.content[0].book.id").value(storedFavourites.get(0).getBook().getId()))
                 .andExpect(jsonPath("$.content[1].book.id").value(storedFavourites.get(1).getBook().getId()));
     }
@@ -145,7 +131,5 @@ public class FavouriteControllerTest {
         mockMvc.perform(get("/users/me/favourites").param("page", "0").param("size", "20").accept("application/json"))
                 .andExpect(status().isBadRequest());
     }
-
-
 
 }

@@ -18,8 +18,6 @@ import com.vagsoft.bookstore.validations.groups.OrderedValidation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -32,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/books")
 @Validated(OrderedValidation.class)
 public class BookController {
-    private static final Logger log = LoggerFactory.getLogger(BookController.class);
     private final BookService bookService;
 
     public BookController(BookService bookService) {
@@ -67,10 +64,6 @@ public class BookController {
             @RequestParam(name = "minPrice", required = false) @Min(value = 0, message = "minPrice must be equal or greater than 0", groups = BasicValidation.class) Double minPrice,
             @RequestParam(name = "maxPrice", required = false) @Min(value = 0, message = "maxPrice must be equal or greater than 0", groups = BasicValidation.class) Double maxPrice,
             Pageable pageable) {
-
-        log.info("GET /books: title={}, genre={}, author={}, description={}, minPrice={}, maxPrice={}, pageable={}",
-                title, genre, author, description, minPrice, maxPrice, pageable);
-
         return ResponseEntity.ok(bookService.getBooks(title, genre, author, description, minPrice, maxPrice, pageable));
     }
 
@@ -85,8 +78,6 @@ public class BookController {
     @IsAdmin()
     @PostMapping
     public ResponseEntity<BookReadDTO> addBook(@Valid @RequestBody BookWriteDTO bookWriteDTO) {
-        log.info("POST /books: book={}", bookWriteDTO);
-
         Optional<BookReadDTO> savedBook = bookService.addBook(bookWriteDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedBook.orElseThrow(() -> new BookCreationException("Book creation failed")));
@@ -102,8 +93,6 @@ public class BookController {
     @GetMapping(path = "/{bookID}")
     public ResponseEntity<BookReadDTO> getBookByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
-        log.info("GET /books/{bookID}: bookID={}", bookID);
-
         Optional<BookReadDTO> foundBook = bookService.getBookByID(bookID);
         return ResponseEntity.ok(
                 foundBook.orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID)));
@@ -123,8 +112,6 @@ public class BookController {
     public ResponseEntity<BookReadDTO> updateBookByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID,
             @Valid @RequestBody BookUpdateDTO bookUpdateDTO) {
-        log.info("PUT /books/{bookID}: bookID={}, book={}", bookID, bookUpdateDTO);
-
         Optional<BookReadDTO> updatedBook = bookService.updateBookByID(bookID, bookUpdateDTO);
         return ResponseEntity
                 .ok(updatedBook.orElseThrow(() -> new BookNotFoundException("No book found with the given ID")));
@@ -142,8 +129,6 @@ public class BookController {
     @DeleteMapping(path = "/{bookID}")
     public ResponseEntity<Void> deleteBookByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
-        log.info("DELETE /books/{bookID}: bookID={}", bookID);
-
         bookService.deleteBookByID(bookID);
 
         return ResponseEntity.noContent().build();

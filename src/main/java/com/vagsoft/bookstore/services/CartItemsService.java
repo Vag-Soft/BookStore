@@ -77,8 +77,7 @@ public class CartItemsService {
         // Requesting books from the book service to ensure availability
         bookService.requestBooks(cartItemWriteDTO.getBookID(), cartItemWriteDTO.getQuantity());
 
-        CartItem cartItemToSave = CartItem.builder()
-                .quantity(cartItemWriteDTO.getQuantity())
+        CartItem cartItemToSave = CartItem.builder().quantity(cartItemWriteDTO.getQuantity())
                 .book(bookRepository.getReferenceById(cartItemWriteDTO.getBookID()))
                 .cart(cartRepository.getReferenceByUser_Id(userID)).build();
 

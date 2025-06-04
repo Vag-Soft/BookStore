@@ -18,8 +18,6 @@ import com.vagsoft.bookstore.validations.groups.OrderedValidation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/users")
 @Validated(OrderedValidation.class)
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
     private final AuthUtils authUtils;
 
@@ -66,9 +63,6 @@ public class UserController {
             @RequestParam(name = "firstName", required = false) @Size(max = 31, message = "firstName must be less than 32 characters", groups = BasicValidation.class) @NullOrNotBlank(groups = BasicValidation.class) String firstName,
             @RequestParam(name = "lastName", required = false) @Size(max = 31, message = "lastName must be less than 32 characters", groups = BasicValidation.class) @NullOrNotBlank(groups = BasicValidation.class) String lastName,
             Pageable pageable) {
-        log.info("GET /users: username={}, email={}, role={}, firstName={}, lastName={}, pageable={}", username, email,
-                role, firstName, lastName, pageable);
-
         return ResponseEntity.ok(userService.getUsers(username, email, role, firstName, lastName, pageable));
     }
 
@@ -83,8 +77,6 @@ public class UserController {
     @GetMapping(path = "/{userID}")
     public ResponseEntity<UserReadDTO> getUserByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
-        log.info("GET /users/{userID}: userID={}", userID);
-
         Optional<UserReadDTO> foundUser = userService.getUserByID(userID);
         return ResponseEntity
                 .ok(foundUser.orElseThrow(() -> new UserNotFoundException("No user found with the given ID")));
@@ -104,8 +96,6 @@ public class UserController {
     public ResponseEntity<UserReadDTO> updateUserByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
             @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-        log.info("PUT /users/{userID}: userID={}, userUpdateDTO={}", userID, userUpdateDTO);
-
         Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
         return ResponseEntity
                 .ok(updatedUser.orElseThrow(() -> new UserNotFoundException("No user found with the given ID")));
@@ -123,8 +113,6 @@ public class UserController {
     @DeleteMapping(path = "/{userID}")
     public ResponseEntity<Void> deleteUserByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
-        log.info("DELETE /users/{userID}: userID={}", userID);
-
         userService.deleteUserByID(userID);
 
         return ResponseEntity.noContent().build();
@@ -137,8 +125,6 @@ public class UserController {
      */
     @GetMapping(path = "/me")
     public ResponseEntity<UserReadDTO> getPrincipalUser() {
-        log.info("GET /users/me");
-
         Integer userID = authUtils.getUserIdFromAuthentication();
 
         Optional<UserReadDTO> foundUser = userService.getUserByID(userID);
@@ -156,8 +142,6 @@ public class UserController {
      */
     @PutMapping(path = "/me")
     public ResponseEntity<UserReadDTO> updatePrincipalUser(@RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-        log.info("PUT /users/me: userUpdateDTO={}", userUpdateDTO);
-
         Integer userID = authUtils.getUserIdFromAuthentication();;
 
         Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
@@ -174,8 +158,6 @@ public class UserController {
     @ApiResponse(responseCode = "204")
     @DeleteMapping(path = "/me")
     public ResponseEntity<Void> deleteUserByID() {
-        log.info("DELETE /users/me");
-
         Integer userID = authUtils.getUserIdFromAuthentication();
 
         userService.deleteUserByID(userID);

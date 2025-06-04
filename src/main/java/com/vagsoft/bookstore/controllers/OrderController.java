@@ -21,8 +21,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -42,7 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/orders")
 @Validated(OrderedValidation.class)
 public class OrderController {
-    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
     private final OrderService orderService;
     private final AuthUtils authUtils;
 
@@ -73,10 +70,6 @@ public class OrderController {
             @RequestParam(name = "minTotalAmount", required = false) @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double minTotalAmount,
             @RequestParam(name = "maxTotalAmount", required = false) @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double maxTotalAmount,
             @RequestParam(name = "status", required = false) Status status, Pageable pageable) {
-
-        log.info("GET /orders: userID={}, minTotalAmount={}, maxTotalAmount={}, status={}, pageable={}", userID,
-                minTotalAmount, maxTotalAmount, status, pageable);
-
         return ResponseEntity.ok(orderService.getOrders(userID, minTotalAmount, maxTotalAmount, status, pageable));
     }
 
@@ -91,9 +84,6 @@ public class OrderController {
     @GetMapping(path = "/{orderID}")
     public ResponseEntity<OrderReadDTO> getOrderByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) Integer orderID) {
-
-        log.info("GET /orders/{}", orderID);
-
         Optional<OrderReadDTO> order = orderService.getOrderByID(orderID);
 
         return ResponseEntity.ok(
@@ -114,9 +104,6 @@ public class OrderController {
     public ResponseEntity<OrderReadDTO> updateOrderByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) Integer orderID,
             @RequestBody @Valid OrderUpdateDTO orderUpdateDTO) {
-
-        log.info("GET /orders/{}: orderUpdateDTO={}", orderID, orderUpdateDTO);
-
         Optional<OrderReadDTO> updatedOrder = orderService.updateOrderByID(orderID, orderUpdateDTO);
 
         return ResponseEntity.ok(updatedOrder
@@ -142,10 +129,6 @@ public class OrderController {
             @RequestParam(name = "minTotalAmount", required = false) @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double minTotalAmount,
             @RequestParam(name = "maxTotalAmount", required = false) @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double maxTotalAmount,
             @RequestParam(name = "status", required = false) Status status, Pageable pageable) {
-
-        log.info("GET /orders/me: minTotalAmount={}, maxTotalAmount={}, status={}, pageable={}", minTotalAmount,
-                maxTotalAmount, status, pageable);
-
         Integer userID = authUtils.getUserIdFromAuthentication();
 
         return ResponseEntity.ok(orderService.getOrders(userID, minTotalAmount, maxTotalAmount, status, pageable));
@@ -159,8 +142,6 @@ public class OrderController {
     @ApiResponse(responseCode = "201")
     @PostMapping(path = "/me")
     public ResponseEntity<OrderReadDTO> addOrder() {
-        log.info("POST /orders/me");
-
         Integer userID = authUtils.getUserIdFromAuthentication();
 
         Optional<OrderReadDTO> savedOrder = orderService.addOrderByUserID(userID);
@@ -180,9 +161,6 @@ public class OrderController {
     @GetMapping(path = "/me/{orderID}")
     public ResponseEntity<OrderReadDTO> getOrderMeByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUser_IdAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID) {
-
-        log.info("GET /orders/me/{}", orderID);
-
         Optional<OrderReadDTO> order = orderService.getOrderByID(orderID);
 
         return ResponseEntity.ok(

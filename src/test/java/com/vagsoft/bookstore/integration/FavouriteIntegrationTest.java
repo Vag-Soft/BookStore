@@ -114,7 +114,8 @@ public class FavouriteIntegrationTest {
         URI uri = UriComponentsBuilder.fromUriString("/users/" + user1.getId() + "/favourites").build().encode()
                 .toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType = new ParameterizedTypeReference<>() {};
+        ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType = new ParameterizedTypeReference<>() {
+        };
         ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response = client.exchange(uri, HttpMethod.GET, null,
                 classType);
 
