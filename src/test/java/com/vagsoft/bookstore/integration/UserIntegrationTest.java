@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
@@ -151,14 +150,14 @@ public class UserIntegrationTest {
         assertEquals(user1.getLastName(), userReadDTO.getLastName());
         assertEquals(user1.getSignupDate(), userReadDTO.getSignupDate());
 
-        Optional<UserReadDTO> updatedUser = userService.getUserByID(user1.getId());
-        assertTrue(updatedUser.isPresent());
-        assertEquals(user1.getId(), updatedUser.get().getId());
-        assertEquals(userUpdateDTO.getUsername(), updatedUser.get().getUsername());
-        assertEquals(user1.getEmail(), updatedUser.get().getEmail());
-        assertEquals(user1.getFirstName(), updatedUser.get().getFirstName());
-        assertEquals(user1.getLastName(), updatedUser.get().getLastName());
-        assertEquals(user1.getSignupDate(), updatedUser.get().getSignupDate());
+        UserReadDTO updatedUser = userService.getUserByID(user1.getId());
+        assertNotNull(updatedUser);
+        assertEquals(user1.getId(), updatedUser.getId());
+        assertEquals(userUpdateDTO.getUsername(), updatedUser.getUsername());
+        assertEquals(user1.getEmail(), updatedUser.getEmail());
+        assertEquals(user1.getFirstName(), updatedUser.getFirstName());
+        assertEquals(user1.getLastName(), updatedUser.getLastName());
+        assertEquals(user1.getSignupDate(), updatedUser.getSignupDate());
     }
 
     @Test
@@ -275,14 +274,14 @@ public class UserIntegrationTest {
         assertEquals(user1.getLastName(), userReadDTO.getLastName());
         assertEquals(user1.getSignupDate(), userReadDTO.getSignupDate());
 
-        Optional<UserReadDTO> updatedUser = userService.getUserByID(user1.getId());
-        assertTrue(updatedUser.isPresent());
-        assertEquals(user1.getId(), updatedUser.get().getId());
-        assertEquals(userUpdateDTO.getUsername(), updatedUser.get().getUsername());
-        assertEquals(user1.getEmail(), updatedUser.get().getEmail());
-        assertEquals(user1.getFirstName(), updatedUser.get().getFirstName());
-        assertEquals(user1.getLastName(), updatedUser.get().getLastName());
-        assertEquals(user1.getSignupDate(), updatedUser.get().getSignupDate());
+        UserReadDTO updatedUser = userService.getUserByID(user1.getId());
+        assertNotNull(updatedUser);
+        assertEquals(user1.getId(), updatedUser.getId());
+        assertEquals(userUpdateDTO.getUsername(), updatedUser.getUsername());
+        assertEquals(user1.getEmail(), updatedUser.getEmail());
+        assertEquals(user1.getFirstName(), updatedUser.getFirstName());
+        assertEquals(user1.getLastName(), updatedUser.getLastName());
+        assertEquals(user1.getSignupDate(), updatedUser.getSignupDate());
     }
 
     @Test

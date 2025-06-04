@@ -45,7 +45,7 @@ public class OrderItemService {
      * @return an OrderItemReadDTO object representing the order item
      */
     @Transactional(readOnly = true)
-    public Optional<OrderItemReadDTO> getOrderItemByBookID(Integer orderID, Integer bookID) {
-        return orderItemsRepository.findByOrderIdAndBookId(orderID, bookID).map(orderItemMapper::orderItemToReadDto);
+    public OrderItemReadDTO getOrderItemByBookID(Integer orderID, Integer bookID) {
+        return orderItemMapper.orderItemToReadDto(orderItemsRepository.getReferenceByOrderIdAndBookId(orderID, bookID));
     }
 }

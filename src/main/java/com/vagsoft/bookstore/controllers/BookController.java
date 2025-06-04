@@ -6,7 +6,7 @@ import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
 import com.vagsoft.bookstore.dto.bookDTOs.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.bookDTOs.BookWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.BookCreationException;
-import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
+import com.vagsoft.bookstore.errors.exceptions.BookUpdateException;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.services.BookService;
 import com.vagsoft.bookstore.validations.annotations.ExistsResource;
@@ -93,9 +93,8 @@ public class BookController {
     @GetMapping(path = "/{bookID}")
     public ResponseEntity<BookReadDTO> getBookByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
-        Optional<BookReadDTO> foundBook = bookService.getBookByID(bookID);
-        return ResponseEntity.ok(
-                foundBook.orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID)));
+        BookReadDTO foundBook = bookService.getBookByID(bookID);
+        return ResponseEntity.ok(foundBook);
     }
 
     /**
@@ -113,8 +112,7 @@ public class BookController {
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID,
             @Valid @RequestBody BookUpdateDTO bookUpdateDTO) {
         Optional<BookReadDTO> updatedBook = bookService.updateBookByID(bookID, bookUpdateDTO);
-        return ResponseEntity
-                .ok(updatedBook.orElseThrow(() -> new BookNotFoundException("No book found with the given ID")));
+        return ResponseEntity.ok(updatedBook.orElseThrow(() -> new BookUpdateException("Book with ID:" + bookID + "update failed")));
     }
 
     /**

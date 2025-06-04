@@ -1,7 +1,5 @@
 package com.vagsoft.bookstore.services;
 
-import java.util.Optional;
-
 import com.vagsoft.bookstore.dto.cartDTOs.CartReadDTO;
 import com.vagsoft.bookstore.mappers.CartMapper;
 import com.vagsoft.bookstore.models.entities.Cart;
@@ -43,8 +41,8 @@ public class CartService {
      * @return the cart associated with the user ID
      */
     @Transactional(readOnly = true)
-    public Optional<CartReadDTO> getCartByUserId(Integer userID) {
-        return cartRepository.findByUser_Id(userID).map(cartMapper::cartToReadDto);
+    public CartReadDTO getCartByUserId(Integer userID) {
+        return cartMapper.cartToReadDto(cartRepository.getReferenceByUser_Id(userID));
     }
 
     /**

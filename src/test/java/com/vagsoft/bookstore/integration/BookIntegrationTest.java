@@ -148,19 +148,19 @@ public class BookIntegrationTest {
         assertEquals(1, savedBook.getGenres().size());
         assertEquals("genre1", savedBook.getGenres().getFirst().getGenre());
 
-        Optional<BookReadDTO> foundBook = bookService.getBookByID(book3.getId() + 1);
-        assertTrue(foundBook.isPresent());
-        assertEquals(book3.getId() + 1, foundBook.get().getId());
-        assertEquals("title3", foundBook.get().getTitle());
-        assertEquals("author3", foundBook.get().getAuthor());
-        assertEquals(3.0, foundBook.get().getPrice());
-        assertEquals(1, foundBook.get().getGenres().size());
-        assertEquals("genre1", foundBook.get().getGenres().getFirst().getGenre());
+        BookReadDTO foundBook = bookService.getBookByID(book3.getId() + 1);
+        assertNotNull(foundBook);
+        assertEquals(book3.getId() + 1, foundBook.getId());
+        assertEquals("title3", foundBook.getTitle());
+        assertEquals("author3", foundBook.getAuthor());
+        assertEquals(3.0, foundBook.getPrice());
+        assertEquals(1, foundBook.getGenres().size());
+        assertEquals("genre1", foundBook.getGenres().getFirst().getGenre());
     }
 
     @Test
     @DisplayName("GET /books/{bookID} - Success")
-    void getBookByIDFound(){
+    void getBookByIDFound() {
         ResponseEntity<BookReadDTO> response = client.getForEntity("/books/" + book1.getId(), BookReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -179,7 +179,7 @@ public class BookIntegrationTest {
 
     @Test
     @DisplayName("GET /books/-1 - Invalid ID")
-    void getBookByIDInvalid(){
+    void getBookByIDInvalid() {
         ResponseEntity<BookReadDTO> response = client.getForEntity("/books/-1", BookReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
@@ -211,14 +211,14 @@ public class BookIntegrationTest {
         assertEquals(book3.getGenres().getLast().getId() + 1, updatedBook.getGenres().getFirst().getId());
         assertEquals("genre2", updatedBook.getGenres().getFirst().getGenre());
 
-        Optional<BookReadDTO> foundBook = bookService.getBookByID(book1.getId());
-        assertTrue(foundBook.isPresent());
-        assertEquals(book1.getId(), foundBook.get().getId());
-        assertEquals("title10", foundBook.get().getTitle());
-        assertEquals("J. R. R. Tolkien", foundBook.get().getAuthor());
-        assertEquals(1, foundBook.get().getGenres().size());
-        assertEquals(book3.getGenres().getLast().getId() + 1, foundBook.get().getGenres().getFirst().getId());
-        assertEquals("genre2", foundBook.get().getGenres().getFirst().getGenre());
+        BookReadDTO foundBook = bookService.getBookByID(book1.getId());
+        assertNotNull(foundBook);
+        assertEquals(book1.getId(), foundBook.getId());
+        assertEquals("title10", foundBook.getTitle());
+        assertEquals("J. R. R. Tolkien", foundBook.getAuthor());
+        assertEquals(1, foundBook.getGenres().size());
+        assertEquals(book3.getGenres().getLast().getId() + 1, foundBook.getGenres().getFirst().getId());
+        assertEquals("genre2", foundBook.getGenres().getFirst().getGenre());
     }
 
     @Test
@@ -238,8 +238,7 @@ public class BookIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
 
-        Optional<BookReadDTO> foundBook = bookService.getBookByID(999);
-        assertFalse(foundBook.isPresent());
+        assertFalse(bookRepository.existsById(999));
     }
 
     @Test
@@ -258,8 +257,7 @@ public class BookIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
 
-        Optional<BookReadDTO> foundBook = bookService.getBookByID(-1);
-        assertFalse(foundBook.isPresent());
+        assertFalse(bookRepository.existsById(-1));
     }
 
     @Test
@@ -268,8 +266,7 @@ public class BookIntegrationTest {
         ResponseEntity<Void> response = client.exchange("/books/" + book1.getId(), HttpMethod.DELETE, null, Void.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
 
-        Optional<BookReadDTO> foundBook = bookService.getBookByID(book1.getId());
-        assertFalse(foundBook.isPresent());
+        assertFalse(bookRepository.existsById(book1.getId()));
     }
 
     @Test
@@ -278,8 +275,7 @@ public class BookIntegrationTest {
         ResponseEntity<Void> response = client.exchange("/books/999", HttpMethod.DELETE, null, Void.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
 
-        Optional<BookReadDTO> foundBook = bookService.getBookByID(999);
-        assertFalse(foundBook.isPresent());
+        assertFalse(bookRepository.existsById(999));
     }
 
     @Test
@@ -288,7 +284,6 @@ public class BookIntegrationTest {
         ResponseEntity<Void> response = client.exchange("/books/-1", HttpMethod.DELETE, null, Void.class);
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
 
-        Optional<BookReadDTO> foundBook = bookService.getBookByID(-1);
-        assertFalse(foundBook.isPresent());
+        assertFalse(bookRepository.existsById(-1));
     }
 }

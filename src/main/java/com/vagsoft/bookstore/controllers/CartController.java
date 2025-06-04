@@ -1,9 +1,6 @@
 package com.vagsoft.bookstore.controllers;
 
-import java.util.Optional;
-
 import com.vagsoft.bookstore.dto.cartDTOs.CartReadDTO;
-import com.vagsoft.bookstore.errors.exceptions.CartNotFoundException;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.CartService;
 import com.vagsoft.bookstore.utils.AuthUtils;
@@ -59,9 +56,8 @@ public class CartController {
     @GetMapping("/{userID}")
     public ResponseEntity<CartReadDTO> getCartByUserId(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
-        Optional<CartReadDTO> cart = cartService.getCartByUserId(userID);
-        return ResponseEntity
-                .ok(cart.orElseThrow(() -> new CartNotFoundException("Cart not found with the given JWT")));
+        CartReadDTO cart = cartService.getCartByUserId(userID);
+        return ResponseEntity.ok(cart);
     }
 
     /**
@@ -73,8 +69,7 @@ public class CartController {
     public ResponseEntity<CartReadDTO> getCartByUserId() {
         Integer userID = authUtils.getUserIdFromAuthentication();
 
-        Optional<CartReadDTO> cart = cartService.getCartByUserId(userID);
-        return ResponseEntity
-                .ok(cart.orElseThrow(() -> new CartNotFoundException("Cart not found with the given JWT")));
+        CartReadDTO cart = cartService.getCartByUserId(userID);
+        return ResponseEntity.ok(cart);
     }
 }

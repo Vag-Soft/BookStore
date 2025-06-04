@@ -7,6 +7,7 @@ import com.vagsoft.bookstore.dto.cartDTOs.CartItemUpdateDTO;
 import com.vagsoft.bookstore.dto.cartDTOs.CartItemWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.CartItemCreationException;
 import com.vagsoft.bookstore.errors.exceptions.CartItemsNotFoundException;
+import com.vagsoft.bookstore.errors.exceptions.CartItemsUpdateException;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.CartItemsRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
@@ -76,12 +77,16 @@ public class CartItemsController {
     @IsAdmin
     @GetMapping(path = "/{userID}/items/{bookID}")
     public ResponseEntity<CartItemReadDTO> getCartItem(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
-        Optional<CartItemReadDTO> cartItem = cartItemsService.getCartItem(userID, bookID);
+            @PathVariable @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class)
+            Integer userID,//
+            @PathVariable @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) //
+            @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's cart items", groups = ExtendedValidation.class)
+            Integer bookID) {
+        CartItemReadDTO cartItem = cartItemsService.getCartItem(userID, bookID);
 
-        return ResponseEntity.ok(cartItem.orElseThrow(() -> new CartItemsNotFoundException(
-                "Cart item not found for user ID: " + userID + " and book ID: " + bookID)));
+        return ResponseEntity.ok(cartItem);
     }
 
     /**
@@ -103,8 +108,8 @@ public class CartItemsController {
             @RequestBody @Valid @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", firstPathVariable = "userID", secondPathVariable = "bookID", message = "No Cart item found with the given user ID and book ID", groups = ExtendedValidation.class) CartItemUpdateDTO cartItemUpdateDTO) {
         Optional<CartItemReadDTO> updatedCartItem = cartItemsService.updateCartItem(userID, bookID, cartItemUpdateDTO);
 
-        return ResponseEntity.ok(updatedCartItem.orElseThrow(() -> new CartItemsNotFoundException(
-                "Cart item not found for user ID: " + userID + " and book ID: " + bookID)));
+        return ResponseEntity.ok(updatedCartItem.orElseThrow(() -> new CartItemsUpdateException(
+                "Cart item with user ID: " + userID + " and book ID: " + bookID + " update failed")));
     }
 
     /**
@@ -118,8 +123,14 @@ public class CartItemsController {
      */
     @IsAdmin
     @DeleteMapping(path = "/{userID}/items/{bookID}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable @Positive(groups = BasicValidation.class) Integer userID,
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's cart items", groups = ExtendedValidation.class) Integer bookID) {
+    public ResponseEntity<Void> deleteCartItem(
+            @PathVariable @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) //
+            Integer userID,//
+            @PathVariable @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) //
+            @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's cart items", groups = ExtendedValidation.class)//
+            Integer bookID) {
         cartItemsService.deleteCartItem(userID, bookID);
 
         return ResponseEntity.noContent().build();
@@ -166,13 +177,15 @@ public class CartItemsController {
      */
     @GetMapping(path = "/me/items/{bookID}")
     public ResponseEntity<CartItemReadDTO> getCartItem(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID) {
+            @PathVariable @Positive(groups = BasicValidation.class)//
+            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class)//
+            @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", useJWT = true, secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's cart items", groups = ExtendedValidation.class)//
+            Integer bookID) {
         Integer userID = authUtils.getUserIdFromAuthentication();
 
-        Optional<CartItemReadDTO> cartItem = cartItemsService.getCartItem(userID, bookID);
+        CartItemReadDTO cartItem = cartItemsService.getCartItem(userID, bookID);
 
-        return ResponseEntity.ok(cartItem.orElseThrow(
-                () -> new CartItemsNotFoundException("Cart item not found with the given JWT and book ID: " + bookID)));
+        return ResponseEntity.ok(cartItem);
     }
 
     /**
@@ -186,14 +199,16 @@ public class CartItemsController {
      */
     @PutMapping(path = "/me/items/{bookID}")
     public ResponseEntity<CartItemReadDTO> updateCartItem(
-            @PathVariable @Positive(groups = BasicValidation.class) Integer bookID,
+            @PathVariable @Positive(groups = BasicValidation.class)//
+            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class)//
+            Integer bookID,//
             @RequestBody @Valid @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", useJWT = true, secondPathVariable = "bookID", message = "No Cart item found with the given JWT and book ID", groups = ExtendedValidation.class) CartItemUpdateDTO cartItemUpdateDTO) {
         Integer userID = authUtils.getUserIdFromAuthentication();
 
         Optional<CartItemReadDTO> updatedCartItem = cartItemsService.updateCartItem(userID, bookID, cartItemUpdateDTO);
 
         return ResponseEntity.ok(updatedCartItem.orElseThrow(
-                () -> new CartItemsNotFoundException("Cart item not found with the given JWT and book ID: " + bookID)));
+                () -> new CartItemsUpdateException("Cart item with the given JWT and book ID: " + bookID + " update failed")));
     }
 
     /**
@@ -205,7 +220,10 @@ public class CartItemsController {
      */
     @DeleteMapping(path = "/me/items/{bookID}")
     public ResponseEntity<Void> deleteCartItem(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", useJWT = true, secondPathVariable = "bookID", message = "The book with the given ID is not in your cart items", groups = ExtendedValidation.class) Integer bookID) {
+            @PathVariable @Positive(groups = BasicValidation.class)//
+            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class)//
+            @ExistsCompositeResource(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", useJWT = true, secondPathVariable = "bookID", message = "The book with the given ID is not in your cart items", groups = ExtendedValidation.class)//
+            Integer bookID) {
         Integer userID = authUtils.getUserIdFromAuthentication();
 
         cartItemsService.deleteCartItem(userID, bookID);

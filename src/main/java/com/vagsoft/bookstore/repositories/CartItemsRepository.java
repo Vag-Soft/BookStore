@@ -79,6 +79,23 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     Optional<CartItem> findByUserIDAndBookID(Integer userID, Integer bookID);
 
     /**
+     * Retrieves a cart item by user ID and book ID, returning a reference
+     *
+     * @param userID
+     *            the ID of the user
+     * @param bookID
+     *            the ID of the book
+     * @return a reference to the cart item associated with the user ID and book ID
+     */
+    @Query("""
+                SELECT ci
+                FROM CartItem ci
+                INNER JOIN Cart c ON ci.book.id = :bookID AND ci.cart = c AND c.user.id = :userID
+            """)
+    CartItem getReferenceByUserIDAndBookID(Integer userID, Integer bookID);
+
+
+    /**
      * Deletes a cart item by user ID and book ID
      *
      * @param userID

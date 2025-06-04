@@ -15,8 +15,6 @@ import com.vagsoft.bookstore.models.entities.OrderItem;
 import com.vagsoft.bookstore.models.enums.Status;
 import com.vagsoft.bookstore.repositories.OrderRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -104,8 +102,8 @@ public class OrderService {
      * @return an Optional containing the OrderReadDTO
      */
     @Transactional(readOnly = true)
-    public Optional<OrderReadDTO> getOrderByID(Integer orderID) {
-        return orderRepository.findById(orderID).map(orderMapper::orderToReadDto);
+    public OrderReadDTO getOrderByID(Integer orderID) {
+        return orderMapper.orderToReadDto(orderRepository.getReferenceById(orderID));
     }
 
     /**
@@ -119,8 +117,7 @@ public class OrderService {
      */
     @Transactional
     public Optional<OrderReadDTO> updateOrderByID(Integer orderID, OrderUpdateDTO orderUpdateDTO) {
-        Order foundOrder = orderRepository.findById(orderID)
-                .orElseThrow(() -> new IllegalArgumentException("Order with ID " + orderID + " not found"));
+        Order foundOrder = orderRepository.getReferenceById(orderID);
 
         orderMapper.updateOrderFromDto(orderUpdateDTO, foundOrder);
 

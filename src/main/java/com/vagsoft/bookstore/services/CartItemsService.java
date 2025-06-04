@@ -61,8 +61,8 @@ public class CartItemsService {
      * @return the cart item associated with the user and book's ID
      */
     @Transactional(readOnly = true)
-    public Optional<CartItemReadDTO> getCartItem(Integer userID, Integer bookID) {
-        return cartItemsRepository.findByUserIDAndBookID(userID, bookID).map(cartItemMapper::cartItemToReadDto);
+    public CartItemReadDTO getCartItem(Integer userID, Integer bookID) {
+        return cartItemMapper.cartItemToReadDto(cartItemsRepository.getReferenceByUserIDAndBookID(userID, bookID));
     }
 
     /**
@@ -102,8 +102,7 @@ public class CartItemsService {
         // Requesting books from the book service to ensure availability
         bookService.requestBooks(bookID, cartItemUpdateDTO.getQuantity());
 
-        CartItem cartItem = cartItemsRepository.findByUserIDAndBookID(userID, bookID).orElseThrow(
-                () -> new RuntimeException("Cart item not found for user ID: " + userID + " and book ID: " + bookID));
+        CartItem cartItem = cartItemsRepository.getReferenceByUserIDAndBookID(userID, bookID);
 
         cartItem.setQuantity(cartItemUpdateDTO.getQuantity());
         CartItem updatedCartItem = cartItemsRepository.save(cartItem);
@@ -121,8 +120,7 @@ public class CartItemsService {
      */
     @Transactional
     public void deleteCartItem(Integer userID, Integer bookID) {
-        CartItem cartItem = cartItemsRepository.findByUserIDAndBookID(userID, bookID).orElseThrow(
-                () -> new RuntimeException("Cart item not found for user ID: " + userID + " and book ID: " + bookID));
+        CartItem cartItem = cartItemsRepository.getReferenceByUserIDAndBookID(userID, bookID);
 
         // Returning books to the book service to increase availability
         bookService.returnBooks(bookID, cartItem.getQuantity());
@@ -142,9 +140,6 @@ public class CartItemsService {
     @Transactional
     public List<CartItem> checkout(Integer userID) {
         List<CartItem> cartItems = cartItemsRepository.findAllByUserID(userID);
-        if (cartItems.isEmpty()) {
-            throw new CartItemsNotFoundException("No items in the cart of the user with ID: " + userID);
-        }
         cartItemsRepository.deleteAllByUserID(userID);
         return cartItems;
     }

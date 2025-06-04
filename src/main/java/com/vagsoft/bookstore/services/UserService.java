@@ -4,13 +4,10 @@ import java.util.Optional;
 
 import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
 import com.vagsoft.bookstore.dto.userDTOs.UserUpdateDTO;
-import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.models.entities.User;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.repositories.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,9 +59,9 @@ public class UserService {
      * @return the retrieved user
      */
     @Transactional(readOnly = true)
-    public Optional<UserReadDTO> getUserByID(Integer userID) {
-        Optional<User> foundUser = userRepository.findById(userID);
-        return foundUser.map(userMapper::userToReadDto);
+    public UserReadDTO getUserByID(Integer userID) {
+        User foundUser = userRepository.getReferenceById(userID);
+        return userMapper.userToReadDto(foundUser);
     }
 
     /**
@@ -78,8 +75,7 @@ public class UserService {
      */
     public Optional<UserReadDTO> updateUserByID(Integer userID, UserUpdateDTO userUpdateDTO) {
 
-        User foundUser = userRepository.findById(userID)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userID + " not found"));
+        User foundUser = userRepository.getReferenceById(userID);
 
         if (userUpdateDTO.getPassword() != null) {
             String hashedPassword = passwordEncoder.encode(userUpdateDTO.getPassword());

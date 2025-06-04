@@ -6,6 +6,7 @@ import com.vagsoft.bookstore.dto.orderDTOs.OrderReadDTO;
 import com.vagsoft.bookstore.dto.orderDTOs.OrderUpdateDTO;
 import com.vagsoft.bookstore.errors.exceptions.OrderCreationException;
 import com.vagsoft.bookstore.errors.exceptions.OrderNotFoundException;
+import com.vagsoft.bookstore.errors.exceptions.OrderUpdateException;
 import com.vagsoft.bookstore.models.enums.Status;
 import com.vagsoft.bookstore.repositories.OrderRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
@@ -84,10 +85,9 @@ public class OrderController {
     @GetMapping(path = "/{orderID}")
     public ResponseEntity<OrderReadDTO> getOrderByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) Integer orderID) {
-        Optional<OrderReadDTO> order = orderService.getOrderByID(orderID);
+        OrderReadDTO order = orderService.getOrderByID(orderID);
 
-        return ResponseEntity.ok(
-                order.orElseThrow(() -> new OrderNotFoundException("No order found with the given ID: " + orderID)));
+        return ResponseEntity.ok(order);
     }
 
     /**
@@ -107,7 +107,7 @@ public class OrderController {
         Optional<OrderReadDTO> updatedOrder = orderService.updateOrderByID(orderID, orderUpdateDTO);
 
         return ResponseEntity.ok(updatedOrder
-                .orElseThrow(() -> new OrderNotFoundException("No order found with the given ID: " + orderID)));
+                .orElseThrow(() -> new OrderUpdateException("Order with ID: " + orderID + " update failed")));
     }
 
     /**
@@ -161,9 +161,8 @@ public class OrderController {
     @GetMapping(path = "/me/{orderID}")
     public ResponseEntity<OrderReadDTO> getOrderMeByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUser_IdAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID) {
-        Optional<OrderReadDTO> order = orderService.getOrderByID(orderID);
+        OrderReadDTO order = orderService.getOrderByID(orderID);
 
-        return ResponseEntity.ok(
-                order.orElseThrow(() -> new OrderNotFoundException("No order found with the given ID: " + orderID)));
+        return ResponseEntity.ok(order);
     }
 }

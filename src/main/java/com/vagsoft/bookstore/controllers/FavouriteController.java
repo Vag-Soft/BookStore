@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteReadDTO;
 import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteWriteDTO;
 import com.vagsoft.bookstore.errors.exceptions.FavouriteCreationException;
+import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.FavouriteRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.FavouriteService;
@@ -88,8 +89,20 @@ public class FavouriteController {
     @ApiResponse(responseCode = "204")
     @IsAdmin
     @DeleteMapping("/{userID}/favourites/{bookID}")
-    public ResponseEntity<Void> deleteFavourite(@PathVariable @Positive(groups = BasicValidation.class) Integer userID,
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = FavouriteRepository.class, methodName = "existsByUser_IdAndBook_Id", firstPathVariable = "userID", secondPathVariable = "bookID", message = "The book with the given ID is not in the given user's favourites", groups = ExtendedValidation.class) Integer bookID) {
+    public ResponseEntity<Void> deleteFavourite(//
+            @PathVariable @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) //
+            Integer userID, //
+            @PathVariable @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class)//
+            @ExistsCompositeResource(//
+                    repository = FavouriteRepository.class, //
+                    methodName = "existsByUser_IdAndBook_Id", //
+                    firstPathVariable = "userID", //
+                    secondPathVariable = "bookID", //
+                    message = "The book with the given ID is not in the given user's favourites", //
+                    groups = ExtendedValidation.class) //
+            Integer bookID) {
         favouriteService.deleteFavourite(userID, bookID);
 
         return ResponseEntity.noContent().build();

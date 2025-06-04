@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 import com.vagsoft.bookstore.errors.exceptions.ResourceCreationException;
 import com.vagsoft.bookstore.errors.exceptions.ResourceNotFoundException;
+import com.vagsoft.bookstore.errors.exceptions.ResourceUpdateException;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ public class GlobalControllerAdvice {
         log.error("ArgumentException", ex);
 
         if (ex.getCause() instanceof ResourceNotFoundException) {
-            return handleResourceNotFoundException((ResourceNotFoundException) ex.getCause()); 
+            return handleResourceNotFoundException((ResourceNotFoundException) ex.getCause());
         }
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
@@ -139,6 +140,24 @@ public class GlobalControllerAdvice {
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setTitle("Resource not found");
+        return problemDetail;
+    }
+
+    /**
+     * Handles resource update exceptions
+     *
+     * @param ex
+     *            the {@link ResourceUpdateException} to handle
+     * @return a {@link ProblemDetail} with the error details
+     */
+    @ExceptionHandler(ResourceUpdateException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ProblemDetail handleResourceUpdateException(ResourceUpdateException ex) {
+        log.error("ResourceUpdateException", ex);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage());
+        problemDetail.setTitle("Resource update failed");
         return problemDetail;
     }
 

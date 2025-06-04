@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
 import com.vagsoft.bookstore.dto.userDTOs.UserUpdateDTO;
-import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
+import com.vagsoft.bookstore.errors.exceptions.UserUpdateException;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.UserService;
@@ -77,9 +77,8 @@ public class UserController {
     @GetMapping(path = "/{userID}")
     public ResponseEntity<UserReadDTO> getUserByID(
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
-        Optional<UserReadDTO> foundUser = userService.getUserByID(userID);
-        return ResponseEntity
-                .ok(foundUser.orElseThrow(() -> new UserNotFoundException("No user found with the given ID")));
+        UserReadDTO foundUser = userService.getUserByID(userID);
+        return ResponseEntity.ok(foundUser);
     }
 
     /**
@@ -97,8 +96,7 @@ public class UserController {
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
             @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
         Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
-        return ResponseEntity
-                .ok(updatedUser.orElseThrow(() -> new UserNotFoundException("No user found with the given ID")));
+        return ResponseEntity.ok(updatedUser.orElseThrow(() -> new UserUpdateException("User with ID:" + userID + " update failed")));
     }
 
     /**
@@ -127,10 +125,9 @@ public class UserController {
     public ResponseEntity<UserReadDTO> getPrincipalUser() {
         Integer userID = authUtils.getUserIdFromAuthentication();
 
-        Optional<UserReadDTO> foundUser = userService.getUserByID(userID);
+        UserReadDTO foundUser = userService.getUserByID(userID);
 
-        return ResponseEntity
-                .ok(foundUser.orElseThrow(() -> new UserNotFoundException("No user found with the given JWT token")));
+        return ResponseEntity.ok(foundUser);
     }
 
     /**
@@ -146,8 +143,7 @@ public class UserController {
 
         Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
 
-        return ResponseEntity
-                .ok(updatedUser.orElseThrow(() -> new UserNotFoundException("No user found with the given JWT token")));
+        return ResponseEntity.ok(updatedUser.orElseThrow(() -> new UserUpdateException("User with ID:" + userID + " update failed")));
     }
 
     /**

@@ -74,9 +74,9 @@ public class BookService {
      * @return the retrieved book
      */
     @Transactional(readOnly = true)
-    public Optional<BookReadDTO> getBookByID(Integer bookID) {
-        Optional<Book> foundBook = bookRepository.findById(bookID);
-        return foundBook.map(bookMapper::bookToReadDto);
+    public BookReadDTO getBookByID(Integer bookID) {
+        Book foundBook = bookRepository.getReferenceById(bookID);
+        return bookMapper.bookToReadDto(foundBook);
     }
 
     /**
@@ -91,8 +91,7 @@ public class BookService {
     @Transactional
     public Optional<BookReadDTO> updateBookByID(Integer bookID, BookUpdateDTO bookUpdateDTO) {
 
-        Book foundBook = bookRepository.findById(bookID)
-                .orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID));
+        Book foundBook = bookRepository.getReferenceById(bookID);
 
         bookMapper.updateBookFromDto(bookUpdateDTO, foundBook);
 

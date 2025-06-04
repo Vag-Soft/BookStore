@@ -118,39 +118,18 @@ class BookServiceTest {
     @DisplayName("getBookByID(1) - Success")
     void getBookByIDFound() {
         when(bookRepository.existsById(1)).thenReturn(true);
-        when(bookRepository.findById(1)).thenReturn(Optional.of(storedBooks.getFirst()));
+        when(bookRepository.getReferenceById(1)).thenReturn(storedBooks.getFirst());
 
-        Optional<BookReadDTO> result = bookService.getBookByID(1);
-
-        assertFalse(result.isEmpty());
-        assertEquals(storedBooks.getFirst().getId(), result.get().getId());
-        assertEquals(storedBooks.getFirst().getTitle(), result.get().getTitle());
-        assertEquals(storedBooks.getFirst().getAuthor(), result.get().getAuthor());
-        assertEquals(storedBooks.getFirst().getDescription(), result.get().getDescription());
-        assertEquals(storedBooks.getFirst().getPrice(), result.get().getPrice());
-        assertEquals(storedBooks.getFirst().getAvailability(), result.get().getAvailability());
-        assertEquals(storedBooks.getFirst().getIsbn(), result.get().getIsbn());
-        assertTrue(result.get().getGenres().isEmpty());
-    }
-
-    @Test
-    @DisplayName("getBookByID(999) - Not Found")
-    void getBookByIDNotFound() {
-        when(bookRepository.existsById(999)).thenReturn(false);
-        when(bookRepository.findById(999)).thenReturn(Optional.empty());
-
-        Optional<BookReadDTO> result = bookService.getBookByID(999);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    @DisplayName("getBookByID(-1) - Invalid ID")
-    void getBookByIDInvalid() {
-        when(bookRepository.existsById(-1)).thenReturn(false);
-        Optional<BookReadDTO> result = bookService.getBookByID(-1);
-
-        assertTrue(result.isEmpty());
+        BookReadDTO result = bookService.getBookByID(1);
+        assertNotNull(result);
+        assertEquals(storedBooks.getFirst().getId(), result.getId());
+        assertEquals(storedBooks.getFirst().getTitle(), result.getTitle());
+        assertEquals(storedBooks.getFirst().getAuthor(), result.getAuthor());
+        assertEquals(storedBooks.getFirst().getDescription(), result.getDescription());
+        assertEquals(storedBooks.getFirst().getPrice(), result.getPrice());
+        assertEquals(storedBooks.getFirst().getAvailability(), result.getAvailability());
+        assertEquals(storedBooks.getFirst().getIsbn(), result.getIsbn());
+        assertTrue(result.getGenres().isEmpty());
     }
 
     @Test
@@ -160,7 +139,7 @@ class BookServiceTest {
         updateBookDTO.setTitle("New Title");
 
         when(bookRepository.existsById(1)).thenReturn(true);
-        when(bookRepository.findById(1)).thenReturn(Optional.of(storedBooks.getFirst()));
+        when(bookRepository.getReferenceById(1)).thenReturn(storedBooks.getFirst());
 
         Book updatedBook = storedBooks.getFirst();
         updatedBook.setTitle(updateBookDTO.getTitle());
@@ -179,27 +158,6 @@ class BookServiceTest {
         assertTrue(result.get().getGenres().isEmpty());
     }
 
-    @Test
-    @DisplayName("updateBookByID(999) - Not Found")
-    void updateBookByIDNotFound() {
-        BookUpdateDTO updateBookDTO = new BookUpdateDTO();
-        updateBookDTO.setTitle("New Title");
-
-        when(bookRepository.existsById(999)).thenReturn(false);
-
-        assertThrows(BookNotFoundException.class, () -> bookService.updateBookByID(999, updateBookDTO));
-    }
-
-    @Test
-    @DisplayName("updateBookByID(-1) - Invalid ID")
-    void updateBookByIDInvalid() {
-        BookUpdateDTO updateBookDTO = new BookUpdateDTO();
-        updateBookDTO.setTitle("New Title");
-
-        when(bookRepository.existsById(-1)).thenReturn(false);
-
-        assertThrows(BookNotFoundException.class, () -> bookService.updateBookByID(-1, updateBookDTO));
-    }
 
     @Test
     @DisplayName("deleteBookByID(1) - Success")
@@ -211,27 +169,4 @@ class BookServiceTest {
 
         verify(bookRepository).deleteById(1);
     }
-
-    @Test
-    @DisplayName("deleteBookByID(999) - Not Found")
-    void deleteBookByIDNotFound() {
-        when(bookRepository.existsById(999)).thenReturn(false);
-        doThrow(new BookNotFoundException("No book found with the given ID: 999")).when(bookRepository).deleteById(999);
-
-        assertThrows(BookNotFoundException.class, () -> bookService.deleteBookByID(999));
-
-        verify(bookRepository).deleteById(999);
-    }
-
-    @Test
-    @DisplayName("deleteBookByID(-1) - Invalid ID")
-    void deleteBookByIDInvalid() {
-        when(bookRepository.existsById(-1)).thenReturn(false);
-        doThrow(new IllegalArgumentException("Invalid Book ID: -1")).when(bookRepository).deleteById(-1);
-
-        assertThrows(IllegalArgumentException.class, () -> bookService.deleteBookByID(-1));
-
-        verify(bookRepository).deleteById(-1);
-    }
-
 }

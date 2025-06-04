@@ -20,5 +20,12 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
      */
     Optional<Cart> findByUser_Id(Integer userID);
 
+    /**
+     * Gets a reference to a cart by its user ID
+     *
+     * @param userID
+     *            the ID of the user whose cart is to be referenced
+     * @return the Cart entity associated with the user ID
+     */
     Cart getReferenceByUser_Id(Integer userID);
 }

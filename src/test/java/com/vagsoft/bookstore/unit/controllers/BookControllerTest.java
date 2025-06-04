@@ -159,7 +159,7 @@ class BookControllerTest {
     void getBookByIDFound() throws Exception {
         BookReadDTO bookOutput = storedBooks.getFirst();
         when(bookRepository.existsById(1)).thenReturn(true);
-        when(bookService.getBookByID(1)).thenReturn(Optional.ofNullable(bookOutput));
+        when(bookService.getBookByID(1)).thenReturn(bookOutput);
 
         assertNotNull(bookOutput);
         mockMvc.perform(get("/books/{bookID}", 1)).andExpect(status().isOk())
@@ -179,7 +179,6 @@ class BookControllerTest {
     @DisplayName("GET /books/999} - Not Found")
     void getBookByIDNotFound() throws Exception {
         when(bookRepository.existsById(999)).thenReturn(false);
-        when(bookService.getBookByID(999)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/books/{bookID}", 999)).andExpect(status().isNotFound());
     }
@@ -229,7 +228,6 @@ class BookControllerTest {
         bookUpdateDTO.setGenres(List.of(new GenreDTO(4, "genre2")));
 
         when(bookRepository.existsById(999)).thenReturn(false);
-        when(bookService.getBookByID(999)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/books/{bookID}", 999).contentType("application/json")
                 .content(objectMapper.writeValueAsString(bookUpdateDTO))).andExpect(status().isNotFound());
@@ -243,7 +241,6 @@ class BookControllerTest {
         bookUpdateDTO.setGenres(List.of(new GenreDTO(4, "genre2")));
 
         when(bookRepository.existsById(-1)).thenReturn(false);
-        when(bookService.getBookByID(-1)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/books/{bookID}", -1).contentType("application/json")
                 .content(objectMapper.writeValueAsString(bookUpdateDTO))).andExpect(status().isBadRequest());

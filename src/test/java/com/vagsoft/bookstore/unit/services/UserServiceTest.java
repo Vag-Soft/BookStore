@@ -87,33 +87,11 @@ class UserServiceTest {
     @DisplayName("getUserByID(1) - Success")
     void getUserByIDFound() {
         when(userRepository.existsById(1)).thenReturn(true);
-        when(userRepository.findById(1)).thenReturn(Optional.of(storedUsers.getFirst()));
+        when(userRepository.getReferenceById(1)).thenReturn(storedUsers.getFirst());
 
-        Optional<UserReadDTO> result = userService.getUserByID(1);
-
-        assertFalse(result.isEmpty());
-        assertEquals(userMapper.userToReadDto(storedUsers.getFirst()), result.get());
-    }
-
-    @Test
-    @DisplayName("getUserByID(999) - Not Found")
-    void getUserByIDNotFound() {
-        when(userRepository.existsById(999)).thenReturn(false);
-        when(userRepository.findById(999)).thenReturn(Optional.empty());
-
-        Optional<UserReadDTO> result = userService.getUserByID(999);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    @DisplayName("getUserByID(-1) - Invalid ID")
-    void getUserByIDInvalid() {
-        when(userRepository.existsById(-1)).thenReturn(false);
-
-        Optional<UserReadDTO> result = userService.getUserByID(-1);
-
-        assertTrue(result.isEmpty());
+        UserReadDTO result = userService.getUserByID(1);
+        assertNotNull(result);
+        assertEquals(userMapper.userToReadDto(storedUsers.getFirst()), result);
     }
 
     @Test
@@ -123,7 +101,7 @@ class UserServiceTest {
         userUpdateDTO.setUsername("jane");
 
         when(userRepository.existsById(1)).thenReturn(true);
-        when(userRepository.findById(1)).thenReturn(Optional.of(storedUsers.getFirst()));
+        when(userRepository.getReferenceById(1)).thenReturn(storedUsers.getFirst());
 
         User updatedUser = storedUsers.getFirst();
         updatedUser.setUsername(userUpdateDTO.getUsername());
@@ -135,27 +113,6 @@ class UserServiceTest {
         assertEquals(userMapper.userToReadDto(updatedUser), result.get());
     }
 
-    @Test
-    @DisplayName("updateUserByID(999) - Not Found")
-    void updateUserByIDNotFound() {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
-        userUpdateDTO.setUsername("jane");
-
-        when(userRepository.existsById(999)).thenReturn(false);
-
-        assertThrows(UserNotFoundException.class, () -> userService.updateUserByID(999, userUpdateDTO));
-    }
-
-    @Test
-    @DisplayName("updateUserByID(-1) - Invalid ID")
-    void updateUserByIDInvalid() {
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO();
-        userUpdateDTO.setUsername("jane");
-
-        when(userRepository.existsById(-1)).thenReturn(false);
-
-        assertThrows(UserNotFoundException.class, () -> userService.updateUserByID(-1, userUpdateDTO));
-    }
 
     @Test
     @DisplayName("deleteUserByID(1) - Success")
@@ -166,27 +123,5 @@ class UserServiceTest {
         userService.deleteUserByID(1);
 
         verify(userRepository).deleteById(1);
-    }
-
-    @Test
-    @DisplayName("deleteUserByID(999) - Not Found")
-    void deletedUserByIDNotFound() {
-        when(userRepository.existsById(999)).thenReturn(false);
-        doThrow(new UserNotFoundException("No user found with the given ID: 999")).when(userRepository).deleteById(999);
-
-        assertThrows(UserNotFoundException.class, () -> userService.deleteUserByID(999));
-
-        verify(userRepository).deleteById(999);
-    }
-
-    @Test
-    @DisplayName("deleteUserByID(-1) - Invalid ID")
-    void deletedUserByIDInvalid() {
-        when(userRepository.existsById(-1)).thenReturn(false);
-        doThrow(new IllegalArgumentException("Invalid User ID: -1")).when(userRepository).deleteById(-1);
-
-        assertThrows(IllegalArgumentException.class, () -> userService.deleteUserByID(-1));
-
-        verify(userRepository).deleteById(-1);
     }
 }

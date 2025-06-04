@@ -111,7 +111,7 @@ class UserControllerTest {
         UserReadDTO userOutput = storedUsers.getFirst();
 
         when(userRepository.existsById(1)).thenReturn(true);
-        when(userService.getUserByID(1)).thenReturn(Optional.ofNullable(userOutput));
+        when(userService.getUserByID(1)).thenReturn(userOutput);
 
         assertNotNull(userOutput);
         mockMvc.perform(get("/users/{userID}", 1)).andExpect(status().isOk())
@@ -129,8 +129,6 @@ class UserControllerTest {
     @DisplayName("GET /users/999} - Not Found")
     void getUserByIDNotFound() throws Exception {
         when(userRepository.existsById(999)).thenReturn(false);
-        when(userService.getUserByID(999)).thenReturn(Optional.empty());
-
         mockMvc.perform(get("/users/{userID}", 999)).andExpect(status().isNotFound());
     }
 
