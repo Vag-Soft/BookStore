@@ -40,8 +40,7 @@ public class GlobalControllerAdvice {
         log.error("ArgumentException", ex);
 
         if (ex.getCause() instanceof ResourceNotFoundException) {
-            return handleResourceNotFoundException((ResourceNotFoundException) ex.getCause()); // TODO: handle this case
-                                                                                               // more gracefully
+            return handleResourceNotFoundException((ResourceNotFoundException) ex.getCause()); 
         }
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());

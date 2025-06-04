@@ -99,7 +99,7 @@ public interface BookMapper {
 
     /**
      * Links the genre ids of the Book to the non null genre ids of the
-     * BookUpdateDTO, to be able to update the genres and avoide deletion
+     * BookUpdateDTO, to be able to update the genres and avoid deletion
      *
      * @param genreDto
      *            the BookUpdateDTO that was used in the mapping

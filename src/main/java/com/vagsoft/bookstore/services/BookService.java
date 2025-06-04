@@ -113,7 +113,7 @@ public class BookService {
     }
 
     /**
-     * Checks if a book has enough stock and delets the requested quantity from the
+     * Checks if a book has enough stock and deletes the requested quantity from the
      * stock.
      *
      * @param bookID
