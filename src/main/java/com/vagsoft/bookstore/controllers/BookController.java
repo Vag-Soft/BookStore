@@ -40,17 +40,17 @@ public class BookController {
      * Retrieves a list of books filtered by the specified parameters
      *
      * @param title
-     *            the title of the books search for (optional)
+     *            the title of the books to search for (optional)
      * @param genre
-     *            the genre of the books search for (optional)
+     *            the genre of the books to search for (optional)
      * @param author
-     *            the author of the books search for (optional)
+     *            the author of the books to search for (optional)
      * @param description
-     *            the description of the books search for (optional)
+     *            the description of the books to search for (optional)
      * @param minPrice
-     *            the minimum price of the books search for (optional)
+     *            the minimum price of the books to search for (optional)
      * @param maxPrice
-     *            the maximum price of the books search for (optional)
+     *            the maximum price of the books to search for (optional)
      * @param pageable
      *            the pagination information (optional)
      * @return a page of books

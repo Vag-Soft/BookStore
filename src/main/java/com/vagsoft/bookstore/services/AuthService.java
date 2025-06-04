@@ -25,12 +25,11 @@ public class AuthService {
     private final CartService cartService;
 
     public AuthService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager, AuthenticationManager authenticationManager1,
-            JwtService jwtService, CartService cartService) {
+            AuthenticationManager authenticationManager, JwtService jwtService, CartService cartService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager1;
+        this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.cartService = cartService;
     }

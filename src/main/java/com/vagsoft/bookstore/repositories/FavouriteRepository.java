@@ -21,7 +21,7 @@ public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
     Page<Favourite> findFavouritesByUser_Id(Integer userID, Pageable pageable);
 
     /**
-     * Checks if a favourite books exists for a specific user
+     * Checks if a favourite book exists for a specific user
      *
      * @param userID
      *            the ID of the user

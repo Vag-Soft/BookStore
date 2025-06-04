@@ -56,7 +56,6 @@ public class FavouriteService {
     @Transactional
     public Optional<FavouriteReadDTO> addFavourite(Integer userID, FavouriteWriteDTO favouriteWriteDTO) {
         Favourite favouriteToSave = favouriteMapper.dtoToFavourite(favouriteWriteDTO);
-        // favouriteToSave.setUserID(userID);
         favouriteToSave.setUser(userRepository.getReferenceById(userID));
         favouriteToSave.setBook(bookRepository.getReferenceById(favouriteWriteDTO.getBookID()));
 

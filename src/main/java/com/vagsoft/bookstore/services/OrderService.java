@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 /** Service class for order operations */
 @Service
 public class OrderService {
-    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final CartItemsService cartItemsService;
@@ -82,9 +81,7 @@ public class OrderService {
         Order orderToSave = new Order();
 
         List<OrderItem> orderItems = orderItemMapper.cartItemsToOrderItems(cartItems);
-        orderItems.forEach(orderItem -> {
-            orderItem.setOrder(orderToSave);
-        });
+        orderItems.forEach(orderItem -> orderItem.setOrder(orderToSave));
 
         // Setting order properties
         orderToSave.setUser(userRepository.getReferenceById(userID));

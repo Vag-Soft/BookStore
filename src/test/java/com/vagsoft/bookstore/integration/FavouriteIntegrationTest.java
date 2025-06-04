@@ -135,7 +135,7 @@ public class FavouriteIntegrationTest {
     void getUsersIDFavouritesNotFound() {
         URI uri = UriComponentsBuilder.fromUriString("/users/999/favourites").build().encode().toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>>() {
+        ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType = new ParameterizedTypeReference<>() {
         };
         ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response = client.exchange(uri, HttpMethod.GET, null,
                 classType);
@@ -151,7 +151,7 @@ public class FavouriteIntegrationTest {
     void getUsersIDFavouritesInvalid() {
         URI uri = UriComponentsBuilder.fromUriString("/users/-1/favourites").build().encode().toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>>() {
+        ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType = new ParameterizedTypeReference<>() {
         };
         ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response = client.exchange(uri, HttpMethod.GET, null,
                 classType);
@@ -249,7 +249,7 @@ public class FavouriteIntegrationTest {
         URI uri = UriComponentsBuilder.fromUriString("/users/me/favourites").build().encode().toUri();
 
         ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType =
-            new ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>>() {};
+            new ParameterizedTypeReference<>() {};
         ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response =
             client.exchange(uri, HttpMethod.GET, null, classType);
 
@@ -273,7 +273,7 @@ public class FavouriteIntegrationTest {
         URI uri = UriComponentsBuilder.fromUriString("/users/me/favourites").build().encode().toUri();
 
         ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>> classType =
-            new ParameterizedTypeReference<CustomPageImpl<FavouriteReadDTO>>() {};
+            new ParameterizedTypeReference<>() {};
         ResponseEntity<CustomPageImpl<FavouriteReadDTO>> response =
             client.exchange(uri, HttpMethod.GET, null, classType);
 

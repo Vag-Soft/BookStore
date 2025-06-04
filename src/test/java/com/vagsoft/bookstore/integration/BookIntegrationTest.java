@@ -81,10 +81,10 @@ public class BookIntegrationTest {
 
     @Test
     @DisplayName("GET /books - Success No Filters")
-    void getBooksNoFilters() throws Exception {
+    void getBooksNoFilters() {
         URI uri = UriComponentsBuilder.fromUriString("/books").build().encode().toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<BookReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<BookReadDTO>>() {
+        ParameterizedTypeReference<CustomPageImpl<BookReadDTO>> classType = new ParameterizedTypeReference<>() {
         };
         ResponseEntity<CustomPageImpl<BookReadDTO>> response = client.exchange(uri, HttpMethod.GET, null, classType);
 
@@ -101,12 +101,12 @@ public class BookIntegrationTest {
 
     @Test
     @DisplayName("GET /books - Success With Filters")
-    void getBooksWithFilters() throws Exception {
+    void getBooksWithFilters() {
         URI uri = UriComponentsBuilder.fromUriString("/books").queryParam("page", 0).queryParam("size", 20)
                 .queryParam("title", "harry").queryParam("author", "J. K. Rowling").queryParam("genre", "fantasy")
                 .queryParam("description", "novel").build().encode().toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<BookReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<BookReadDTO>>() {
+        ParameterizedTypeReference<CustomPageImpl<BookReadDTO>> classType = new ParameterizedTypeReference<>() {
         };
         ResponseEntity<CustomPageImpl<BookReadDTO>> response = client.exchange(uri, HttpMethod.GET, null, classType);
 
@@ -133,7 +133,7 @@ public class BookIntegrationTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<String>(newBookString, headers);
+        HttpEntity<String> request = new HttpEntity<>(newBookString, headers);
 
         ResponseEntity<BookReadDTO> response = client.postForEntity("/books", request, BookReadDTO.class);
 
@@ -160,7 +160,7 @@ public class BookIntegrationTest {
 
     @Test
     @DisplayName("GET /books/{bookID} - Success")
-    void getBookByIDFound() throws Exception {
+    void getBookByIDFound(){
         ResponseEntity<BookReadDTO> response = client.getForEntity("/books/" + book1.getId(), BookReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -171,7 +171,7 @@ public class BookIntegrationTest {
 
     @Test
     @DisplayName("GET /books/999 - Not Found")
-    void getBookByIDNotFound() throws Exception {
+    void getBookByIDNotFound() {
         ResponseEntity<BookReadDTO> response = client.getForEntity("/books/999", BookReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
@@ -179,7 +179,7 @@ public class BookIntegrationTest {
 
     @Test
     @DisplayName("GET /books/-1 - Invalid ID")
-    void getBookByIDInvalid() throws Exception {
+    void getBookByIDInvalid(){
         ResponseEntity<BookReadDTO> response = client.getForEntity("/books/-1", BookReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
@@ -195,7 +195,7 @@ public class BookIntegrationTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<String>(updateBookString, headers);
+        HttpEntity<String> request = new HttpEntity<>(updateBookString, headers);
 
         ResponseEntity<BookReadDTO> response = client.exchange("/books/" + book1.getId(), HttpMethod.PUT, request,
                 BookReadDTO.class);
@@ -231,7 +231,7 @@ public class BookIntegrationTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<String>(updateBookString, headers);
+        HttpEntity<String> request = new HttpEntity<>(updateBookString, headers);
 
         ResponseEntity<BookReadDTO> response = client.exchange("/books/999", HttpMethod.PUT, request,
                 BookReadDTO.class);
@@ -252,7 +252,7 @@ public class BookIntegrationTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<String>(updateBookString, headers);
+        HttpEntity<String> request = new HttpEntity<>(updateBookString, headers);
 
         ResponseEntity<BookReadDTO> response = client.exchange("/books/-1", HttpMethod.PUT, request, BookReadDTO.class);
 
@@ -264,7 +264,7 @@ public class BookIntegrationTest {
 
     @Test
     @DisplayName("DELETE /books/{bookID} - Success")
-    void deleteBookByIDFound() throws Exception {
+    void deleteBookByIDFound() {
         ResponseEntity<Void> response = client.exchange("/books/" + book1.getId(), HttpMethod.DELETE, null, Void.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
 
@@ -274,7 +274,7 @@ public class BookIntegrationTest {
 
     @Test
     @DisplayName("DELETE /books/999 - Not Found")
-    void deleteBookByIDNotFound() throws Exception {
+    void deleteBookByIDNotFound() {
         ResponseEntity<Void> response = client.exchange("/books/999", HttpMethod.DELETE, null, Void.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
 
@@ -284,7 +284,7 @@ public class BookIntegrationTest {
 
     @Test
     @DisplayName("DELETE /books/-1 - Invalid ID")
-    void deleteBookByIDInvalid() throws Exception {
+    void deleteBookByIDInvalid() {
         ResponseEntity<Void> response = client.exchange("/books/-1", HttpMethod.DELETE, null, Void.class);
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
 

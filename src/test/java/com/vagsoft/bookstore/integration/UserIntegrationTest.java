@@ -64,10 +64,10 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("GET /users - Success No Filters")
-    void getUsersNoFilters() throws Exception {
+    void getUsersNoFilters() {
         URI uri = UriComponentsBuilder.fromUriString("/users").build().encode().toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<UserReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<UserReadDTO>>() {
+        ParameterizedTypeReference<CustomPageImpl<UserReadDTO>> classType = new ParameterizedTypeReference<>() {
         };
         ResponseEntity<CustomPageImpl<UserReadDTO>> response = client.exchange(uri, HttpMethod.GET, null, classType);
 
@@ -84,11 +84,11 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("GET /users - Success With Filters")
-    void getUsersWithFilters() throws Exception {
+    void getUsersWithFilters() {
         URI uri = UriComponentsBuilder.fromUriString("/users").queryParam("email", "johnson@")
                 .queryParam("role", "ADMIN").queryParam("page", 0).queryParam("size", 20).build().encode().toUri();
 
-        ParameterizedTypeReference<CustomPageImpl<UserReadDTO>> classType = new ParameterizedTypeReference<CustomPageImpl<UserReadDTO>>() {
+        ParameterizedTypeReference<CustomPageImpl<UserReadDTO>> classType = new ParameterizedTypeReference<>() {
         };
         ResponseEntity<CustomPageImpl<UserReadDTO>> response = client.exchange(uri, HttpMethod.GET, null, classType);
 
@@ -102,7 +102,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("GET /users/{userID} - Success")
-    void getUserByIDFound() throws Exception {
+    void getUserByIDFound() {
         ResponseEntity<UserReadDTO> response = client.getForEntity("/users/" + user1.getId(), UserReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -112,7 +112,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("GET /users/999 - Not Found")
-    void getUserByIDNotFound() throws Exception {
+    void getUserByIDNotFound() {
         ResponseEntity<UserReadDTO> response = client.getForEntity("/users/999", UserReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
@@ -120,7 +120,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("GET /users/-1 - Invalid ID")
-    void getUserByIDInvalid() throws Exception {
+    void getUserByIDInvalid() {
         ResponseEntity<UserReadDTO> response = client.getForEntity("/users/-1", UserReadDTO.class);
 
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
@@ -200,7 +200,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("DELETE /users/{userID} - Success")
-    void deleteUserByIDFound() throws Exception {
+    void deleteUserByIDFound() {
         ResponseEntity<Void> response = client.exchange("/users/" + user1.getId(), HttpMethod.DELETE, null, Void.class);
 
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
@@ -210,7 +210,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("DELETE /users/999 - Not Found")
-    void deleteUserByIDNotFound() throws Exception {
+    void deleteUserByIDNotFound() {
         ResponseEntity<Void> response = client.exchange("/users/999", HttpMethod.DELETE, null, Void.class);
 
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
@@ -220,7 +220,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("DELETE /users/-1 - Invalid ID")
-    void deleteUserByIDInvalid() throws Exception {
+    void deleteUserByIDInvalid() {
         ResponseEntity<Void> response = client.exchange("/users/-1", HttpMethod.DELETE, null, Void.class);
 
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
@@ -230,7 +230,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("GET /users/me - Success")
-    void getUsersMe() throws Exception {
+    void getUsersMe() {
         when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
         ResponseEntity<UserReadDTO> response = client.getForEntity("/users/me", UserReadDTO.class);
 
@@ -241,7 +241,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("GET /users/me - Error JWT")
-    void getUsersMeError() throws Exception {
+    void getUsersMeError() {
         when(authUtils.getUserIdFromAuthentication())
                 .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
         ResponseEntity<UserReadDTO> response = client.getForEntity("/users/me", UserReadDTO.class);
@@ -306,7 +306,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("DELETE /users/me - Success")
-    void deleteUserMe() throws Exception {
+    void deleteUserMe() {
         lenient().when(authUtils.getUserIdFromAuthentication()).thenReturn(user1.getId());
 
         ResponseEntity<Void> response = client.exchange("/users/me", HttpMethod.DELETE, null, Void.class);
@@ -318,7 +318,7 @@ public class UserIntegrationTest {
 
     @Test
     @DisplayName("DELETE /users/me - Error JWT")
-    void deleteUserMeError() throws Exception {
+    void deleteUserMeError() {
         lenient().when(authUtils.getUserIdFromAuthentication())
                 .thenThrow(new IllegalArgumentException("Invalid Jwt token"));
 
