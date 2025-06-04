@@ -47,14 +47,14 @@ public class AuthService {
         String hashedPassword = passwordEncoder.encode(userWriteDTO.getPassword());
         userWriteDTO.setPassword(hashedPassword);
 
-        User userToSave = userMapper.DtoToUser(userWriteDTO);
+        User userToSave = userMapper.dtoToUser(userWriteDTO);
 
         User savedUser = userRepository.save(userToSave);
 
         // Create an empty cart for the newly registered user
         cartService.createEmptyCart(savedUser);
 
-        return Optional.of(userMapper.UserToReadDto(savedUser));
+        return Optional.of(userMapper.userToReadDto(savedUser));
     }
 
     /**

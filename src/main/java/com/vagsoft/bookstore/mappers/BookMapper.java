@@ -22,7 +22,7 @@ public interface BookMapper {
      *            the BookReadDTO to be converted
      * @return the converted Book entity
      */
-    Book DtoToBook(BookReadDTO bookReadDTO);
+    Book dtoToBook(BookReadDTO bookReadDTO);
 
     /**
      * Converts a BookWriteDTO to a Book entity
@@ -32,7 +32,7 @@ public interface BookMapper {
      * @return the converted Book entity
      */
     @Mapping(ignore = true, target = "bookUpdateDTO.id")
-    Book DtoToBook(BookWriteDTO bookWriteDTO);
+    Book dtoToBook(BookWriteDTO bookWriteDTO);
 
     /**
      * Converts a BookUpdateDTO to a Book entity
@@ -42,7 +42,7 @@ public interface BookMapper {
      * @return the converted Book entity
      */
     @Mapping(ignore = true, target = "bookUpdateDTO.id")
-    Book DtoToBook(BookUpdateDTO bookUpdateDTO);
+    Book dtoToBook(BookUpdateDTO bookUpdateDTO);
 
     /**
      * Converts a Book entity to a BookReadDTO
@@ -51,7 +51,7 @@ public interface BookMapper {
      *            the Book entity to be converted
      * @return the converted BookReadDTO
      */
-    BookReadDTO BookToReadDto(Book book);
+    BookReadDTO bookToReadDto(Book book);
 
     /**
      * Converts a Book entity to a BookWriteDTO
@@ -60,7 +60,7 @@ public interface BookMapper {
      *            the Book entity to be converted
      * @return the converted BookWriteDTO
      */
-    BookWriteDTO BookToWriteDto(Book book);
+    BookWriteDTO bookToWriteDto(Book book);
 
     /**
      * Converts a Book entity to a BookUpdateDTO
@@ -69,7 +69,7 @@ public interface BookMapper {
      *            the Book entity to be converted
      * @return the converted BookUpdateDTO
      */
-    BookUpdateDTO BookToUpdateDto(Book book);
+    BookUpdateDTO bookToUpdateDto(Book book);
 
     /**
      * Updates a Book entity from a BookUpdateDTO, ignoring null values

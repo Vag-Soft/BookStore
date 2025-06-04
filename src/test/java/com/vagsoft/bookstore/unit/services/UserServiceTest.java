@@ -65,8 +65,8 @@ class UserServiceTest {
         Page<UserReadDTO> result = userService.getUsers(null, null, null, null, null, pageable);
 
         assertEquals(2, result.getContent().size());
-        assertEquals(userMapper.UserToReadDto(storedUsers.get(0)), result.getContent().get(0));
-        assertEquals(userMapper.UserToReadDto(storedUsers.get(1)), result.getContent().get(1));
+        assertEquals(userMapper.userToReadDto(storedUsers.get(0)), result.getContent().get(0));
+        assertEquals(userMapper.userToReadDto(storedUsers.get(1)), result.getContent().get(1));
     }
 
     @Test
@@ -80,7 +80,7 @@ class UserServiceTest {
         Page<UserReadDTO> result = userService.getUsers(null, null, Role.USER, null, null, pageable);
 
         assertEquals(1, result.getContent().size());
-        assertEquals(userMapper.UserToReadDto(storedUsers.getFirst()), result.getContent().getFirst());
+        assertEquals(userMapper.userToReadDto(storedUsers.getFirst()), result.getContent().getFirst());
     }
 
     @Test
@@ -92,7 +92,7 @@ class UserServiceTest {
         Optional<UserReadDTO> result = userService.getUserByID(1);
 
         assertFalse(result.isEmpty());
-        assertEquals(userMapper.UserToReadDto(storedUsers.getFirst()), result.get());
+        assertEquals(userMapper.userToReadDto(storedUsers.getFirst()), result.get());
     }
 
     @Test
@@ -132,7 +132,7 @@ class UserServiceTest {
 
         Optional<UserReadDTO> result = userService.updateUserByID(1, userUpdateDTO);
         assertFalse(result.isEmpty());
-        assertEquals(userMapper.UserToReadDto(updatedUser), result.get());
+        assertEquals(userMapper.userToReadDto(updatedUser), result.get());
     }
 
     @Test

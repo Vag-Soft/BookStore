@@ -60,10 +60,10 @@ public class BookService {
      */
     @Transactional
     public Optional<BookReadDTO> addBook(BookWriteDTO bookWriteDTO) {
-        Book bookToSave = bookMapper.DtoToBook(bookWriteDTO);
+        Book bookToSave = bookMapper.dtoToBook(bookWriteDTO);
 
         Book savedBook = bookRepository.save(bookToSave);
-        return Optional.of(bookMapper.BookToReadDto(savedBook));
+        return Optional.of(bookMapper.bookToReadDto(savedBook));
     }
 
     /**
@@ -76,7 +76,7 @@ public class BookService {
     @Transactional(readOnly = true)
     public Optional<BookReadDTO> getBookByID(Integer bookID) {
         Optional<Book> foundBook = bookRepository.findById(bookID);
-        return foundBook.map(bookMapper::BookToReadDto);
+        return foundBook.map(bookMapper::bookToReadDto);
     }
 
     /**
@@ -98,7 +98,7 @@ public class BookService {
 
         Book updatedBook = bookRepository.save(foundBook);
 
-        return Optional.of(bookMapper.BookToReadDto(updatedBook));
+        return Optional.of(bookMapper.bookToReadDto(updatedBook));
     }
 
     /**

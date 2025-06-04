@@ -59,7 +59,7 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Page<OrderReadDTO> getOrders(Integer userID, Double minTotalAmount, Double maxTotalAmount, Status status,
             Pageable pageable) {
-        return orderMapper.PageOrderToPageDto(
+        return orderMapper.pageOrderToPageDto(
                 orderRepository.findOrders(userID, minTotalAmount, maxTotalAmount, status, pageable));
     }
 

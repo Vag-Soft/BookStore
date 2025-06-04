@@ -56,7 +56,7 @@ public interface OrderMapper {
      *            the list of Order entities to be converted
      * @return the list of converted OrderReadDTOs
      */
-    List<OrderReadDTO> ListOrderToListDto(List<Order> orders);
+    List<OrderReadDTO> listOrderToListDto(List<Order> orders);
 
     /**
      * Converts a Page of Order entities to a Page of OrderReadDTOs
@@ -65,7 +65,7 @@ public interface OrderMapper {
      *            the Page of Order entities to be converted
      * @return the converted Page of OrderReadDTOs
      */
-    default Page<OrderReadDTO> PageOrderToPageDto(Page<Order> page) {
-        return new PageImpl<>(ListOrderToListDto(page.getContent()), page.getPageable(), page.getTotalElements());
+    default Page<OrderReadDTO> pageOrderToPageDto(Page<Order> page) {
+        return new PageImpl<>(listOrderToListDto(page.getContent()), page.getPageable(), page.getTotalElements());
     }
 }

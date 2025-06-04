@@ -64,8 +64,8 @@ class BookServiceTest {
         Page<BookReadDTO> result = bookService.getBooks(null, null, null, null, null, null, pageable);
 
         assertEquals(2, result.getContent().size());
-        assertEquals(bookMapper.BookToReadDto(storedBooks.get(0)), result.getContent().get(0));
-        assertEquals(bookMapper.BookToReadDto(storedBooks.get(1)), result.getContent().get(1));
+        assertEquals(bookMapper.bookToReadDto(storedBooks.get(0)), result.getContent().get(0));
+        assertEquals(bookMapper.bookToReadDto(storedBooks.get(1)), result.getContent().get(1));
     }
 
     @Test
@@ -81,7 +81,7 @@ class BookServiceTest {
                 pageable);
 
         assertEquals(1, result.getContent().size());
-        assertEquals(bookMapper.BookToReadDto(storedBooks.get(1)), result.getContent().getFirst());
+        assertEquals(bookMapper.bookToReadDto(storedBooks.get(1)), result.getContent().getFirst());
     }
 
     @Test
@@ -99,7 +99,7 @@ class BookServiceTest {
         addedBook.setAuthor("New Author");
         addedBook.setPrice(10.0);
 
-        when(bookRepository.save(bookMapper.DtoToBook(bookToAdd))).thenReturn(addedBook);
+        when(bookRepository.save(bookMapper.dtoToBook(bookToAdd))).thenReturn(addedBook);
 
         Optional<BookReadDTO> result = bookService.addBook(bookToAdd);
 

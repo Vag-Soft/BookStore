@@ -51,7 +51,7 @@ public class AuthController {
             @RequestBody @ValidAdminRegistration(groups = ExtendedValidation.class) @Valid UserWriteDTO userWriteDTO) {
         log.info("POST /auth/register: userWriteDTO={}", userWriteDTO);
 
-        UserLoginDTO userLoginDTO = userMapper.UserWriteToLoginDto(userWriteDTO);
+        UserLoginDTO userLoginDTO = userMapper.userWriteToLoginDto(userWriteDTO);
 
         Optional<UserReadDTO> registeredUser = authService.registerUser(userWriteDTO);
 

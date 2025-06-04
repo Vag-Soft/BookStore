@@ -22,7 +22,7 @@ public interface UserMapper {
      * @return the converted User entity
      */
     @Mapping(ignore = true, target = "userReadDTO.id")
-    User DtoToUser(UserReadDTO userReadDTO);
+    User dtoToUser(UserReadDTO userReadDTO);
 
     /**
      * Converts a UserWriteDTO to a User entity
@@ -33,7 +33,7 @@ public interface UserMapper {
      */
     @Mapping(source = "userWriteDTO.password", target = "hashPassword")
     @Mapping(target = "signupDate", expression = "java(java.time.LocalDate.now())")
-    User DtoToUser(UserWriteDTO userWriteDTO);
+    User dtoToUser(UserWriteDTO userWriteDTO);
 
     /**
      * Converts a User entity to a UserReadDTO
@@ -42,7 +42,7 @@ public interface UserMapper {
      *            the User entity to be converted
      * @return the converted UserReadDTO
      */
-    UserReadDTO UserToReadDto(User user);
+    UserReadDTO userToReadDto(User user);
 
     /**
      * Converts a UserWriteDTO entity to a UserLoginDTO
@@ -51,7 +51,7 @@ public interface UserMapper {
      *            the UserWriteDTO to be converted
      * @return the converted UserLoginDTO
      */
-    UserLoginDTO UserWriteToLoginDto(UserWriteDTO userWriteDTO);
+    UserLoginDTO userWriteToLoginDto(UserWriteDTO userWriteDTO);
 
     /**
      * Updates a User entity from a UserUpdateDTO, ignoring null values

@@ -76,10 +76,10 @@ public class UserIntegrationTest {
         assertEquals(2, response.getBody().getContent().size());
 
         UserReadDTO firstUser = response.getBody().getContent().get(0);
-        assertEquals(userMapper.UserToReadDto(user1), firstUser);
+        assertEquals(userMapper.userToReadDto(user1), firstUser);
 
         UserReadDTO secondUser = response.getBody().getContent().get(1);
-        assertEquals(userMapper.UserToReadDto(user2), secondUser);
+        assertEquals(userMapper.userToReadDto(user2), secondUser);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class UserIntegrationTest {
         assertEquals(1, response.getBody().getContent().size());
 
         UserReadDTO secondUser = response.getBody().getContent().getFirst();
-        assertEquals(userMapper.UserToReadDto(user2), secondUser);
+        assertEquals(userMapper.userToReadDto(user2), secondUser);
     }
 
     @Test
@@ -107,7 +107,7 @@ public class UserIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(userMapper.UserToReadDto(user1), response.getBody());
+        assertEquals(userMapper.userToReadDto(user1), response.getBody());
     }
 
     @Test
@@ -236,7 +236,7 @@ public class UserIntegrationTest {
 
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(userMapper.UserToReadDto(user1), response.getBody());
+        assertEquals(userMapper.userToReadDto(user1), response.getBody());
     }
 
     @Test

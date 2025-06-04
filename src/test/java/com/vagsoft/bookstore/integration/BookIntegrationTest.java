@@ -93,10 +93,10 @@ public class BookIntegrationTest {
         assertEquals(3, response.getBody().getContent().size());
 
         BookReadDTO firstBook = response.getBody().getContent().get(0);
-        assertEquals(bookMapper.BookToReadDto(book1), firstBook);
+        assertEquals(bookMapper.bookToReadDto(book1), firstBook);
 
         BookReadDTO secondBook = response.getBody().getContent().get(1);
-        assertEquals(bookMapper.BookToReadDto(book2), secondBook);
+        assertEquals(bookMapper.bookToReadDto(book2), secondBook);
     }
 
     @Test
@@ -117,10 +117,10 @@ public class BookIntegrationTest {
         assertEquals(2, responseBody.getContent().size());
 
         BookReadDTO firstBook = response.getBody().getContent().get(0);
-        assertEquals(bookMapper.BookToReadDto(book2), firstBook);
+        assertEquals(bookMapper.bookToReadDto(book2), firstBook);
 
         BookReadDTO secondBook = response.getBody().getContent().get(1);
-        assertEquals(bookMapper.BookToReadDto(book3), secondBook);
+        assertEquals(bookMapper.bookToReadDto(book3), secondBook);
     }
 
     @Test
@@ -166,7 +166,7 @@ public class BookIntegrationTest {
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
         BookReadDTO book = response.getBody();
-        assertEquals(bookMapper.BookToReadDto(book1), book);
+        assertEquals(bookMapper.bookToReadDto(book1), book);
     }
 
     @Test

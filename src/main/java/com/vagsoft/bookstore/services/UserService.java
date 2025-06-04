@@ -65,7 +65,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public Optional<UserReadDTO> getUserByID(Integer userID) {
         Optional<User> foundUser = userRepository.findById(userID);
-        return foundUser.map(userMapper::UserToReadDto);
+        return foundUser.map(userMapper::userToReadDto);
     }
 
     /**
@@ -91,7 +91,7 @@ public class UserService {
 
         User updatedUser = userRepository.save(foundUser);
 
-        return Optional.of(userMapper.UserToReadDto(updatedUser));
+        return Optional.of(userMapper.userToReadDto(updatedUser));
     }
 
     /**
@@ -116,6 +116,6 @@ public class UserService {
     public Optional<UserReadDTO> getUserByUsername(String username) {
         Optional<User> foundUser = userRepository.findByUsername(username);
 
-        return foundUser.map(userMapper::UserToReadDto);
+        return foundUser.map(userMapper::userToReadDto);
     }
 }

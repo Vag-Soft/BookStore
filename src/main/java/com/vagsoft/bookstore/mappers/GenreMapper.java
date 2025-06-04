@@ -15,7 +15,7 @@ public interface GenreMapper {
      *            the GenreDTO to be converted
      * @return the converted Genre entity
      */
-    Genre DtoToGenre(GenreDTO genreDTO);
+    Genre dtoToGenre(GenreDTO genreDTO);
 
     /**
      * Converts a Genre entity to a GenreDTO.
@@ -24,5 +24,5 @@ public interface GenreMapper {
      *            the Genre entity to be converted
      * @return the converted GenreDTO
      */
-    GenreDTO GenreToDto(Genre genre);
+    GenreDTO genreToDto(Genre genre);
 }
