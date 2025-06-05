@@ -2,7 +2,6 @@ package com.vagsoft.bookstore.unit.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,7 +12,6 @@ import java.util.Optional;
 
 import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
 import com.vagsoft.bookstore.dto.userDTOs.UserUpdateDTO;
-import com.vagsoft.bookstore.errors.exceptions.UserNotFoundException;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.models.entities.User;
 import com.vagsoft.bookstore.models.enums.Role;
@@ -112,7 +110,6 @@ class UserServiceTest {
         assertFalse(result.isEmpty());
         assertEquals(userMapper.userToReadDto(updatedUser), result.get());
     }
-
 
     @Test
     @DisplayName("deleteUserByID(1) - Success")

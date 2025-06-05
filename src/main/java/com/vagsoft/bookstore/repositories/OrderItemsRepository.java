@@ -47,8 +47,10 @@ public interface OrderItemsRepository extends JpaRepository<OrderItem, Integer> 
     /**
      * Retrieves a reference to an order item by the specified order ID and book ID.
      *
-     * @param orderID the ID of the order
-     * @param bookID the ID of the book
+     * @param orderID
+     *            the ID of the order
+     * @param bookID
+     *            the ID of the book
      * @return an OrderItem entity reference
      */
     OrderItem getReferenceByOrderIdAndBookId(Integer orderID, Integer bookID);

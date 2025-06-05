@@ -112,7 +112,8 @@ public class BookController {
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) Integer bookID,
             @Valid @RequestBody BookUpdateDTO bookUpdateDTO) {
         Optional<BookReadDTO> updatedBook = bookService.updateBookByID(bookID, bookUpdateDTO);
-        return ResponseEntity.ok(updatedBook.orElseThrow(() -> new BookUpdateException("Book with ID:" + bookID + "update failed")));
+        return ResponseEntity
+                .ok(updatedBook.orElseThrow(() -> new BookUpdateException("Book with ID:" + bookID + "update failed")));
     }
 
     /**

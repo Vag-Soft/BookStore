@@ -1,9 +1,6 @@
 package com.vagsoft.bookstore.controllers;
 
-import java.util.Optional;
-
 import com.vagsoft.bookstore.dto.orderDTOs.OrderItemReadDTO;
-import com.vagsoft.bookstore.errors.exceptions.OrderItemNotFoundException;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.OrderItemsRepository;
 import com.vagsoft.bookstore.repositories.OrderRepository;
@@ -63,13 +60,12 @@ public class OrderItemController {
      */
     @IsAdmin
     @GetMapping("/{orderID}/items/{bookID}")
-    public ResponseEntity<OrderItemReadDTO> getOrderItemByBookID(
+    public ResponseEntity<OrderItemReadDTO> getOrderItemByBookID(@PathVariable @Positive(groups = BasicValidation.class) //
+    @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) //
+    Integer orderID, //
             @PathVariable @Positive(groups = BasicValidation.class) //
-            @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) //
-            Integer orderID,//
-            @PathVariable @Positive(groups = BasicValidation.class)//
-            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class)//
-            @ExistsCompositeResource(repository = OrderItemsRepository.class, methodName = "existsByOrderIdAndBookId", firstPathVariable = "orderID", secondPathVariable = "bookID", message = "The order with the given ID does not contain the book with the given ID", groups = ExtendedValidation.class)//
+            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) //
+            @ExistsCompositeResource(repository = OrderItemsRepository.class, methodName = "existsByOrderIdAndBookId", firstPathVariable = "orderID", secondPathVariable = "bookID", message = "The order with the given ID does not contain the book with the given ID", groups = ExtendedValidation.class) //
             Integer bookID) {
         OrderItemReadDTO orderItem = orderItemService.getOrderItemByBookID(orderID, bookID);
 

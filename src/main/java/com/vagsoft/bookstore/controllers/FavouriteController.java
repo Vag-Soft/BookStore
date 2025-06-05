@@ -94,7 +94,7 @@ public class FavouriteController {
             @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) //
             Integer userID, //
             @PathVariable @Positive(groups = BasicValidation.class) //
-            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class)//
+            @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) //
             @ExistsCompositeResource(//
                     repository = FavouriteRepository.class, //
                     methodName = "existsByUser_IdAndBook_Id", //

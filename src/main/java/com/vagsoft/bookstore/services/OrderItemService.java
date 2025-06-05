@@ -1,7 +1,5 @@
 package com.vagsoft.bookstore.services;
 
-import java.util.Optional;
-
 import com.vagsoft.bookstore.dto.orderDTOs.OrderItemReadDTO;
 import com.vagsoft.bookstore.mappers.OrderItemMapper;
 import com.vagsoft.bookstore.repositories.OrderItemsRepository;

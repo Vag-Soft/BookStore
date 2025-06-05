@@ -94,7 +94,6 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
             """)
     CartItem getReferenceByUserIDAndBookID(Integer userID, Integer bookID);
 
-
     /**
      * Deletes a cart item by user ID and book ID
      *

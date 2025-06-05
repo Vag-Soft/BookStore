@@ -2,7 +2,6 @@ package com.vagsoft.bookstore.unit.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,7 +12,6 @@ import java.util.Optional;
 import com.vagsoft.bookstore.dto.bookDTOs.BookReadDTO;
 import com.vagsoft.bookstore.dto.bookDTOs.BookUpdateDTO;
 import com.vagsoft.bookstore.dto.bookDTOs.BookWriteDTO;
-import com.vagsoft.bookstore.errors.exceptions.BookNotFoundException;
 import com.vagsoft.bookstore.mappers.BookMapper;
 import com.vagsoft.bookstore.models.entities.Book;
 import com.vagsoft.bookstore.models.entities.Genre;
@@ -157,7 +155,6 @@ class BookServiceTest {
         assertEquals(storedBooks.getFirst().getIsbn(), result.get().getIsbn());
         assertTrue(result.get().getGenres().isEmpty());
     }
-
 
     @Test
     @DisplayName("deleteBookByID(1) - Success")

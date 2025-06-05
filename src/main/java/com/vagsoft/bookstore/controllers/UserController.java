@@ -96,7 +96,8 @@ public class UserController {
             @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
             @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
         Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
-        return ResponseEntity.ok(updatedUser.orElseThrow(() -> new UserUpdateException("User with ID:" + userID + " update failed")));
+        return ResponseEntity.ok(
+                updatedUser.orElseThrow(() -> new UserUpdateException("User with ID:" + userID + " update failed")));
     }
 
     /**
@@ -139,11 +140,12 @@ public class UserController {
      */
     @PutMapping(path = "/me")
     public ResponseEntity<UserReadDTO> updatePrincipalUser(@RequestBody @Valid UserUpdateDTO userUpdateDTO) {
-        Integer userID = authUtils.getUserIdFromAuthentication();;
+        Integer userID = authUtils.getUserIdFromAuthentication();
 
         Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
 
-        return ResponseEntity.ok(updatedUser.orElseThrow(() -> new UserUpdateException("User with ID:" + userID + " update failed")));
+        return ResponseEntity.ok(
+                updatedUser.orElseThrow(() -> new UserUpdateException("User with ID:" + userID + " update failed")));
     }
 
     /**
