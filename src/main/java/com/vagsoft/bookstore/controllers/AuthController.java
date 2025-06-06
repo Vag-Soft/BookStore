@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.vagsoft.bookstore.dto.userDTOs.UserLoginDTO;
 import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
 import com.vagsoft.bookstore.dto.userDTOs.UserWriteDTO;
-import com.vagsoft.bookstore.errors.exceptions.UserCreationException;
+import com.vagsoft.bookstore.errors.exceptions.userExceptions.UserCreationException;
 import com.vagsoft.bookstore.mappers.UserMapper;
 import com.vagsoft.bookstore.services.AuthService;
 import com.vagsoft.bookstore.validations.annotations.ValidAdminRegistration;

@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.vagsoft.bookstore.dto.cartDTOs.CartItemReadDTO;
 import com.vagsoft.bookstore.dto.cartDTOs.CartItemUpdateDTO;
 import com.vagsoft.bookstore.dto.cartDTOs.CartItemWriteDTO;
-import com.vagsoft.bookstore.errors.exceptions.CartItemsNotFoundException;
+import com.vagsoft.bookstore.errors.exceptions.cartExceptions.CartItemsNotFoundException;
 import com.vagsoft.bookstore.mappers.CartItemMapper;
 import com.vagsoft.bookstore.models.entities.CartItem;
 import com.vagsoft.bookstore.repositories.BookRepository;

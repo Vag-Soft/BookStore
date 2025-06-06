@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteReadDTO;
 import com.vagsoft.bookstore.dto.favouriteDTOs.FavouriteWriteDTO;
-import com.vagsoft.bookstore.errors.exceptions.FavouriteCreationException;
+import com.vagsoft.bookstore.errors.exceptions.favouriteExceptions.FavouriteCreationException;
 import com.vagsoft.bookstore.repositories.BookRepository;
 import com.vagsoft.bookstore.repositories.FavouriteRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;

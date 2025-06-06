@@ -1,4 +1,6 @@
-package com.vagsoft.bookstore.errors.exceptions;
+package com.vagsoft.bookstore.errors.exceptions.bookExceptions;
+
+import com.vagsoft.bookstore.errors.exceptions.ResourceUpdateException;
 
 /**
  * Exception thrown when a book cannot be updated

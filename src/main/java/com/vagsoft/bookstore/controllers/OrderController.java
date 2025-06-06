@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import com.vagsoft.bookstore.dto.orderDTOs.OrderReadDTO;
 import com.vagsoft.bookstore.dto.orderDTOs.OrderUpdateDTO;
-import com.vagsoft.bookstore.errors.exceptions.OrderCreationException;
-import com.vagsoft.bookstore.errors.exceptions.OrderUpdateException;
+import com.vagsoft.bookstore.errors.exceptions.orderExceptions.OrderCreationException;
+import com.vagsoft.bookstore.errors.exceptions.orderExceptions.OrderUpdateException;
 import com.vagsoft.bookstore.models.enums.Status;
 import com.vagsoft.bookstore.repositories.OrderRepository;
 import com.vagsoft.bookstore.repositories.UserRepository;

@@ -1,4 +1,6 @@
-package com.vagsoft.bookstore.errors.exceptions;
+package com.vagsoft.bookstore.errors.exceptions.orderExceptions;
+
+import com.vagsoft.bookstore.errors.exceptions.ResourceUpdateException;
 
 /**
  * Exception thrown when an order cannot be updated

@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
 import com.vagsoft.bookstore.dto.userDTOs.UserUpdateDTO;
-import com.vagsoft.bookstore.errors.exceptions.UserUpdateException;
+import com.vagsoft.bookstore.errors.exceptions.userExceptions.UserUpdateException;
 import com.vagsoft.bookstore.models.enums.Role;
 import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.services.UserService;
