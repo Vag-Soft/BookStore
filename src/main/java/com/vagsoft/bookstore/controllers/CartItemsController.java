@@ -19,6 +19,7 @@ import com.vagsoft.bookstore.validations.annotations.UniqueCompositeFields;
 import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import com.vagsoft.bookstore.validations.groups.OrderedValidation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
@@ -117,6 +118,7 @@ public class CartItemsController {
      *            the ID of the book
      * @return no content response if deletion is successful
      */
+    @ApiResponse(responseCode = "204")
     @IsAdmin
     @DeleteMapping(path = "/{userID}/items/{bookID}")
     public ResponseEntity<Void> deleteCartItem(@PathVariable @Positive(groups = BasicValidation.class) //
@@ -152,6 +154,7 @@ public class CartItemsController {
      *            the cart item to be added
      * @return the created cart item
      */
+    @ApiResponse(responseCode = "201")
     @PostMapping(path = "/me/items")
     public ResponseEntity<CartItemReadDTO> addCartItem(
             @RequestBody @Valid @UniqueCompositeFields(repository = CartItemsRepository.class, methodName = "existsByUserIDAndBookID", usePathVariable = false, dtoClass = CartItemWriteDTO.class, dtoFieldName = "bookID", message = "This book is already in your cart", groups = ExtendedValidation.class) CartItemWriteDTO cartItemWriteDTO) {
@@ -211,6 +214,7 @@ public class CartItemsController {
      *            the ID of the book
      * @return no content response if deletion is successful
      */
+    @ApiResponse(responseCode = "204")
     @DeleteMapping(path = "/me/items/{bookID}")
     public ResponseEntity<Void> deleteCartItem(@PathVariable @Positive(groups = BasicValidation.class) //
     @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) //

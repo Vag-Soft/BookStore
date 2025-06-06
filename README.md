@@ -3,14 +3,13 @@
 An Online Bookstore Application built with Spring Boot, featuring user authentication, book management, shopping cart functionality, order processing, and administrative capabilities with a RESTful API architecture.
 
 ## Features
-- **User Authentication/Authorization**: User registration/login system using Spring Security with JWT tokenss for authentication and role-based authorization (USER/ADMIN roles)
+- **User Authentication/Authorization**: User registration/login system using Spring Security with JWT tokens for authentication and role-based authorization (USER/ADMIN roles)
 - **Book Catalog**: Comprehensive Book catalog for browsing books with advanced filtering and pagination
 - **Shopping Cart**: Shopping cart system allowing users to add/remove books, update quantities and proceed to checkout
 - **Order Processing**: Complete ordering system including order placement, status tracking, and order history
 - **User Favorites**: Users are able to favorite and browse their preferred books
 - **Admin Panel**: Administrative capabilities for ADMINs to manage books, carts, orders, and user accounts with role-based access control
 - **RESTful API**: Comprehensive REST endpoints with OpenAPI/Swagger documentation
-- **JavaDoc**: Detailed JavaDoc comments for quick reference and understanding of the codebase
 
 ## Tech Stack
 - **Framework**: Spring Boot 3.x with Spring MVC architecture
@@ -94,51 +93,53 @@ An Online Bookstore Application built with Spring Boot, featuring user authentic
 - `DELETE /books/{id}` - Delete a book (Admin only)
 
 ### Users
+- `GET /users/me` - Get logged-in user profile
+- `PUT /users/me` - Update logged-in user profile
+- `DELETE /users/me` - Delete logged-in user account
 - `GET /users` - Get users with pagination and filtering (Admin only)
 - `GET /users/{id}` - Get user by ID (Admin only)
 - `PUT /users/{id}` - Update user by ID (Admin only)
 - `DELETE /users/{id}` - Delete user by ID (Admin only)
-- `GET /users/me` - Get logged-in user profile
-- `PUT /users/me` - Update logged-in user profile
-- `DELETE /users/me` - Delete logged-in user account
 
 ### Favourites
-- `GET /users/{userID}/favourites` - Get favourites for a specific user (Admin only)
-- `POST /users/{userID}/favourites` - Add favourite for a specific user (Admin only)
-- `DELETE /users/{userID}/favourites/{bookID}` - Delete favourite for a specific user (Admin only)
 - `GET /users/me/favourites` - Get logged-in user's favourites
 - `POST /users/me/favourites` - Add favourite for logged-in user
 - `DELETE /users/me/favourites/{bookID}` - Delete favourite for logged-in user
+- `GET /users/{userID}/favourites` - Get favourites for a specific user (Admin only)
+- `POST /users/{userID}/favourites` - Add favourite for a specific user (Admin only)
+- `DELETE /users/{userID}/favourites/{bookID}` - Delete favourite for a specific user (Admin only)
 
 ### Carts
+- `GET /carts/me` - Get logged-in user's cart
 - `GET /carts` - Get all carts with pagination (Admin only)
 - `GET /carts/{userID}` - Get a specific cart by user ID (Admin only)
-- `GET /carts/me` - Get logged-in user's cart
 
 ### Cart Items
-- `GET /carts/{userID}/items` - Get all cart items for a specific user (Admin only)
-- `GET /carts/{userID}/items/{bookID}` - Get specific cart item for a user (Admin only)
-- `PUT /carts/{userID}/items/{bookID}` - Update cart item for a specific user (Admin only)
-- `DELETE /carts/{userID}/items/{bookID}` - Delete cart item for a specific user (Admin only)
 - `GET /carts/me/items` - Get logged-in user's cart items
 - `POST /carts/me/items` - Add cart item for logged-in user
 - `GET /carts/me/items/{bookID}` - Get specific cart item for logged-in user
 - `PUT /carts/me/items/{bookID}` - Update cart item for logged-in user
 - `DELETE /carts/me/items/{bookID}` - Delete cart item for logged-in user
+- `GET /carts/{userID}/items` - Get all cart items for a specific user (Admin only)
+- `GET /carts/{userID}/items/{bookID}` - Get specific cart item for a user (Admin only)
+- `PUT /carts/{userID}/items/{bookID}` - Update cart item for a specific user (Admin only)
+- `DELETE /carts/{userID}/items/{bookID}` - Delete cart item for a specific user (Admin only)
 
 ### Orders
-- `GET /orders` - Get all orders with filtering (userID, amount range, status) and pagination (Admin only)
-- `GET /orders/{orderID}` - Get specific order by ID (Admin only)
-- `PUT /orders/{orderID}` - Update order by ID (Admin only)
 - `GET /orders/me` - Get logged-in user's orders with filtering (amount range, status) and pagination
 - `POST /orders/me` - Place a new order for logged-in user
 - `GET /orders/me/{orderID}` - Get specific order for logged-in user
+- `GET /orders` - Get all orders with filtering (userID, amount range, status) and pagination (Admin only)
+- `GET /orders/{orderID}` - Get specific order by ID (Admin only)
+- `PUT /orders/{orderID}` - Update order by ID (Admin only)
 
 ### Order Items
-- `GET /orders/{orderID}/items` - Get all order items for a specific order (Admin only)
-- `GET /orders/{orderID}/items/{bookID}` - Get specific order item by order ID and book ID (Admin only)
 - `GET /orders/me/{orderID}/items` - Get order items for logged-in user's specific order
 - `GET /orders/me/{orderID}/items/{bookID}` - Get specific order item for logged-in user's order
+- `GET /orders/{orderID}/items` - Get all order items for a specific order (Admin only)
+- `GET /orders/{orderID}/items/{bookID}` - Get specific order item by order ID and book ID (Admin only)
+
+For more details on the API endpoints, refer to the API docs ```http://localhost:8080/swagger-ui/index.html```.
 
 ## Database schema design
 ![BookStore](https://github.com/user-attachments/assets/7b89aeef-96d8-4ff0-bd61-542f3fd31a2c)
