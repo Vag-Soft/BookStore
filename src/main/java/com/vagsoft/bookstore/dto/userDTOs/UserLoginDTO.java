@@ -19,5 +19,6 @@ public class UserLoginDTO {
 
     @NotBlank(message = "password must not be blank", groups = BasicValidation.class)
     @Size(max = 63, message = "password must be less than 64 characters", groups = BasicValidation.class)
+    @Size(min = 8, message = "password must be at least 8 characters", groups = BasicValidation.class)
     private String password;
 }

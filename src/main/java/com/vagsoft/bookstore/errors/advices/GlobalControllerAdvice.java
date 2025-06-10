@@ -22,13 +22,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-/** Global controller advice that handles exceptions */
+/** Global controller advice that handles exceptions. */
 @RestControllerAdvice(basePackages = "com.vagsoft.bookstore")
 public class GlobalControllerAdvice {
     private static final Logger log = LoggerFactory.getLogger(GlobalControllerAdvice.class);
 
     /**
-     * Handles argument exceptions
+     * Handles argument exceptions.
      *
      * @param ex
      *            exception to handle of type {@link ConstraintViolationException},
@@ -37,7 +37,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler({ConstraintViolationException.class, IllegalArgumentException.class, ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleArgumentExceptions(Exception ex) {
+    public ProblemDetail handleArgumentExceptions(final Exception ex) {
         log.error("ArgumentException", ex);
 
         if (ex.getCause() instanceof ResourceNotFoundException) {
@@ -50,7 +50,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles validation exceptions
+     * Handles validation exceptions.
      *
      * @param ex
      *            the {@link MethodArgumentNotValidException} to handle
@@ -58,7 +58,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ProblemDetail handleMethodArgumentNotValidException(final MethodArgumentNotValidException ex) {
         log.error("MethodArgumentNotValidException", ex);
 
         String errorMessage = ex.getFieldErrors().stream()
@@ -71,7 +71,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles invalid request body exceptions
+     * Handles invalid request body exceptions.
      *
      * @param ex
      *            the {@link HttpMessageNotReadableException} to handle
@@ -79,7 +79,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+    public ProblemDetail handleHttpMessageNotReadableException(final HttpMessageNotReadableException ex) {
         log.error("HttpMessageNotReadableException", ex);
 
         String errorMessage = "Invalid request body fields";
@@ -90,7 +90,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles type mismatch exceptions
+     * Handles type mismatch exceptions.
      *
      * @param ex
      *            the {@link MethodArgumentTypeMismatchException} to handle
@@ -98,7 +98,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+    public ProblemDetail handleTypeMismatchException(final MethodArgumentTypeMismatchException ex) {
         log.error("TypeMismatchException", ex);
 
         String errorMessage = "'" + ex.getPropertyName() + "' has invalid type";
@@ -109,7 +109,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles resource creation exceptions
+     * Handles resource creation exceptions.
      *
      * @param ex
      *            the {@link ResourceCreationException} to handle
@@ -117,7 +117,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(ResourceCreationException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ProblemDetail handleResourceCreationException(ResourceCreationException ex) {
+    public ProblemDetail handleResourceCreationException(final ResourceCreationException ex) {
         log.error("ResourceCreationException", ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -127,7 +127,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles resource not found exceptions
+     * Handles resource not found exceptions.
      *
      * @param ex
      *            the {@link ResourceNotFoundException} to handle
@@ -135,7 +135,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException ex) {
+    public ProblemDetail handleResourceNotFoundException(final ResourceNotFoundException ex) {
         log.error("ResourceNotFoundException", ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
@@ -144,7 +144,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles resource update exceptions
+     * Handles resource update exceptions.
      *
      * @param ex
      *            the {@link ResourceUpdateException} to handle
@@ -152,7 +152,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(ResourceUpdateException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ProblemDetail handleResourceUpdateException(ResourceUpdateException ex) {
+    public ProblemDetail handleResourceUpdateException(final ResourceUpdateException ex) {
         log.error("ResourceUpdateException", ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -162,7 +162,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles data integrity exceptions
+     * Handles data integrity exceptions.
      *
      * @param ex
      *            the {@link DataIntegrityViolationException} to handle
@@ -170,7 +170,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ProblemDetail handleException(DataIntegrityViolationException ex) {
+    public ProblemDetail handleException(final DataIntegrityViolationException ex) {
         log.error("DataIntegrityViolationException", ex);
 
         String errorMessage = "Data integrity violation";
@@ -181,7 +181,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles ObjectOptimisticLockingFailureException exceptions
+     * Handles ObjectOptimisticLockingFailureException exceptions.
      *
      * @param ex
      *            the {@link ObjectOptimisticLockingFailureException} to handle
@@ -189,7 +189,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ProblemDetail handleOptimisticLockingFailureException(ObjectOptimisticLockingFailureException ex) {
+    public ProblemDetail handleOptimisticLockingFailureException(final ObjectOptimisticLockingFailureException ex) {
         log.error("ObjectOptimisticLockingFailureException", ex);
 
         String errorMessage = "Resource with ID: " + ex.getIdentifier() + " does not exist";
@@ -200,7 +200,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles bad credentials exceptions
+     * Handles bad credentials exceptions.
      *
      * @param ex
      *            the {@link BadCredentialsException} to handle
@@ -208,7 +208,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ProblemDetail handleBadCredentialsException(BadCredentialsException ex) {
+    public ProblemDetail handleBadCredentialsException(final BadCredentialsException ex) {
         log.error("BadCredentialsException", ex);
 
         String errorMessage = "Invalid username or password";
@@ -219,7 +219,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles authorization denied exceptions
+     * Handles authorization denied exceptions.
      *
      * @param ex
      *            the {@link AuthorizationDeniedException} to handle
@@ -227,7 +227,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(AuthorizationDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ProblemDetail handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+    public ProblemDetail handleAuthorizationDeniedException(final AuthorizationDeniedException ex) {
         log.error("AuthorizationDeniedException", ex);
 
         String errorMessage = "You do not have permission to access this resource";
@@ -238,7 +238,7 @@ public class GlobalControllerAdvice {
     }
 
     /**
-     * Handles other exceptions
+     * Handles other exceptions.
      *
      * @param ex
      *            the {@link Exception} to handle
@@ -246,7 +246,7 @@ public class GlobalControllerAdvice {
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ProblemDetail handleException(Exception ex) {
+    public ProblemDetail handleException(final Exception ex) {
         log.error("Exception", ex);
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,

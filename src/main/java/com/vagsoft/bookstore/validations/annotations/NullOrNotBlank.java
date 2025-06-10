@@ -1,19 +1,23 @@
 package com.vagsoft.bookstore.validations.annotations;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import com.vagsoft.bookstore.validations.validators.NullOrNotBlankValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-/** Validates that a field is null or not blank */
+/** Validates that a field is null or not blank. */
 @Documented
 @Constraint(validatedBy = NullOrNotBlankValidator.class)
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NullOrNotBlank {
     /**
-     * The error message to be used when the constraint is violated
+     * The error message to be used when the constraint is violated.
      *
      * @return the error message
      */

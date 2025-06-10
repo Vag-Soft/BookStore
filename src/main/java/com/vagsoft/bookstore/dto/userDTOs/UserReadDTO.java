@@ -3,7 +3,8 @@ package com.vagsoft.bookstore.dto.userDTOs;
 import java.time.LocalDate;
 
 import com.vagsoft.bookstore.models.enums.Role;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

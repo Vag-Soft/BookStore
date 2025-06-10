@@ -4,11 +4,11 @@ import com.vagsoft.bookstore.validations.annotations.NullOrNotBlank;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-/** Validator class for {@link NullOrNotBlank} */
+/** Validator class for {@link NullOrNotBlank}. */
 public class NullOrNotBlankValidator implements ConstraintValidator<NullOrNotBlank, String> {
 
     @Override
-    public void initialize(NullOrNotBlank contactNumber) {
+    public void initialize(final NullOrNotBlank contactNumber) {
     }
 
     /**
@@ -22,7 +22,7 @@ public class NullOrNotBlankValidator implements ConstraintValidator<NullOrNotBla
      * @return true if the string is valid, false otherwise
      */
     @Override
-    public boolean isValid(String contactField, ConstraintValidatorContext cxt) {
+    public boolean isValid(final String contactField, final ConstraintValidatorContext cxt) {
         return contactField == null || !contactField.isBlank();
     }
 }

@@ -8,15 +8,21 @@ import com.vagsoft.bookstore.dto.bookDTOs.BookWriteDTO;
 import com.vagsoft.bookstore.dto.genreDTOs.GenreDTO;
 import com.vagsoft.bookstore.models.entities.Book;
 import com.vagsoft.bookstore.models.entities.Genre;
-import org.mapstruct.*;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.BeforeMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-/** Mapper class for converting Book entities and DTOs */
+/** Mapper class for converting Book entities and DTOs. */
 @Mapper(componentModel = "spring")
 public interface BookMapper {
     /**
-     * Converts a BookReadDTO to a Book entity
+     * Converts a BookReadDTO to a Book entity.
      *
      * @param bookReadDTO
      *            the BookReadDTO to be converted
@@ -25,7 +31,7 @@ public interface BookMapper {
     Book dtoToBook(BookReadDTO bookReadDTO);
 
     /**
-     * Converts a BookWriteDTO to a Book entity
+     * Converts a BookWriteDTO to a Book entity.
      *
      * @param bookWriteDTO
      *            the BookWriteDTO to be converted
@@ -35,7 +41,7 @@ public interface BookMapper {
     Book dtoToBook(BookWriteDTO bookWriteDTO);
 
     /**
-     * Converts a BookUpdateDTO to a Book entity
+     * Converts a BookUpdateDTO to a Book entity.
      *
      * @param bookUpdateDTO
      *            the BookUpdateDTO to be converted
@@ -45,7 +51,7 @@ public interface BookMapper {
     Book dtoToBook(BookUpdateDTO bookUpdateDTO);
 
     /**
-     * Converts a Book entity to a BookReadDTO
+     * Converts a Book entity to a BookReadDTO.
      *
      * @param book
      *            the Book entity to be converted
@@ -54,7 +60,7 @@ public interface BookMapper {
     BookReadDTO bookToReadDto(Book book);
 
     /**
-     * Converts a Book entity to a BookWriteDTO
+     * Converts a Book entity to a BookWriteDTO.
      *
      * @param book
      *            the Book entity to be converted
@@ -63,7 +69,7 @@ public interface BookMapper {
     BookWriteDTO bookToWriteDto(Book book);
 
     /**
-     * Converts a Book entity to a BookUpdateDTO
+     * Converts a Book entity to a BookUpdateDTO.
      *
      * @param book
      *            the Book entity to be converted
@@ -72,7 +78,7 @@ public interface BookMapper {
     BookUpdateDTO bookToUpdateDto(Book book);
 
     /**
-     * Updates a Book entity from a BookUpdateDTO, ignoring null values
+     * Updates a Book entity from a BookUpdateDTO, ignoring null values.
      *
      * @param bookUpdateDTO
      *            the BookUpdateDTO to update from
@@ -83,7 +89,8 @@ public interface BookMapper {
     void updateBookFromDto(BookUpdateDTO bookUpdateDTO, @MappingTarget Book book);
 
     /**
-     * Links the books inside the genres of a Book entity with itself, after mapping
+     * Links the books inside the genres of a Book entity with itself, after
+     * mapping.
      *
      * @param dto
      *            the BookWriteDTO that was used in the mapping
@@ -99,7 +106,7 @@ public interface BookMapper {
 
     /**
      * Links the genre ids of the Book to the non-null genre ids of the
-     * BookUpdateDTO, to be able to update the genres and avoid deletion
+     * BookUpdateDTO, to be able to update the genres and avoid deletion.
      *
      * @param genreDto
      *            the BookUpdateDTO that was used in the mapping
@@ -117,7 +124,8 @@ public interface BookMapper {
     }
 
     /**
-     * Links the books inside the genres of a Book entity with itself, after mapping
+     * Links the books inside the genres of a Book entity with itself, after
+     * mapping.
      *
      * @param dto
      *            the BookUpdateDTO that was used in the mapping
@@ -132,7 +140,7 @@ public interface BookMapper {
     }
 
     /**
-     * Converts a list of Book entities to a list of BookReadDTOs
+     * Converts a list of Book entities to a list of BookReadDTOs.
      *
      * @param books
      *            the list of Book entities to be converted
@@ -141,7 +149,7 @@ public interface BookMapper {
     List<BookReadDTO> listBookToListDto(List<Book> books);
 
     /**
-     * Converts a page of Book entities to a page of BookReadDTOs
+     * Converts a page of Book entities to a page of BookReadDTOs.
      *
      * @param page
      *            the page of Book entities to be converted

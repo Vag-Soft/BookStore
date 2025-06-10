@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/** Repository interface for accessing favourites data */
+/** Repository interface for accessing favourites data. */
 @Repository
 public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
     /**
-     * Finds a page of favourites for a specific user
+     * Finds a page of favourites for a specific user.
      *
      * @param userID
      *            the ID of the user whose favourites are to be retrieved
@@ -21,7 +21,7 @@ public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
     Page<Favourite> findFavouritesByUser_Id(Integer userID, Pageable pageable);
 
     /**
-     * Checks if a favourite book exists for a specific user
+     * Checks if a favourite book exists for a specific user.
      *
      * @param userID
      *            the ID of the user
@@ -32,7 +32,7 @@ public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
     boolean existsByUser_IdAndBook_Id(Integer userID, Integer bookID);
 
     /**
-     * Deletes a favourite book for a specific user
+     * Deletes a favourite book for a specific user.
      *
      * @param userID
      *            the ID of the user

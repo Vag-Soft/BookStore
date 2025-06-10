@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-/** Repository interface for accessing order data */
+/** Repository interface for accessing order data. */
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     /**
-     * Retrieves a page of orders filtered by the specified parameters
+     * Retrieves a page of orders filtered by the specified parameters.
      *
      * @param userID
      *            the ID of the user who placed the orders (optional)
