@@ -68,7 +68,7 @@ public class BookController {
     @GetMapping
     public ResponseEntity<Page<BookReadDTO>> getBooks(//
             @RequestParam(name = "title", required = false) //
-            @Size(max = 61, message = "title must be less than 64 characters", groups = BasicValidation.class) //
+            @Size(max = 63, message = "title must be less than 64 characters", groups = BasicValidation.class) //
             @NullOrNotBlank(groups = BasicValidation.class) //
             final String title, //
             @RequestParam(name = "genre", required = false) //
