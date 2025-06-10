@@ -7,15 +7,19 @@ import com.vagsoft.bookstore.dto.userDTOs.UserReadDTO;
 import com.vagsoft.bookstore.dto.userDTOs.UserUpdateDTO;
 import com.vagsoft.bookstore.dto.userDTOs.UserWriteDTO;
 import com.vagsoft.bookstore.models.entities.User;
-import org.mapstruct.*;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-/** Mapper class for converting User entities and DTOs */
+/** Mapper class for converting User entities and DTOs. */
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     /**
-     * Converts a UserReadDTO to a User entity
+     * Converts a UserReadDTO to a User entity.
      *
      * @param userReadDTO
      *            the UserReadDTO to be converted
@@ -25,7 +29,7 @@ public interface UserMapper {
     User dtoToUser(UserReadDTO userReadDTO);
 
     /**
-     * Converts a UserWriteDTO to a User entity
+     * Converts a UserWriteDTO to a User entity.
      *
      * @param userWriteDTO
      *            the UserWriteDTO to be converted
@@ -36,7 +40,7 @@ public interface UserMapper {
     User dtoToUser(UserWriteDTO userWriteDTO);
 
     /**
-     * Converts a User entity to a UserReadDTO
+     * Converts a User entity to a UserReadDTO.
      *
      * @param user
      *            the User entity to be converted
@@ -45,7 +49,7 @@ public interface UserMapper {
     UserReadDTO userToReadDto(User user);
 
     /**
-     * Converts a UserWriteDTO entity to a UserLoginDTO
+     * Converts a UserWriteDTO entity to a UserLoginDTO.
      *
      * @param userWriteDTO
      *            the UserWriteDTO to be converted
@@ -54,7 +58,7 @@ public interface UserMapper {
     UserLoginDTO userWriteToLoginDto(UserWriteDTO userWriteDTO);
 
     /**
-     * Updates a User entity from a UserUpdateDTO, ignoring null values
+     * Updates a User entity from a UserUpdateDTO, ignoring null values.
      *
      * @param userUpdateDTO
      *            the UserUpdateDTO to update from
@@ -67,7 +71,7 @@ public interface UserMapper {
     void updateUserFromDto(UserUpdateDTO userUpdateDTO, @MappingTarget User user);
 
     /**
-     * Converts a list of User entities to a list of UserReadDTOs
+     * Converts a list of User entities to a list of UserReadDTOs.
      *
      * @param users
      *            the list of User entities to be converted
@@ -76,7 +80,7 @@ public interface UserMapper {
     List<UserReadDTO> listUserToListDto(List<User> users);
 
     /**
-     * Converts a page of User entities to a page of UserReadDTOs
+     * Converts a page of User entities to a page of UserReadDTOs.
      *
      * @param page
      *            the page of User entities to be converted

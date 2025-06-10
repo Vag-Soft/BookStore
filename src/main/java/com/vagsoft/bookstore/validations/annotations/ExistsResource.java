@@ -11,19 +11,19 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-/** Validates that a resource exists */
+/** Validates that a resource exists. */
 @Documented
 @Constraint(validatedBy = ExistsResourceValidator.class)
 @Target({ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExistsResource {
-    /** The repository class to use for existence validation */
+    /** The repository class to use for existence validation. */
     Class<? extends JpaRepository<?, Integer>> repository();
 
-    /** Whether the resource can be null */
+    /** Whether the resource can be null. */
     boolean nullable() default false;
 
-    /** The error message to be used when the constraint is violated */
+    /** The error message to be used when the constraint is violated. */
     String message() default "Resource not found with the given ID";
 
     Class<?>[] groups() default {};

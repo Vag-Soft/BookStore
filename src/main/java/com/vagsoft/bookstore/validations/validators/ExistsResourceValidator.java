@@ -17,12 +17,12 @@ public class ExistsResourceValidator implements ConstraintValidator<ExistsResour
     private boolean nullable;
 
     @Override
-    public void initialize(ExistsResource constraintAnnotation) {
+    public void initialize(final ExistsResource constraintAnnotation) {
         this.repositoryClass = constraintAnnotation.repository();
         this.nullable = constraintAnnotation.nullable();
     }
     @Override
-    public boolean isValid(Integer value, ConstraintValidatorContext context) {
+    public boolean isValid(final Integer value, final ConstraintValidatorContext context) {
         if (nullable && value == null) {
             return true;
         }

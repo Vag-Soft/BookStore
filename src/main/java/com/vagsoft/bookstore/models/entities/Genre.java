@@ -2,8 +2,18 @@ package com.vagsoft.bookstore.models.entities;
 
 import java.util.Objects;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -24,7 +34,7 @@ public class Genre {
     @Column(nullable = false)
     private String genre;
 
-    public Genre(Integer id, String genre) {
+    public Genre(final Integer id, final String genre) {
         this.id = id;
         this.genre = genre;
     }
@@ -38,9 +48,10 @@ public class Genre {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass())
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         Genre genre1 = (Genre) o;
         return Objects.equals(id, genre1.id) && Objects.equals(book.getId(), genre1.book.getId())
                 && Objects.equals(genre, genre1.genre);

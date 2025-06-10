@@ -14,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Service class for handling business logic related to favourites */
+/** Service class for handling business logic related to favourites. */
 @Service
 public class FavouriteService {
     private final FavouriteRepository favouriteRepository;
@@ -22,8 +22,8 @@ public class FavouriteService {
     private final UserRepository userRepository;
     private final FavouriteMapper favouriteMapper;
 
-    public FavouriteService(FavouriteRepository favouriteRepository, BookRepository bookRepository,
-            UserRepository userRepository, FavouriteMapper favouriteMapper) {
+    public FavouriteService(final FavouriteRepository favouriteRepository, final BookRepository bookRepository,
+            final UserRepository userRepository, final FavouriteMapper favouriteMapper) {
         this.favouriteRepository = favouriteRepository;
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
@@ -31,7 +31,7 @@ public class FavouriteService {
     }
 
     /**
-     * Retrieves a list of favourites for a specific user
+     * Retrieves a list of favourites for a specific user.
      *
      * @param userID
      *            the ID of the user whose favourites are to be retrieved
@@ -40,12 +40,12 @@ public class FavouriteService {
      * @return a page of favourites for the specified user
      */
     @Transactional(readOnly = true)
-    public Page<FavouriteReadDTO> getFavouritesByUserID(Integer userID, Pageable pageable) {
+    public Page<FavouriteReadDTO> getFavouritesByUserID(final Integer userID, final Pageable pageable) {
         return favouriteMapper.pageBookToPageDto(favouriteRepository.findFavouritesByUser_Id(userID, pageable));
     }
 
     /**
-     * Adds a new favourite book for a specific user
+     * Adds a new favourite book for a specific user.
      *
      * @param userID
      *            the ID of the user to whom the favourite belongs
@@ -54,7 +54,7 @@ public class FavouriteService {
      * @return the created favourite
      */
     @Transactional
-    public Optional<FavouriteReadDTO> addFavourite(Integer userID, FavouriteWriteDTO favouriteWriteDTO) {
+    public Optional<FavouriteReadDTO> addFavourite(final Integer userID, final FavouriteWriteDTO favouriteWriteDTO) {
         Favourite favouriteToSave = favouriteMapper.dtoToFavourite(favouriteWriteDTO);
         favouriteToSave.setUser(userRepository.getReferenceById(userID));
         favouriteToSave.setBook(bookRepository.getReferenceById(favouriteWriteDTO.getBookID()));
@@ -64,7 +64,7 @@ public class FavouriteService {
     }
 
     /**
-     * Deletes a favourite book for a specific user
+     * Deletes a favourite book for a specific user.
      *
      * @param userID
      *            the ID of the user whose favourite is to be deleted
@@ -72,7 +72,7 @@ public class FavouriteService {
      *            the ID of the favourite book to be deleted
      */
     @Transactional
-    public void deleteFavourite(Integer userID, Integer bookID) {
+    public void deleteFavourite(final Integer userID, final Integer bookID) {
         favouriteRepository.deleteByUser_IdAndBook_Id(userID, bookID);
     }
 }

@@ -6,7 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 
 public class RequestUtils {
-    public static <T> T getPathVariable(HttpServletRequest request, String pathVariableName, Class<T> type) {
+    public static <T> T getPathVariable(final HttpServletRequest request, final String pathVariableName,
+            final Class<T> type) {
         Object pathVariables = request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
         if (pathVariables instanceof Map<?, ?> values) {
             Object value = values.get(pathVariableName);

@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** REST controller for endpoints related to orders */
+/** REST controller for endpoints related to orders. */
 @RestController
 @RequestMapping(path = "/orders")
 @Validated(OrderedValidation.class)
@@ -43,13 +43,13 @@ public class OrderController {
     private final OrderService orderService;
     private final AuthUtils authUtils;
 
-    public OrderController(OrderService orderService, AuthUtils authUtils) {
+    public OrderController(final OrderService orderService, final AuthUtils authUtils) {
         this.orderService = orderService;
         this.authUtils = authUtils;
     }
 
     /**
-     * Retrieves a page of orders filtered by the specified parameters
+     * Retrieves a page of orders filtered by the specified parameters.
      * 
      * @param userID
      *            the ID of the user who placed the orders (optional)
@@ -65,16 +65,25 @@ public class OrderController {
      */
     @IsAdmin
     @GetMapping
-    public ResponseEntity<Page<OrderReadDTO>> getOrders(
-            @RequestParam(name = "userID", required = false) @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, nullable = true, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
-            @RequestParam(name = "minTotalAmount", required = false) @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double minTotalAmount,
-            @RequestParam(name = "maxTotalAmount", required = false) @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double maxTotalAmount,
-            @RequestParam(name = "status", required = false) Status status, Pageable pageable) {
+    public ResponseEntity<Page<OrderReadDTO>> getOrders(//
+            @RequestParam(name = "userID", required = false) //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = UserRepository.class, nullable = true, message = "User with given ID does not exist", groups = ExtendedValidation.class) //
+            final Integer userID, //
+            @RequestParam(name = "minTotalAmount", required = false) //
+            @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) //
+            final Double minTotalAmount, //
+            @RequestParam(name = "maxTotalAmount", required = false) //
+            @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) //
+            final Double maxTotalAmount, //
+            @RequestParam(name = "status", required = false) //
+            final Status status, //
+            final Pageable pageable) {
         return ResponseEntity.ok(orderService.getOrders(userID, minTotalAmount, maxTotalAmount, status, pageable));
     }
 
     /**
-     * Retrieves an order by its ID
+     * Retrieves an order by its ID.
      *
      * @param orderID
      *            the ID of the order to retrieve
@@ -82,15 +91,18 @@ public class OrderController {
      */
     @IsAdmin
     @GetMapping(path = "/{orderID}")
-    public ResponseEntity<OrderReadDTO> getOrderByID(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) Integer orderID) {
+    public ResponseEntity<OrderReadDTO> getOrderByID(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) //
+            final Integer orderID) {
         OrderReadDTO order = orderService.getOrderByID(orderID);
 
         return ResponseEntity.ok(order);
     }
 
     /**
-     * Updates an order by its ID with the given order information
+     * Updates an order by its ID with the given order information.
      *
      * @param orderID
      *            the ID of the order to be updated
@@ -100,9 +112,13 @@ public class OrderController {
      */
     @IsAdmin
     @PutMapping(path = "/{orderID}")
-    public ResponseEntity<OrderReadDTO> updateOrderByID(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) Integer orderID,
-            @RequestBody @Valid OrderUpdateDTO orderUpdateDTO) {
+    public ResponseEntity<OrderReadDTO> updateOrderByID(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) //
+            final Integer orderID, //
+            @RequestBody @Valid //
+            final OrderUpdateDTO orderUpdateDTO) {
         Optional<OrderReadDTO> updatedOrder = orderService.updateOrderByID(orderID, orderUpdateDTO);
 
         return ResponseEntity.ok(updatedOrder
@@ -111,7 +127,7 @@ public class OrderController {
 
     /**
      * Retrieves a page of orders for the authenticated user, filtered by the
-     * specified parameters
+     * specified parameters.
      *
      * @param minTotalAmount
      *            the minimum total amount of the orders to search for (optional)
@@ -124,17 +140,23 @@ public class OrderController {
      * @return a page of orders
      */
     @GetMapping(path = "/me")
-    public ResponseEntity<Page<OrderReadDTO>> getOrders(
-            @RequestParam(name = "minTotalAmount", required = false) @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double minTotalAmount,
-            @RequestParam(name = "maxTotalAmount", required = false) @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) Double maxTotalAmount,
-            @RequestParam(name = "status", required = false) Status status, Pageable pageable) {
+    public ResponseEntity<Page<OrderReadDTO>> getOrders(//
+            @RequestParam(name = "minTotalAmount", required = false) //
+            @Min(value = 0, message = "minTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) //
+            final Double minTotalAmount, //
+            @RequestParam(name = "maxTotalAmount", required = false) //
+            @Min(value = 0, message = "maxTotalAmount must be equal or  greater than 0", groups = BasicValidation.class) //
+            final Double maxTotalAmount, //
+            @RequestParam(name = "status", required = false) //
+            final Status status, //
+            final Pageable pageable) {
         Integer userID = authUtils.getUserIdFromAuthentication();
 
         return ResponseEntity.ok(orderService.getOrders(userID, minTotalAmount, maxTotalAmount, status, pageable));
     }
 
     /**
-     * Places a new order for the authenticated user
+     * Places a new order for the authenticated user.
      *
      * @return the added order
      */
@@ -158,8 +180,17 @@ public class OrderController {
      * @return the order with the specified ID
      */
     @GetMapping(path = "/me/{orderID}")
-    public ResponseEntity<OrderReadDTO> getOrderMeByID(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUser_IdAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID) {
+    public ResponseEntity<OrderReadDTO> getOrderMeByID(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsCompositeResource(//
+                    repository = OrderRepository.class, //
+                    methodName = "existsByUser_IdAndId", //
+                    useJWT = true, //
+                    secondPathVariable = "orderID", //
+                    message = "The order with the given ID does not exist in your submitted orders", //
+                    groups = ExtendedValidation.class) //
+            final Integer orderID) {
         OrderReadDTO order = orderService.getOrderByID(orderID);
 
         return ResponseEntity.ok(order);

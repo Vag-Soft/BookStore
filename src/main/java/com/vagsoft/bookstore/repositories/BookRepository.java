@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-/** Repository interface for accessing book data */
+/** Repository interface for accessing book data. */
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
     /**
-     * Retrieves a list of books filtered by the specified parameters
+     * Retrieves a list of books filtered by the specified parameters.
      *
      * @param title
      *            the title of the books to search for (optional)
@@ -43,7 +43,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             Double maxPrice, Pageable pageable);
 
     /**
-     * Checks if a book with the given ISBN exists in the database
+     * Checks if a book with the given ISBN exists in the database.
      *
      * @param isbn
      *            the ISBN of the book to be checked
@@ -53,7 +53,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     /**
      * Checks if a book with the given ISBN exists in the database, excluding the
-     * book with the specified ID
+     * book with the specified ID.
      *
      * @param isbn
      *            the ISBN of the book to be checked

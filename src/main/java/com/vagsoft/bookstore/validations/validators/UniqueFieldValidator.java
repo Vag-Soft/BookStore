@@ -31,7 +31,7 @@ public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Ob
     private boolean nullable;
 
     @Override
-    public void initialize(UniqueField constraintAnnotation) {
+    public void initialize(final UniqueField constraintAnnotation) {
         this.repositoryClass = constraintAnnotation.repository();
         this.methodName = constraintAnnotation.methodName();
         this.pathVariable = constraintAnnotation.pathVariable();
@@ -39,7 +39,7 @@ public class UniqueFieldValidator implements ConstraintValidator<UniqueField, Ob
     }
 
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
+    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         if (nullable && value == null) {
             return true;
         }

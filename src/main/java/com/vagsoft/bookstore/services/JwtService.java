@@ -9,11 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 
-/** Service class for handling JWT token generation */
+/** Service class for handling JWT token generation. */
 @RequiredArgsConstructor
 public class JwtService {
     private final String issuer;
@@ -22,16 +21,14 @@ public class JwtService {
 
     private final JwtEncoder jwtEncoder;
 
-    private final JwtDecoder jwtDecoder;
-
     /**
-     * Generates a JWT token for the given authentication
+     * Generates a JWT token for the given authentication.
      *
      * @param authentication
      *            the authentication object containing user details
      * @return the generated JWT token
      */
-    public String generateToken(Authentication authentication) {
+    public String generateToken(final Authentication authentication) {
         String scope = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
 

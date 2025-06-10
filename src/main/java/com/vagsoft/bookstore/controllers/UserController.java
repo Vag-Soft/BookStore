@@ -17,14 +17,22 @@ import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
 import com.vagsoft.bookstore.validations.groups.OrderedValidation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-/** REST controller for endpoints related to users */
+/** REST controller for endpoints related to users. */
 @RestController
 @RequestMapping(path = "/users")
 @Validated(OrderedValidation.class)
@@ -32,13 +40,13 @@ public class UserController {
     private final UserService userService;
     private final AuthUtils authUtils;
 
-    public UserController(UserService userService, AuthUtils authUtils) {
+    public UserController(final UserService userService, final AuthUtils authUtils) {
         this.userService = userService;
         this.authUtils = authUtils;
     }
 
     /**
-     * Retrieves a list of users filtered by the specified parameters
+     * Retrieves a list of users filtered by the specified parameters.
      *
      * @param username
      *            the username of the users to search for (optional)
@@ -62,12 +70,12 @@ public class UserController {
             @RequestParam(name = "role", required = false) Role role,
             @RequestParam(name = "firstName", required = false) @Size(max = 31, message = "firstName must be less than 32 characters", groups = BasicValidation.class) @NullOrNotBlank(groups = BasicValidation.class) String firstName,
             @RequestParam(name = "lastName", required = false) @Size(max = 31, message = "lastName must be less than 32 characters", groups = BasicValidation.class) @NullOrNotBlank(groups = BasicValidation.class) String lastName,
-            Pageable pageable) {
+            final Pageable pageable) {
         return ResponseEntity.ok(userService.getUsers(username, email, role, firstName, lastName, pageable));
     }
 
     /**
-     * Retrieves a user by its ID
+     * Retrieves a user by its ID.
      *
      * @param userID
      *            the ID of the user to be retrieved
@@ -75,14 +83,17 @@ public class UserController {
      */
     @IsAdmin()
     @GetMapping(path = "/{userID}")
-    public ResponseEntity<UserReadDTO> getUserByID(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
+    public ResponseEntity<UserReadDTO> getUserByID(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) //
+            final Integer userID) {
         UserReadDTO foundUser = userService.getUserByID(userID);
         return ResponseEntity.ok(foundUser);
     }
 
     /**
-     * Updates a user by its ID with the given user information
+     * Updates a user by its ID with the given user information.
      *
      * @param userID
      *            the ID of the user to be updated
@@ -92,8 +103,11 @@ public class UserController {
      */
     @IsAdmin()
     @PutMapping(path = "/{userID}")
-    public ResponseEntity<UserReadDTO> updateUserByID(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID,
+    public ResponseEntity<UserReadDTO> updateUserByID(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) //
+            final Integer userID, //
             @RequestBody @Valid UserUpdateDTO userUpdateDTO) {
         Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
         return ResponseEntity.ok(
@@ -101,7 +115,7 @@ public class UserController {
     }
 
     /**
-     * Deletes a user by its ID
+     * Deletes a user by its ID.
      *
      * @param userID
      *            the ID of the user to be deleted
@@ -110,15 +124,18 @@ public class UserController {
     @ApiResponse(responseCode = "204")
     @IsAdmin()
     @DeleteMapping(path = "/{userID}")
-    public ResponseEntity<Void> deleteUserByID(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
+    public ResponseEntity<Void> deleteUserByID(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) //
+            final Integer userID) {
         userService.deleteUserByID(userID);
 
         return ResponseEntity.noContent().build();
     }
 
     /**
-     * Retrieves the currently authenticated user
+     * Retrieves the currently authenticated user.
      *
      * @return the currently authenticated user
      */
@@ -132,14 +149,14 @@ public class UserController {
     }
 
     /**
-     * Updates the currently authenticated user with the given user information
+     * Updates the currently authenticated user with the given user information.
      *
      * @param userUpdateDTO
      *            the new user information
      * @return the updated user
      */
     @PutMapping(path = "/me")
-    public ResponseEntity<UserReadDTO> updatePrincipalUser(@RequestBody @Valid UserUpdateDTO userUpdateDTO) {
+    public ResponseEntity<UserReadDTO> updatePrincipalUser(@RequestBody @Valid final UserUpdateDTO userUpdateDTO) {
         Integer userID = authUtils.getUserIdFromAuthentication();
 
         Optional<UserReadDTO> updatedUser = userService.updateUserByID(userID, userUpdateDTO);
@@ -149,7 +166,7 @@ public class UserController {
     }
 
     /**
-     * Deletes the currently authenticated user
+     * Deletes the currently authenticated user.
      *
      * @return a ResponseEntity with no content
      */

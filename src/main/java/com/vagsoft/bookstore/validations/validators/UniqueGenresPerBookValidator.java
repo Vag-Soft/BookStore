@@ -7,11 +7,11 @@ import com.vagsoft.bookstore.validations.annotations.UniqueGenresPerBook;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-/** Validator class for {@link UniqueGenresPerBook} */
+/** Validator class for {@link UniqueGenresPerBook}. */
 public class UniqueGenresPerBookValidator implements ConstraintValidator<UniqueGenresPerBook, List<GenreDTO>> {
 
     @Override
-    public void initialize(UniqueGenresPerBook contactNumber) {
+    public void initialize(final UniqueGenresPerBook contactNumber) {
     }
 
     /**
@@ -25,7 +25,7 @@ public class UniqueGenresPerBookValidator implements ConstraintValidator<UniqueG
      * @return true if the genres are valid, false otherwise
      */
     @Override
-    public boolean isValid(List<GenreDTO> genres, ConstraintValidatorContext cxt) {
+    public boolean isValid(final List<GenreDTO> genres, final ConstraintValidatorContext cxt) {
         return genres.stream().map(GenreDTO::getGenre).distinct().count() == genres.size();
     }
 }

@@ -13,16 +13,37 @@ import org.springframework.data.domain.PageImpl;
 @Mapper(componentModel = "spring")
 public interface OrderItemMapper {
 
+    /**
+     * Converts an OrderItem entity to an OrderItemReadDTO.
+     *
+     * @param orderItem
+     *            the OrderItem entity to be converted
+     * @return the converted OrderItemReadDTO
+     */
     @Mapping(source = "orderItem.order.id", target = "orderID")
     OrderItemReadDTO orderItemToReadDto(OrderItem orderItem);
 
+    /**
+     * Converts a CartItem to an OrderItem entity.
+     *
+     * @param cartItem
+     *            the CartItem to be converted
+     * @return the converted OrderItem entity
+     */
     @Mapping(target = "id", ignore = true)
     OrderItem cartItemToOrderItem(CartItem cartItem);
 
+    /**
+     * Converts a list of CartItem entities to a list of OrderItem entities.
+     *
+     * @param cartItems
+     *            the list of CartItem entities to be converted
+     * @return the list of converted OrderItem entities
+     */
     List<OrderItem> cartItemsToOrderItems(List<CartItem> cartItems);
 
     /**
-     * Converts a list of OrderItem entities to a list of OrderItemReadDTOs
+     * Converts a list of OrderItem entities to a list of OrderItemReadDTOs.
      *
      * @param orderItems
      *            the list of OrderItem entities to be converted
@@ -31,7 +52,7 @@ public interface OrderItemMapper {
     List<OrderItemReadDTO> listOrderItemToListDto(List<OrderItem> orderItems);
 
     /**
-     * Converts a page of OrderItem entities to a page of OrderItemReadDTOs
+     * Converts a page of OrderItem entities to a page of OrderItemReadDTOs.
      *
      * @param page
      *            the page of OrderItem entities to be converted
