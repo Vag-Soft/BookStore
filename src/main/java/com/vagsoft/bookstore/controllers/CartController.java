@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** REST controller for endpoints related to carts */
+/** REST controller for endpoints related to carts. */
 @RestController
 @RequestMapping(path = "/carts")
 @Validated(OrderedValidation.class)
@@ -27,13 +27,13 @@ public class CartController {
     private final CartService cartService;
     private final AuthUtils authUtils;
 
-    public CartController(CartService cartService, AuthUtils authUtils) {
+    public CartController(final CartService cartService, final AuthUtils authUtils) {
         this.cartService = cartService;
         this.authUtils = authUtils;
     }
 
     /**
-     * Retrieves all carts
+     * Retrieves all carts.
      *
      * @param pageable
      *            pagination information
@@ -41,12 +41,12 @@ public class CartController {
      */
     @IsAdmin
     @GetMapping
-    public ResponseEntity<Page<CartReadDTO>> getAllCarts(Pageable pageable) {
+    public ResponseEntity<Page<CartReadDTO>> getAllCarts(final Pageable pageable) {
         return ResponseEntity.ok(cartService.getAllCarts(pageable));
     }
 
     /**
-     * Retrieves cart by user ID
+     * Retrieves cart by user ID.
      *
      * @param userID
      *            the ID of the user
@@ -54,14 +54,17 @@ public class CartController {
      */
     @IsAdmin
     @GetMapping("/{userID}")
-    public ResponseEntity<CartReadDTO> getCartByUserId(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) Integer userID) {
+    public ResponseEntity<CartReadDTO> getCartByUserId(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = UserRepository.class, message = "User with given ID does not exist", groups = ExtendedValidation.class) //
+            final Integer userID) {
         CartReadDTO cart = cartService.getCartByUserId(userID);
         return ResponseEntity.ok(cart);
     }
 
     /**
-     * Retrieves the cart of the currently authenticated user
+     * Retrieves the cart of the currently authenticated user.
      *
      * @return the cart associated with the authenticated user
      */

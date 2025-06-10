@@ -28,12 +28,12 @@ public class ExistsCompositeResourceValidator implements ConstraintValidator<Exi
 
     private Class<? extends JpaRepository<?, ?>> repositoryClass;
     private String methodName;
-    String firstPathVariable;
-    String secondPathVariable;
+    private String firstPathVariable;
+    private String secondPathVariable;
     private boolean useJWT;
 
     @Override
-    public void initialize(ExistsCompositeResource constraintAnnotation) {
+    public void initialize(final ExistsCompositeResource constraintAnnotation) {
         this.repositoryClass = constraintAnnotation.repository();
         this.methodName = constraintAnnotation.methodName();
         this.firstPathVariable = constraintAnnotation.firstPathVariable();
@@ -42,7 +42,7 @@ public class ExistsCompositeResourceValidator implements ConstraintValidator<Exi
     }
 
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
+    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         var repository = applicationContext.getBean(repositoryClass);
 
         try {

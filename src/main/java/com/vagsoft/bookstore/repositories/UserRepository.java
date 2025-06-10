@@ -10,11 +10,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-/** Repository interface for accessing user data */
+/** Repository interface for accessing user data. */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     /**
-     * Retrieves a list of users filtered by the specified parameters
+     * Retrieves a list of users filtered by the specified parameters.
      *
      * @param username
      *            the username of the users to search for (optional)
@@ -43,7 +43,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             Pageable pageable);
 
     /**
-     * Finds a user by its username
+     * Finds a user by its username.
      *
      * @param username
      *            the username of the user to be found
@@ -52,7 +52,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String username);
 
     /**
-     * Checks if a user with the given email exists in the database
+     * Checks if a user with the given email exists in the database.
      *
      * @param email
      *            the email of the user to be checked
@@ -62,7 +62,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     /**
      * Checks if a user with the given email exists in the database, excluding the
-     * user with the specified ID
+     * user with the specified ID.
      *
      * @param email
      *            the email of the user to be checked
@@ -71,7 +71,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     boolean existsByEmailAndIdNot(String email, Integer userID);
 
     /**
-     * Checks if a user with the given username exists in the database
+     * Checks if a user with the given username exists in the database.
      *
      * @param username
      *            the username of the user to be checked
@@ -81,7 +81,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     /**
      * Checks if a user with the given username exists in the database, excluding
-     * the user with the specified ID
+     * the user with the specified ID.
      *
      * @param username
      *            the username of the user to be checked

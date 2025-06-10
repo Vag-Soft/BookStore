@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** REST controller for endpoints related to order items */
+/** REST controller for endpoints related to order items. */
 @RestController
 @RequestMapping(path = "/orders")
 @Validated(OrderedValidation.class)
 public class OrderItemController {
     private final OrderItemService orderItemService;
 
-    public OrderItemController(OrderItemService orderItemService) {
+    public OrderItemController(final OrderItemService orderItemService) {
         this.orderItemService = orderItemService;
     }
 
@@ -43,9 +43,12 @@ public class OrderItemController {
      */
     @IsAdmin
     @GetMapping("/{orderID}/items")
-    public ResponseEntity<Page<OrderItemReadDTO>> getOrderItems(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsResource(repository = OrderRepository.class, message = "Order with the given ID does not exist", groups = ExtendedValidation.class) Integer orderID,
-            Pageable pageable) {
+    public ResponseEntity<Page<OrderItemReadDTO>> getOrderItems(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = OrderRepository.class, message = "Order with the given ID does not exist", groups = ExtendedValidation.class) //
+            final Integer orderID, //
+            final Pageable pageable) {
         return ResponseEntity.ok(orderItemService.getOrderItems(orderID, pageable));
     }
 
@@ -60,13 +63,22 @@ public class OrderItemController {
      */
     @IsAdmin
     @GetMapping("/{orderID}/items/{bookID}")
-    public ResponseEntity<OrderItemReadDTO> getOrderItemByBookID(@PathVariable @Positive(groups = BasicValidation.class) //
-    @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) //
-    Integer orderID, //
-            @PathVariable @Positive(groups = BasicValidation.class) //
+    public ResponseEntity<OrderItemReadDTO> getOrderItemByBookID(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsResource(repository = OrderRepository.class, message = "Order with given ID does not exist", groups = ExtendedValidation.class) //
+            final Integer orderID, //
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
             @ExistsResource(repository = BookRepository.class, message = "Book with given ID does not exist", groups = ExtendedValidation.class) //
-            @ExistsCompositeResource(repository = OrderItemsRepository.class, methodName = "existsByOrderIdAndBookId", firstPathVariable = "orderID", secondPathVariable = "bookID", message = "The order with the given ID does not contain the book with the given ID", groups = ExtendedValidation.class) //
-            Integer bookID) {
+            @ExistsCompositeResource(//
+                    repository = OrderItemsRepository.class, //
+                    methodName = "existsByOrderIdAndBookId", //
+                    firstPathVariable = "orderID", //
+                    secondPathVariable = "bookID", //
+                    message = "The order with the given ID does not contain the book with the given ID", //
+                    groups = ExtendedValidation.class) //
+            final Integer bookID) {
         OrderItemReadDTO orderItem = orderItemService.getOrderItemByBookID(orderID, bookID);
 
         return ResponseEntity.ok(orderItem);
@@ -83,9 +95,17 @@ public class OrderItemController {
      * @return a page of OrderItemReadDTO objects
      */
     @GetMapping("/me/{orderID}/items")
-    public ResponseEntity<Page<OrderItemReadDTO>> getOrderMeItems(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUser_IdAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID,
-            Pageable pageable) {
+    public ResponseEntity<Page<OrderItemReadDTO>> getOrderMeItems(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsCompositeResource(//
+                    repository = OrderRepository.class, //
+                    methodName = "existsByUser_IdAndId", //
+                    useJWT = true, //
+                    secondPathVariable = "orderID", //
+                    message = "The order with the given ID does not exist in your submitted orders", //
+                    groups = ExtendedValidation.class) //
+            final Integer orderID, final Pageable pageable) {
         return ResponseEntity.ok(orderItemService.getOrderItems(orderID, pageable));
     }
 
@@ -100,9 +120,27 @@ public class OrderItemController {
      * @return an OrderItemReadDTO object representing the order item
      */
     @GetMapping("/me/{orderID}/items/{bookID}")
-    public ResponseEntity<OrderItemReadDTO> getOrderMeItemByBookID(
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderRepository.class, methodName = "existsByUser_IdAndId", useJWT = true, secondPathVariable = "orderID", message = "The order with the given ID does not exist in your submitted orders", groups = ExtendedValidation.class) Integer orderID,
-            @PathVariable @Positive(groups = BasicValidation.class) @ExistsCompositeResource(repository = OrderItemsRepository.class, methodName = "existsByOrderIdAndBookId", firstPathVariable = "orderID", secondPathVariable = "bookID", message = "The order with the given ID does not contain the book with the given ID", groups = ExtendedValidation.class) Integer bookID) {
+    public ResponseEntity<OrderItemReadDTO> getOrderMeItemByBookID(//
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsCompositeResource(//
+                    repository = OrderRepository.class, //
+                    methodName = "existsByUser_IdAndId", //
+                    useJWT = true, //
+                    secondPathVariable = "orderID", //
+                    message = "The order with the given ID does not exist in your submitted orders", //
+                    groups = ExtendedValidation.class) //
+            final Integer orderID, //
+            @PathVariable //
+            @Positive(groups = BasicValidation.class) //
+            @ExistsCompositeResource(//
+                    repository = OrderItemsRepository.class, //
+                    methodName = "existsByOrderIdAndBookId", //
+                    firstPathVariable = "orderID", //
+                    secondPathVariable = "bookID", //
+                    message = "The order with the given ID does not contain the book with the given ID", //
+                    groups = ExtendedValidation.class) //
+            final Integer bookID) {
         OrderItemReadDTO orderItem = orderItemService.getOrderItemByBookID(orderID, bookID);
 
         return ResponseEntity.ok(orderItem);

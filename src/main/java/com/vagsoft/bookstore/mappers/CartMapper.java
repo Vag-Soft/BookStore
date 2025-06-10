@@ -9,12 +9,12 @@ import org.mapstruct.Mapping;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-/** Mapper class for converting Cart entities and DTOs */
+/** Mapper class for converting Cart entities and DTOs. */
 @Mapper(componentModel = "spring", uses = CartItemMapper.class)
 public interface CartMapper {
 
     /**
-     * Converts a Cart entity to a CartReadDTO
+     * Converts a Cart entity to a CartReadDTO.
      *
      * @param cart
      *            the Cart entity to be converted
@@ -24,7 +24,7 @@ public interface CartMapper {
     CartReadDTO cartToReadDto(Cart cart);
 
     /**
-     * Converts a list of Cart entities to a list of CartReadDTOs
+     * Converts a list of Cart entities to a list of CartReadDTOs.
      *
      * @param carts
      *            the list of Cart entities to be converted
@@ -33,7 +33,7 @@ public interface CartMapper {
     List<CartReadDTO> listCartToDto(List<Cart> carts);
 
     /**
-     * Converts a page of Cart entities to a page of CartReadDTOs
+     * Converts a page of Cart entities to a page of CartReadDTOs.
      *
      * @param page
      *            the page of Cart entities to be converted

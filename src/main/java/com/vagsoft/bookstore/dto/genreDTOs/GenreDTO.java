@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GenreDTO {
-    Integer id;
+    private Integer id;
 
     @NotBlank(message = "genre must not be blank", groups = BasicValidation.class)
     @Size(max = 31, message = "genre must be less than 32 characters", groups = BasicValidation.class)
     private String genre;
 
-    public GenreDTO(String genre) {
+    public GenreDTO(final String genre) {
         this.genre = genre;
     }
 }

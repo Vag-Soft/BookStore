@@ -20,7 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Service class for order operations */
+/** Service class for order operations. */
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
@@ -29,8 +29,9 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
 
-    public OrderService(OrderRepository orderRepository, UserRepository userRepository,
-            CartItemsService cartItemsService, OrderMapper orderMapper, OrderItemMapper orderItemMapper) {
+    public OrderService(final OrderRepository orderRepository, final UserRepository userRepository,
+            final CartItemsService cartItemsService, final OrderMapper orderMapper,
+            final OrderItemMapper orderItemMapper) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.cartItemsService = cartItemsService;
@@ -39,7 +40,7 @@ public class OrderService {
     }
 
     /**
-     * Retrieves a page of orders filtered by the specified parameters
+     * Retrieves a page of orders filtered by the specified parameters.
      *
      * @param userID
      *            the ID of the user who placed the orders (optional)
@@ -54,21 +55,21 @@ public class OrderService {
      * @return a page of orders
      */
     @Transactional(readOnly = true)
-    public Page<OrderReadDTO> getOrders(Integer userID, Double minTotalAmount, Double maxTotalAmount, Status status,
-            Pageable pageable) {
+    public Page<OrderReadDTO> getOrders(final Integer userID, final Double minTotalAmount, final Double maxTotalAmount,
+            final Status status, Pageable pageable) {
         return orderMapper.pageOrderToPageDto(
                 orderRepository.findOrders(userID, minTotalAmount, maxTotalAmount, status, pageable));
     }
 
     /**
-     * Places a new order for the user with the specified ID
+     * Places a new order for the user with the specified ID.
      *
      * @param userID
      *            the ID of the user placing the order
      * @return an Optional containing the created OrderReadDTO
      */
     @Transactional
-    public Optional<OrderReadDTO> addOrderByUserID(Integer userID) {
+    public Optional<OrderReadDTO> addOrderByUserID(final Integer userID) {
         // Checking out the user's cart items
         List<CartItem> cartItems = cartItemsService.checkout(userID);
         if (cartItems.isEmpty()) {
@@ -95,19 +96,19 @@ public class OrderService {
     }
 
     /**
-     * Retrieves an order by its ID
+     * Retrieves an order by its ID.
      *
      * @param orderID
      *            the ID of the order to be retrieved
      * @return an Optional containing the OrderReadDTO
      */
     @Transactional(readOnly = true)
-    public OrderReadDTO getOrderByID(Integer orderID) {
+    public OrderReadDTO getOrderByID(final Integer orderID) {
         return orderMapper.orderToReadDto(orderRepository.getReferenceById(orderID));
     }
 
     /**
-     * Updates an order by its ID with the given order information
+     * Updates an order by its ID with the given order information.
      *
      * @param orderID
      *            the ID of the order to be updated
@@ -116,7 +117,7 @@ public class OrderService {
      * @return an Optional containing the updated OrderReadDTO
      */
     @Transactional
-    public Optional<OrderReadDTO> updateOrderByID(Integer orderID, OrderUpdateDTO orderUpdateDTO) {
+    public Optional<OrderReadDTO> updateOrderByID(final Integer orderID, final OrderUpdateDTO orderUpdateDTO) {
         Order foundOrder = orderRepository.getReferenceById(orderID);
 
         orderMapper.updateOrderFromDto(orderUpdateDTO, foundOrder);

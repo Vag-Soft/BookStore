@@ -5,7 +5,8 @@ import com.vagsoft.bookstore.repositories.UserRepository;
 import com.vagsoft.bookstore.validations.annotations.UniqueField;
 import com.vagsoft.bookstore.validations.groups.BasicValidation;
 import com.vagsoft.bookstore.validations.groups.ExtendedValidation;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,7 @@ public class UserWriteDTO {
 
     @NotBlank(message = "password must not be blank", groups = BasicValidation.class)
     @Size(max = 63, message = "password must be less than 64 characters", groups = BasicValidation.class)
+    @Size(min = 8, message = "password must be at least 8 characters", groups = BasicValidation.class)
     private String password;
 
     @Enumerated(EnumType.STRING)

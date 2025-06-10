@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vagsoft.bookstore.dto.genreDTOs.GenreDTO;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder

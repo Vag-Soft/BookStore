@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** Controller class for handling authentication-related requests */
+/** Controller class for handling authentication-related requests. */
 @RestController
 @RequestMapping(path = "/auth")
 @Validated(OrderedValidation.class)
@@ -30,13 +30,13 @@ public class AuthController {
     private final AuthService authService;
     private final UserMapper userMapper;
 
-    public AuthController(AuthService authService, UserMapper userMapper) {
+    public AuthController(final AuthService authService, final UserMapper userMapper) {
         this.authService = authService;
         this.userMapper = userMapper;
     }
 
     /**
-     * Registers a new user and returns a JWT token
+     * Registers a new user and returns a JWT token.
      *
      * @param userWriteDTO
      *            the UserWriteDTO containing user details
@@ -44,8 +44,10 @@ public class AuthController {
      */
     @ApiResponse(responseCode = "201")
     @PostMapping("/register")
-    public ResponseEntity<UserReadDTO> registerUser(
-            @RequestBody @ValidAdminRegistration(groups = ExtendedValidation.class) @Valid UserWriteDTO userWriteDTO) {
+    public ResponseEntity<UserReadDTO> registerUser(//
+            @RequestBody //
+            @ValidAdminRegistration(groups = ExtendedValidation.class) //
+            @Valid UserWriteDTO userWriteDTO) {
         UserLoginDTO userLoginDTO = userMapper.userWriteToLoginDto(userWriteDTO);
 
         Optional<UserReadDTO> registeredUser = authService.registerUser(userWriteDTO);
@@ -57,14 +59,14 @@ public class AuthController {
     }
 
     /**
-     * Logins a user and returns a JWT token
+     * Logins a user and returns a JWT token.
      *
      * @param userLoginDTO
      *            the UserLoginDTO containing login credentials
      * @return ResponseEntity containing the JWT token
      */
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody @Valid UserLoginDTO userLoginDTO) {
+    public ResponseEntity<String> loginUser(@RequestBody @Valid final UserLoginDTO userLoginDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(authService.authenticate(userLoginDTO));
     }
 }

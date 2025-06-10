@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageImpl;
 @Mapper(componentModel = "spring")
 public interface CartItemMapper {
     /**
-     * Converts a CartItem entity to a CartItemReadDTO
+     * Converts a CartItem entity to a CartItemReadDTO.
      *
      * @param cartItem
      *            the CartItem entity to be converted
@@ -22,7 +22,7 @@ public interface CartItemMapper {
     CartItemReadDTO cartItemToReadDto(CartItem cartItem);
 
     /**
-     * Converts a list of CartItem entities to a list of CartItemReadDTOs
+     * Converts a list of CartItem entities to a list of CartItemReadDTOs.
      *
      * @param cartItems
      *            the list of CartItem entities to be converted
@@ -31,7 +31,7 @@ public interface CartItemMapper {
     List<CartItemReadDTO> listCartItemsToDto(List<CartItem> cartItems);
 
     /**
-     * Converts a page of CartItem entities to a page of CartItemReadDTOs
+     * Converts a page of CartItem entities to a page of CartItemReadDTOs.
      *
      * @param page
      *            the page of CartItem entities to be converted

@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 
-/** Mapper class for converting Favourite entities and DTOs */
+/** Mapper class for converting Favourite entities and DTOs. */
 @Mapper(componentModel = "spring")
 public interface FavouriteMapper {
     Favourite dtoToFavourite(FavouriteWriteDTO favouriteWriteDTO);
@@ -17,7 +17,7 @@ public interface FavouriteMapper {
     FavouriteReadDTO favouriteToReadDto(Favourite favourite);
 
     /**
-     * Converts a list of Favourite entities to a list of FavouriteReadDTOs
+     * Converts a list of Favourite entities to a list of FavouriteReadDTOs.
      *
      * @param favourites
      *            the list of Favourite entities to be converted
@@ -26,7 +26,7 @@ public interface FavouriteMapper {
     List<FavouriteReadDTO> listFavouriteToListDto(List<Favourite> favourites);
 
     /**
-     * Converts a page of Favourite entities to a page of FavouriteReadDTOs
+     * Converts a page of Favourite entities to a page of FavouriteReadDTOs.
      *
      * @param page
      *            the page of Favourite entities to be converted

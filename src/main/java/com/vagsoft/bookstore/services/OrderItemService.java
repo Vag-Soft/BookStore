@@ -8,13 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Service class for order item operations */
+/** Service class for order item operations. */
 @Service
 public class OrderItemService {
     private final OrderItemsRepository orderItemsRepository;
     private final OrderItemMapper orderItemMapper;
 
-    public OrderItemService(OrderItemsRepository orderItemsRepository, OrderItemMapper orderItemMapper) {
+    public OrderItemService(final OrderItemsRepository orderItemsRepository, final OrderItemMapper orderItemMapper) {
         this.orderItemsRepository = orderItemsRepository;
         this.orderItemMapper = orderItemMapper;
     }
@@ -29,7 +29,7 @@ public class OrderItemService {
      * @return a page of OrderItemReadDTO objects
      */
     @Transactional(readOnly = true)
-    public Page<OrderItemReadDTO> getOrderItems(Integer orderID, Pageable pageable) {
+    public Page<OrderItemReadDTO> getOrderItems(final Integer orderID, final Pageable pageable) {
         return orderItemMapper.pageOrderItemToPageDto(orderItemsRepository.findAllByOrderId(orderID, pageable));
     }
 
@@ -43,7 +43,7 @@ public class OrderItemService {
      * @return an OrderItemReadDTO object representing the order item
      */
     @Transactional(readOnly = true)
-    public OrderItemReadDTO getOrderItemByBookID(Integer orderID, Integer bookID) {
+    public OrderItemReadDTO getOrderItemByBookID(final Integer orderID, final Integer bookID) {
         return orderItemMapper.orderItemToReadDto(orderItemsRepository.getReferenceByOrderIdAndBookId(orderID, bookID));
     }
 }

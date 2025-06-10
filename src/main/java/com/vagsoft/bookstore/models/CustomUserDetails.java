@@ -8,11 +8,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-/** Custom UserDetails implementation for Spring Security */
+/** Custom UserDetails implementation for Spring Security. */
 public class CustomUserDetails implements UserDetails {
     private final User user;
 
-    public CustomUserDetails(User user) {
+    public CustomUserDetails(final User user) {
         this.user = user;
     }
 

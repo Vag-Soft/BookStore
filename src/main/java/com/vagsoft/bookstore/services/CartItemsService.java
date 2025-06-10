@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.vagsoft.bookstore.dto.cartDTOs.CartItemReadDTO;
 import com.vagsoft.bookstore.dto.cartDTOs.CartItemUpdateDTO;
 import com.vagsoft.bookstore.dto.cartDTOs.CartItemWriteDTO;
-import com.vagsoft.bookstore.errors.exceptions.cartExceptions.CartItemsNotFoundException;
 import com.vagsoft.bookstore.mappers.CartItemMapper;
 import com.vagsoft.bookstore.models.entities.CartItem;
 import com.vagsoft.bookstore.repositories.BookRepository;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service class for handling cart item-related operations
+ * Service class for handling cart item-related operations.
  */
 @Service
 public class CartItemsService {
@@ -28,8 +27,8 @@ public class CartItemsService {
     private final BookService bookService;
     private final CartItemMapper cartItemMapper;
 
-    public CartItemsService(CartItemsRepository cartItemsRepository, CartRepository cartRepository,
-            BookRepository bookRepository, BookService bookService, CartItemMapper cartItemMapper) {
+    public CartItemsService(final CartItemsRepository cartItemsRepository, final CartRepository cartRepository,
+            final BookRepository bookRepository, final BookService bookService, final CartItemMapper cartItemMapper) {
         this.cartItemsRepository = cartItemsRepository;
         this.cartRepository = cartRepository;
         this.bookRepository = bookRepository;
@@ -38,7 +37,7 @@ public class CartItemsService {
     }
 
     /**
-     * Retrieves all cart items for a given user
+     * Retrieves all cart items for a given user.
      *
      * @param userID
      *            the ID of the user
@@ -47,12 +46,12 @@ public class CartItemsService {
      * @return paginated list of cart items for the user
      */
     @Transactional(readOnly = true)
-    public Page<CartItemReadDTO> getAllCartItems(Integer userID, Pageable pageable) {
+    public Page<CartItemReadDTO> getAllCartItems(final Integer userID, final Pageable pageable) {
         return cartItemMapper.pageCartItemsToPageDto(cartItemsRepository.findAllByUserID(userID, pageable));
     }
 
     /**
-     * Retrieves a specific cart item for a given user using the book's ID
+     * Retrieves a specific cart item for a given user using the book's ID.
      *
      * @param userID
      *            the ID of the user
@@ -61,19 +60,19 @@ public class CartItemsService {
      * @return the cart item associated with the user and book's ID
      */
     @Transactional(readOnly = true)
-    public CartItemReadDTO getCartItem(Integer userID, Integer bookID) {
+    public CartItemReadDTO getCartItem(final Integer userID, final Integer bookID) {
         return cartItemMapper.cartItemToReadDto(cartItemsRepository.getReferenceByUserIDAndBookID(userID, bookID));
     }
 
     /**
-     * Adds a new cart item for a given user
+     * Adds a new cart item for a given user.
      *
      * @param cartItemWriteDTO
      *            the cart item to be added
      * @return the created cart item
      */
     @Transactional
-    public Optional<CartItemReadDTO> addCartItem(Integer userID, CartItemWriteDTO cartItemWriteDTO) {
+    public Optional<CartItemReadDTO> addCartItem(final Integer userID, final CartItemWriteDTO cartItemWriteDTO) {
         // Requesting books from the book service to ensure availability
         bookService.requestBooks(cartItemWriteDTO.getBookID(), cartItemWriteDTO.getQuantity());
 
@@ -86,7 +85,7 @@ public class CartItemsService {
     }
 
     /**
-     * Updates a specific cart item for a given user using the book's ID
+     * Updates a specific cart item for a given user using the book's ID.
      *
      * @param userID
      *            the ID of the user
@@ -97,8 +96,8 @@ public class CartItemsService {
      * @return the updated cart item
      */
     @Transactional
-    public Optional<CartItemReadDTO> updateCartItem(Integer userID, Integer bookID,
-            CartItemUpdateDTO cartItemUpdateDTO) {
+    public Optional<CartItemReadDTO> updateCartItem(final Integer userID, final Integer bookID,
+            final CartItemUpdateDTO cartItemUpdateDTO) {
         // Requesting books from the book service to ensure availability
         bookService.requestBooks(bookID, cartItemUpdateDTO.getQuantity());
 
@@ -111,7 +110,7 @@ public class CartItemsService {
     }
 
     /**
-     * Deletes a specific cart item for a given user using the book's ID
+     * Deletes a specific cart item for a given user using the book's ID.
      *
      * @param userID
      *            the ID of the user
@@ -119,7 +118,7 @@ public class CartItemsService {
      *            the ID of the book
      */
     @Transactional
-    public void deleteCartItem(Integer userID, Integer bookID) {
+    public void deleteCartItem(final Integer userID, final Integer bookID) {
         CartItem cartItem = cartItemsRepository.getReferenceByUserIDAndBookID(userID, bookID);
 
         // Returning books to the book service to increase availability
@@ -129,16 +128,14 @@ public class CartItemsService {
     }
 
     /**
-     * Retrieves all cart items for a given user and deletes them from the cart
+     * Retrieves all cart items for a given user and deletes them from the cart.
      *
      * @param userID
      *            the ID of the user
      * @return a list of cart items that were checked out
-     * @throws CartItemsNotFoundException
-     *             if no items are found in the user's cart
      */
     @Transactional
-    public List<CartItem> checkout(Integer userID) {
+    public List<CartItem> checkout(final Integer userID) {
         List<CartItem> cartItems = cartItemsRepository.findAllByUserID(userID);
         cartItemsRepository.deleteAllByUserID(userID);
         return cartItems;
