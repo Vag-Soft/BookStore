@@ -14,19 +14,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Service class for book operations */
+/** Service class for book operations. */
 @Service
 public class BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
-    public BookService(BookRepository bookRepository, BookMapper bookMapper) {
+    public BookService(final BookRepository bookRepository, final BookMapper bookMapper) {
         this.bookRepository = bookRepository;
         this.bookMapper = bookMapper;
     }
 
     /**
-     * Retrieves a list of books filtered by the specified parameters
+     * Retrieves a list of books filtered by the specified parameters.
      *
      * @param title
      *            the title of the books to search for (optional)
@@ -45,21 +45,21 @@ public class BookService {
      * @return a page of books
      */
     @Transactional(readOnly = true)
-    public Page<BookReadDTO> getBooks(String title, String genre, String author, String description, Double minPrice,
-            Double maxPrice, Pageable pageable) {
+    public Page<BookReadDTO> getBooks(final String title, final String genre, final String author,
+            final String description, final Double minPrice, final Double maxPrice, final Pageable pageable) {
         return bookMapper.pageBookToPageDto(
                 bookRepository.findBooks(title, genre, author, description, minPrice, maxPrice, pageable));
     }
 
     /**
-     * Adds a new book
+     * Adds a new book.
      *
      * @param bookWriteDTO
      *            the book to be added
      * @return the added book
      */
     @Transactional
-    public Optional<BookReadDTO> addBook(BookWriteDTO bookWriteDTO) {
+    public Optional<BookReadDTO> addBook(final BookWriteDTO bookWriteDTO) {
         Book bookToSave = bookMapper.dtoToBook(bookWriteDTO);
 
         Book savedBook = bookRepository.save(bookToSave);
@@ -67,20 +67,20 @@ public class BookService {
     }
 
     /**
-     * Retrieves a book by its ID
+     * Retrieves a book by its ID.
      *
      * @param bookID
      *            the ID of the book to be retrieved
      * @return the retrieved book
      */
     @Transactional(readOnly = true)
-    public BookReadDTO getBookByID(Integer bookID) {
+    public BookReadDTO getBookByID(final Integer bookID) {
         Book foundBook = bookRepository.getReferenceById(bookID);
         return bookMapper.bookToReadDto(foundBook);
     }
 
     /**
-     * Updates a book by its ID with the given book information
+     * Updates a book by its ID with the given book information.
      *
      * @param bookID
      *            the ID of the book to be updated
@@ -89,7 +89,7 @@ public class BookService {
      * @return the updated book
      */
     @Transactional
-    public Optional<BookReadDTO> updateBookByID(Integer bookID, BookUpdateDTO bookUpdateDTO) {
+    public Optional<BookReadDTO> updateBookByID(final Integer bookID, final BookUpdateDTO bookUpdateDTO) {
 
         Book foundBook = bookRepository.getReferenceById(bookID);
 
@@ -101,13 +101,13 @@ public class BookService {
     }
 
     /**
-     * Deletes a book by its ID
+     * Deletes a book by its ID.
      *
      * @param bookID
      *            the ID of the book to be deleted
      */
     @Transactional
-    public void deleteBookByID(Integer bookID) {
+    public void deleteBookByID(final Integer bookID) {
         bookRepository.deleteById(bookID);
     }
 
@@ -121,7 +121,7 @@ public class BookService {
      *            the quantity of the book
      */
     @Transactional
-    public void requestBooks(Integer bookID, Integer quantity) {
+    public void requestBooks(final Integer bookID, final Integer quantity) {
         Book book = bookRepository.findById(bookID)
                 .orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID));
 
@@ -141,7 +141,7 @@ public class BookService {
      *            the quantity of the book to return
      */
     @Transactional
-    public void returnBooks(Integer bookID, Integer quantity) {
+    public void returnBooks(final Integer bookID, final Integer quantity) {
         Book book = bookRepository.findById(bookID)
                 .orElseThrow(() -> new BookNotFoundException("No book found with the given ID: " + bookID));
 

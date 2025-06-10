@@ -12,8 +12,8 @@ INSERT INTO Users (email, username, hashPassword, role, firstName, lastName, sig
 VALUES
     ('john.doe@example.com', 'john.doe', '$2a$10$1Mn20VjeC1Gvpbei3cFHdOq.FU1AQgrWvmi6R3Kbqxlos1d.La9OO', 'USER', 'John', 'Doe', '2023-04-28'),-- hashed from 'SecurePass123!'
     ('admin.jones@bookstore.com', 'admin.jones', '$2a$10$3YYtS3FDrzxWxYcN.VB2NevDPDqLsouWAiLgGXhkN6.t5dcDJbkOK', 'ADMIN', 'Robert', 'Jones', '2020-03-15'), -- hashed from 'AdminPass789!'
-    ('admin@bookstore.com', 'admin', '$2a$10$6T849dwtDHzHr.VsO/yUHuuvHe4zAamoNf20C9/Zuj2cWmHJ6oZIS', 'ADMIN', 'Mr', 'Admin', '2020-03-15'), -- hashed from 'admin'
-    ('user@bookstore.com', 'user', '$2a$10$zpqetztH8zDi7QTKNVoyGOYJ9J8kvNjDGujwMsiWuaq1OtYIH5BvK' , 'USER', 'Urs', 'User', '2020-03-05'); -- hashed from 'user'
+    ('admin@bookstore.com', 'admin', '$2a$10$AtgR81bb4y8jNmABctXx2O1cLf076cEOWDcxFWIjuztESoDe7RbY2', 'ADMIN', 'Mr', 'Admin', '2020-03-15'), -- hashed from 'adminadmin'
+    ('user@bookstore.com', 'user', '$2a$10$QjtinB3rnsZJ3tVBfFHJ9OKfFwH8DYXGoYaXKwlehMVw6sM7cuu4q' , 'USER', 'Urs', 'User', '2020-03-05'); -- hashed from 'useruser'
 
 
 INSERT INTO Favourites (userID, bookID)

@@ -7,12 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository interface for accessing cart data
+ * Repository interface for accessing cart data.
  */
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Integer> {
     /**
-     * Finds a cart by its user ID
+     * Finds a cart by its user ID.
      *
      * @param userID
      *            the ID of the user whose cart is to be found
@@ -21,7 +21,7 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
     Optional<Cart> findByUser_Id(Integer userID);
 
     /**
-     * Gets a reference to a cart by its user ID
+     * Gets a reference to a cart by its user ID.
      *
      * @param userID
      *            the ID of the user whose cart is to be referenced

@@ -21,14 +21,14 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
 
-/** Security configuration class for the application */
+/** Security configuration class for the application. */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 @Profile("!test")
 public class SecurityConfig {
     /**
-     * Bean for configuring the security filter chain
+     * Bean for configuring the security filter chain.
      *
      * @param http
      *            HttpSecurity object for configuring security settings
@@ -52,14 +52,14 @@ public class SecurityConfig {
     }
 
     /**
-     * Bean for configuring the authentication manager
+     * Bean for configuring the authentication manager.
      *
      * @param userDetailsService
      *            UserDetailsService object for loading user details
      * @return AuthenticationManager object
      */
     @Bean
-    public AuthenticationManager authenticationManager(CustomUserDetailsService userDetailsService) {
+    public AuthenticationManager authenticationManager(final CustomUserDetailsService userDetailsService) {
         var authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -67,7 +67,7 @@ public class SecurityConfig {
     }
 
     /**
-     * Bean for configuring password encoding with BCrypt
+     * Bean for configuring password encoding with BCrypt.
      *
      * @return PasswordEncoder object
      */

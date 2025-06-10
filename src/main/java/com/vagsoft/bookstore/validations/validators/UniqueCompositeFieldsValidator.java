@@ -33,7 +33,7 @@ public class UniqueCompositeFieldsValidator implements ConstraintValidator<Uniqu
     private boolean usePathVariable;
 
     @Override
-    public void initialize(UniqueCompositeFields constraintAnnotation) {
+    public void initialize(final UniqueCompositeFields constraintAnnotation) {
         this.repositoryClass = constraintAnnotation.repository();
         this.methodName = constraintAnnotation.methodName();
         this.pathVariable = constraintAnnotation.pathVariable();
@@ -43,7 +43,7 @@ public class UniqueCompositeFieldsValidator implements ConstraintValidator<Uniqu
     }
 
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
+    public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         var repository = applicationContext.getBean(repositoryClass);
 
         try {

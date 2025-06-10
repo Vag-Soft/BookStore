@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Service class for handling authentication-related operations */
+/** Service class for handling authentication-related operations. */
 @Service
 public class AuthService {
     private final UserRepository userRepository;
@@ -24,8 +24,9 @@ public class AuthService {
     private final JwtService jwtService;
     private final CartService cartService;
 
-    public AuthService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder,
-            AuthenticationManager authenticationManager, JwtService jwtService, CartService cartService) {
+    public AuthService(final UserRepository userRepository, final UserMapper userMapper,
+            final PasswordEncoder passwordEncoder, final AuthenticationManager authenticationManager,
+            final JwtService jwtService, final CartService cartService) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
@@ -35,14 +36,14 @@ public class AuthService {
     }
 
     /**
-     * Registers a new user
+     * Registers a new user.
      *
      * @param userWriteDTO
      *            the UserWriteDTO containing user details
      * @return the registered UserReadDTO
      */
     @Transactional
-    public Optional<UserReadDTO> registerUser(UserWriteDTO userWriteDTO) {
+    public Optional<UserReadDTO> registerUser(final UserWriteDTO userWriteDTO) {
         String hashedPassword = passwordEncoder.encode(userWriteDTO.getPassword());
         userWriteDTO.setPassword(hashedPassword);
 
@@ -57,13 +58,13 @@ public class AuthService {
     }
 
     /**
-     * Authenticates a user and returns a JWT token
+     * Authenticates a user and returns a JWT token.
      *
      * @param userLoginDTO
      *            the UserLoginDTO containing login credentials
      * @return the generated JWT token
      */
-    public String authenticate(UserLoginDTO userLoginDTO) {
+    public String authenticate(final UserLoginDTO userLoginDTO) {
 
         final var authToken = UsernamePasswordAuthenticationToken.unauthenticated(userLoginDTO.getUsername(),
                 userLoginDTO.getPassword());

@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-/** Repository interface for accessing order item data */
+/** Repository interface for accessing order item data. */
 @Repository
 public interface OrderItemsRepository extends JpaRepository<OrderItem, Integer> {
     /**

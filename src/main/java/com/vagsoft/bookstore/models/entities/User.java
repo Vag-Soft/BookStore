@@ -3,7 +3,14 @@ package com.vagsoft.bookstore.models.entities;
 import java.time.LocalDate;
 
 import com.vagsoft.bookstore.models.enums.Role;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,8 +50,8 @@ public class User {
     @Column(name = "signupdate", nullable = false)
     private LocalDate signupDate;
 
-    public User(String email, String username, String hashPassword, Role role, String firstName, String lastName,
-            LocalDate signupDate) {
+    public User(final String email, final String username, final String hashPassword, final Role role,
+            final String firstName, final String lastName, final LocalDate signupDate) {
         this.email = email;
         this.username = username;
         this.hashPassword = hashPassword;

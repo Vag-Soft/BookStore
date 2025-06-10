@@ -19,7 +19,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
-/** Configuration class for JWT settings */
+/** Configuration class for JWT settings. */
 @Configuration
 @Setter
 @Getter
@@ -67,9 +67,9 @@ public class JwtConfig {
      * @return JwtService instance
      */
     @Bean
-    public JwtService jwtService(@Value("${spring.application.name}") final String appName, final JwtEncoder jwtEncoder,
-            final JwtDecoder jwtDecoder) {
+    public JwtService jwtService(@Value("${spring.application.name}") final String appName,
+            final JwtEncoder jwtEncoder) {
 
-        return new JwtService(appName, ttl, jwtEncoder, jwtDecoder);
+        return new JwtService(appName, ttl, jwtEncoder);
     }
 }

@@ -12,12 +12,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository interface for managing cart items
+ * Repository interface for managing cart items.
  */
 @Repository
 public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     /**
-     * Retrieves all cart items by user ID
+     * Retrieves all cart items by user ID.
      *
      * @param userID
      *            the ID of the user
@@ -33,7 +33,7 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     Page<CartItem> findAllByUserID(Integer userID, Pageable pageable);
 
     /**
-     * Retrieves all cart items by user ID
+     * Retrieves all cart items by user ID.
      *
      * @param userID
      *            the ID of the user
@@ -47,7 +47,7 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     List<CartItem> findAllByUserID(Integer userID);
 
     /**
-     * Checks if a cart item exists for a given user ID and book ID
+     * Checks if a cart item exists for a given user ID and book ID.
      *
      * @param userID
      *            the ID of the user
@@ -63,7 +63,7 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     boolean existsByUserIDAndBookID(Integer userID, Integer bookID);
 
     /**
-     * Retrieves a cart item by user ID and book ID
+     * Retrieves a cart item by user ID and book ID.
      *
      * @param userID
      *            the ID of the user
@@ -79,7 +79,7 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     Optional<CartItem> findByUserIDAndBookID(Integer userID, Integer bookID);
 
     /**
-     * Retrieves a cart item by user ID and book ID, returning a reference
+     * Retrieves a cart item by user ID and book ID, returning a reference.
      *
      * @param userID
      *            the ID of the user
@@ -95,7 +95,7 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     CartItem getReferenceByUserIDAndBookID(Integer userID, Integer bookID);
 
     /**
-     * Deletes a cart item by user ID and book ID
+     * Deletes a cart item by user ID and book ID.
      *
      * @param userID
      *            the ID of the user
@@ -115,7 +115,7 @@ public interface CartItemsRepository extends JpaRepository<CartItem, Integer> {
     void deleteByUserIDAndBookID(Integer userID, Integer bookID);
 
     /**
-     * Deletes all cart items associated with a user ID
+     * Deletes all cart items associated with a user ID.
      *
      * @param userID
      *            the ID of the user

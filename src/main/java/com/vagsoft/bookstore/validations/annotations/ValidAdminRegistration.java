@@ -11,7 +11,7 @@ import jakarta.validation.Payload;
 
 /**
  * Validates that the user has the 'ADMIN' role when registering other 'ADMIN'
- * accounts
+ * accounts.
  */
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
