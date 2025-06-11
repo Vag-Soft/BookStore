@@ -26,15 +26,17 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final CartItemsService cartItemsService;
+    private final BookService bookService;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
 
     public OrderService(final OrderRepository orderRepository, final UserRepository userRepository,
-            final CartItemsService cartItemsService, final OrderMapper orderMapper,
-            final OrderItemMapper orderItemMapper) {
+                        final CartItemsService cartItemsService, BookService bookService, final OrderMapper orderMapper,
+                        final OrderItemMapper orderItemMapper) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.cartItemsService = cartItemsService;
+        this.bookService = bookService;
         this.orderMapper = orderMapper;
         this.orderItemMapper = orderItemMapper;
     }
@@ -74,6 +76,11 @@ public class OrderService {
         List<CartItem> cartItems = cartItemsService.checkout(userID);
         if (cartItems.isEmpty()) {
             throw new CartItemsNotFoundException("No items in the cart of the user with ID: " + userID);
+        }
+
+        // Requesting books from the book service to ensure availability
+        for (CartItem cartItem : cartItems) {
+            bookService.requestBooks(cartItem.getBook().getId(), cartItem.getQuantity());
         }
 
         // Mapping cart items to order items and creating an order
@@ -123,6 +130,13 @@ public class OrderService {
         orderMapper.updateOrderFromDto(orderUpdateDTO, foundOrder);
 
         Order updatedOrder = orderRepository.save(foundOrder);
+
+        // If the order is being cancelled, return the books to stock
+        if(orderUpdateDTO.getStatus() == Status.CANCELLED) {
+            for (OrderItem orderItem : updatedOrder.getOrderItems()) {
+                bookService.returnBooks(orderItem.getBook().getId(), orderItem.getQuantity());
+            }
+        }
 
         return Optional.of(orderMapper.orderToReadDto(updatedOrder));
     }

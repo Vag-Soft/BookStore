@@ -330,7 +330,6 @@ public class OrderControllerTest {
         OrderReadDTO expectedOrder = new OrderReadDTO(3, 1, 50.0, Status.PROCESSING, LocalDate.now(),
                 List.of(orderItem1, orderItem2));
 
-        // Mock setup
         when(authUtils.getUserIdFromAuthentication()).thenReturn(1);
         when(userRepository.existsById(1)).thenReturn(true);
         when(cartItemsRepository.findAllByUserID(1)).thenReturn(List.of(cartItem1, cartItem2));

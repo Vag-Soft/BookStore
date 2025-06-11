@@ -346,9 +346,11 @@ public class OrderIntegrationTest {
         assertEquals(Status.PROCESSING, createdOrder.getStatus());
         assertEquals(50.0, createdOrder.getTotalAmount());
         assertEquals(2, createdOrder.getOrderItems().size());
+
         OrderItem firstOrderItem = orderItemMapper.cartItemToOrderItem(cartItem1);
         firstOrderItem.setOrder(orderMapper.readDtoToOrder(createdOrder));
         firstOrderItem.setId(orderItem3.getId()+1);
+        book1.setAvailability(book1.getAvailability() - cartItem1.getQuantity());
         assertEquals(orderItemMapper.orderItemToReadDto(firstOrderItem), createdOrder.getOrderItems().getFirst());
 
         assertTrue(orderRepository.existsById(createdOrder.getId()));

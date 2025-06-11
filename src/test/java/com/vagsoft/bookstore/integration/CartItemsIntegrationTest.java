@@ -253,7 +253,6 @@ public class CartItemsIntegrationTest {
 
         assertNotNull(response.getBody());
 
-        book1.setAvailability(book1.getAvailability() - 5);
         CartItem updatedCartItem = CartItem.builder().cart(cart1).book(book1).quantity(5).build();
         CartItemReadDTO updatedCartItemDto = response.getBody();
         assertEquals(cartItemMapper.cartItemToReadDto(updatedCartItem), updatedCartItemDto);
@@ -493,7 +492,6 @@ public class CartItemsIntegrationTest {
 
         assertNotNull(response.getBody());
 
-        book2.setAvailability(book2.getAvailability() - 2);
         CartItem cartItem = CartItem.builder()
                 .cart(cart2)
                 .book(book2)
@@ -607,7 +605,6 @@ public class CartItemsIntegrationTest {
 
         assertNotNull(response.getBody());
 
-        book1.setAvailability(book1.getAvailability() - 5);
         CartItem updatedCartItem = CartItem.builder()
                 .cart(cart1)
                 .book(book1)

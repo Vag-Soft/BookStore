@@ -112,6 +112,22 @@ public class BookService {
     }
 
     /**
+     * Checks if a book has enough stock available.
+     *
+     * @param bookID
+     *            the ID of the book to check
+     * @param quantity
+     *            the quantity of the book to check
+     * @return true if the book has enough stock, false otherwise
+     */
+    @Transactional(readOnly = true)
+    public boolean isBookQuantityAvailable(final Integer bookID, final Integer quantity) {
+        Book book = bookRepository.getReferenceById(bookID);
+
+        return book.getAvailability() >= quantity;
+    }
+
+    /**
      * Checks if a book has enough stock and deletes the requested quantity from the
      * stock.
      *

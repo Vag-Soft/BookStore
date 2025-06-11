@@ -73,12 +73,14 @@ public class CartItemsService {
      */
     @Transactional
     public Optional<CartItemReadDTO> addCartItem(final Integer userID, final CartItemWriteDTO cartItemWriteDTO) {
-        // Requesting books from the book service to ensure availability
-        bookService.requestBooks(cartItemWriteDTO.getBookID(), cartItemWriteDTO.getQuantity());
-
         CartItem cartItemToSave = CartItem.builder().quantity(cartItemWriteDTO.getQuantity())
                 .book(bookRepository.getReferenceById(cartItemWriteDTO.getBookID()))
                 .cart(cartRepository.getReferenceByUser_Id(userID)).build();
+
+        // Check the book's availability before adding to the cart
+        if (!bookService.isBookQuantityAvailable(cartItemWriteDTO.getBookID(), cartItemWriteDTO.getQuantity())) {
+            throw new IllegalArgumentException("Not enough stock for book with ID: " + cartItemWriteDTO.getBookID());
+        }
 
         CartItem savedCartItem = cartItemsRepository.save(cartItemToSave);
         return Optional.of(cartItemMapper.cartItemToReadDto(savedCartItem));
@@ -98,9 +100,6 @@ public class CartItemsService {
     @Transactional
     public Optional<CartItemReadDTO> updateCartItem(final Integer userID, final Integer bookID,
             final CartItemUpdateDTO cartItemUpdateDTO) {
-        // Requesting books from the book service to ensure availability
-        bookService.requestBooks(bookID, cartItemUpdateDTO.getQuantity());
-
         CartItem cartItem = cartItemsRepository.getReferenceByUserIDAndBookID(userID, bookID);
 
         cartItem.setQuantity(cartItemUpdateDTO.getQuantity());
@@ -119,11 +118,6 @@ public class CartItemsService {
      */
     @Transactional
     public void deleteCartItem(final Integer userID, final Integer bookID) {
-        CartItem cartItem = cartItemsRepository.getReferenceByUserIDAndBookID(userID, bookID);
-
-        // Returning books to the book service to increase availability
-        bookService.returnBooks(bookID, cartItem.getQuantity());
-
         cartItemsRepository.deleteByUserIDAndBookID(userID, bookID);
     }
 
