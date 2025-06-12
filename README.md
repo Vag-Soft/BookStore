@@ -32,34 +32,37 @@ An Online Bookstore Application built with Spring Boot, featuring user authentic
 - **Java**: Java JDK 21
 - **Docker Desktop**: Docker Desktop installed and running
 
-## Installation
-1. Clone the repository.
-2. Launch Docker Desktop.
-3. Run ```docker compose up -d``` in the terminal, to start up the PostgreSQL docker container.
-4. Run the BookStoreApplication class in src/main/java/com/vagsoft/bookstore/BookStoreApplication.java.
-
 ## Usage
 ### 1. Clone the repository
-    ```bash
+```bash
     git clone https://github.com/Vag-Soft/BookStore.git
     cd bookstore
-    ```
+   ```
 
 ### 2. Start up database
-    ```bash
+```bash
     # Ensure Docker Desktop is running
     docker compose up -d
     # Run ```docker compose down``` to close and delete 
     # the main database instance, useful for testing
-    ```
+   ```    
+
 ### 3. Run the application
-    ```bash
+```bash
     ./mvnw spring-boot:run
 
     # Or run the main class directly in your IDE:
     # src/main/java/com/vagsoft/bookstore/BookStoreApplication.java
-    ```
-### 4. Use the application
+   ```
+
+### 4. Create a private RSA key for JWT signing with OpenSSL
+```bash
+    # Git Bash already has OpenSSL installed
+    cd src/main/resources
+    openssl genpkey -algorithm RSA -out app.key -outform PEM
+   ```
+
+### 5. Use the application
  - Send HTTP requests at ```http://localhost:8080```
  - Check the API docs with Swagger UI at ```http://localhost:8080/swagger-ui/index.html```
  - Use the default credentials to log in:
@@ -70,7 +73,7 @@ An Online Bookstore Application built with Spring Boot, featuring user authentic
 #### Testing
 - Checkout to the testing branch before running the application for testing purposes.
 - Run all unit and integration tests with:
-    ```bash
+  ```bash
     ./mvnw test
   
     # Or run tests directly in your IDE
